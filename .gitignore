@@ -76,3 +76,6 @@ jspm_packages/
 
 # misc
 .DS_Store
+
+# IDE - VSCode
+.vscode/*
