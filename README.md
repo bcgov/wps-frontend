@@ -12,11 +12,11 @@ Wildfire Predictive Services to support decision making in prevention, preparedn
 * [Node.js](https://nodejs.org/en/) - You’ll need to have 10.16.0 or later version on your local development machine. You can use [nvm](https://github.com/nvm-sh/nvm#installation) (macOS/Linux) or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node versions between different projects.
 
 ### Installing
-In the project directory, you can run:
+In the project directory, run:
 
 #### `npm install`
 
-Installs all the dependencies required.
+Installs all dependencies in the node_modules folder.
 
 ### Executing program
 
@@ -39,7 +39,7 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 ## Authors
 
-Contributors names and contact info
+Contributors names in alphabetical order
 
 [Andrea Williams](https://github.com/andrea-williams), [Derek Roberts](https://github.com/DerekRoberts), [Kyubin Han](https://github.com/Kyubinhan), [Nithin Kuruba](https://github.com/Nkuruba), [Sybrand Strauss](https://github.com/Sybrand)
 
