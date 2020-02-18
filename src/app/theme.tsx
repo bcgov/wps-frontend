@@ -1,11 +1,10 @@
-import React from 'react'
-import { Container, CssBaseline } from '@material-ui/core'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
+import { createMuiTheme } from '@material-ui/core/styles'
 
 /**
  * Theme documentation: https://material-ui.com/customization/palette/
  * Theme demo: https://material.io/resources/color/#!/?view.left=1&view.right=1&primary.color=003365&secondary.color=FBC02D
  */
+
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -26,15 +25,4 @@ const theme = createMuiTheme({
   }
 })
 
-const App = () => {
-  return (
-    <>
-      <CssBaseline />
-      <ThemeProvider theme={theme}>
-        <Container maxWidth="md">Hello World!</Container>
-      </ThemeProvider>
-    </>
-  )
-}
-
-export default App
+export default theme
