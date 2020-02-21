@@ -1,0 +1,29 @@
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+
+import { fetchStations } from 'features/fwiCalculator/stationsSlice'
+import { WeatherStationsDropdown } from './WeatherStationsDropdown'
+import { Station } from 'api/stationAPI'
+import { PageTitle } from 'components/PageTitle'
+import { Container } from 'components/Container'
+
+export const FWICalculatorPage = () => {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchStations())
+  }, [dispatch])
+
+  const onStationChange = (station: Station | null) => {
+    console.log(station)
+  }
+
+  return (
+    <>
+      <PageTitle title="FWI Calculator" />
+      <Container>
+        <WeatherStationsDropdown onStationChange={onStationChange} />
+      </Container>
+    </>
+  )
+}
