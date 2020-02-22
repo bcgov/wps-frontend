@@ -26,10 +26,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "test:ci": "set CI=true&&npm test",
+    "test:ci": "CI=true npm test",
     "eject": "react-scripts eject",
-    "lint": "eslint \"**/*.+(ts|tsx)\"",
-    "lint:fix": "eslint --fix \"**/*.+(ts|tsx)\"",
+    "lint": "eslint './src/**/*.{ts,tsx}'",
+    "lint:fix": "eslint --fix './src/**/*.{ts,tsx}'",
     "format": "prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md|vue)\"",
     "test:watch": "npm test -- --watch"
   },
