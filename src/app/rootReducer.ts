@@ -1,5 +1,5 @@
 import { combineReducers } from '@reduxjs/toolkit'
-import stationsReducer from 'features/fwiCalculator/stationsSlice'
+import stationsReducer from 'features/fwiCalculator/slices/stationsSlice'
 
 const rootReducer = combineReducers({
   stations: stationsReducer

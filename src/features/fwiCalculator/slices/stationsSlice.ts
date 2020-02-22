@@ -8,7 +8,7 @@ interface StationsState {
   stations: Station[]
 }
 
-const stationsInitialState: StationsState = {
+export const stationsInitialState: StationsState = {
   isLoading: false,
   error: null,
   stations: []

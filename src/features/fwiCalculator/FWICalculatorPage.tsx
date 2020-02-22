@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { fetchStations } from 'features/fwiCalculator/stationsSlice'
-import { WeatherStationsDropdown } from './WeatherStationsDropdown'
+import { fetchStations } from 'features/fwiCalculator/slices/stationsSlice'
+import { WeatherStationsDropdown } from './components/StationsDropdown'
 import { Station } from 'api/stationAPI'
 import { PageTitle } from 'components/PageTitle'
 import { Container } from 'components/Container'
