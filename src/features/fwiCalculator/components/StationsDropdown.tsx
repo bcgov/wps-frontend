@@ -19,7 +19,7 @@ export const WeatherStationsDropdown = (props: Props) => {
   return (
     <>
       <Autocomplete
-        id="weather-station-dropdown"
+        data-testid="weather-station-dropdown"
         options={stations}
         getOptionLabel={option => `${option.name}(${option.code})`}
         onChange={onChange}

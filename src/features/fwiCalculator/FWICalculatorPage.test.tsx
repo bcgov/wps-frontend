@@ -21,12 +21,12 @@ afterEach(() => {
 it('renders FWI calculator page', async () => {
   mockAxios.onGet('/stations').reply(200, { weather_stations: mockStations })
 
-  const { getByText, getByLabelText, store } = renderWithRedux(<App />)
+  const { getByText, getByTestId, store } = renderWithRedux(<App />)
   const pageTitle = getByText(/FWI calculator/i)
   expect(pageTitle).toBeInTheDocument()
   expect(selectStationsReducer(store.getState()).stations).toEqual([])
 
-  fireEvent.click(getByLabelText('Weather Stations'))
+  fireEvent.click(getByTestId('weather-station-dropdown'))
   const [station1] = await waitForElement(() => [
     getByText('Station 1(1)'),
     getByText('Station 2(2)')
