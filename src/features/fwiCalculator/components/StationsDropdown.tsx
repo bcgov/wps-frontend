@@ -4,14 +4,14 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TextField } from '@material-ui/core'
 
 import { Station } from 'api/stationAPI'
-import { RootState } from 'app/rootReducer'
+import { selectStationsReducer } from 'app/rootReducer'
 
 interface Props {
   onStationChange: (station: Station | null) => void
 }
 
 export const WeatherStationsDropdown = (props: Props) => {
-  const { stations, error } = useSelector((state: RootState) => state.stations)
+  const { stations, error } = useSelector(selectStationsReducer)
   const onChange = (e: ChangeEvent<{}>, s: Station | null) => {
     props.onStationChange(s)
   }
@@ -19,9 +19,9 @@ export const WeatherStationsDropdown = (props: Props) => {
   return (
     <>
       <Autocomplete
-        id="weather-station-dropdown"
+        data-testid="weather-station-dropdown"
         options={stations}
-        getOptionLabel={option => option.name}
+        getOptionLabel={option => `${option.name}(${option.code})`}
         onChange={onChange}
         style={{ width: 300 }}
         renderInput={params => (
@@ -33,9 +33,7 @@ export const WeatherStationsDropdown = (props: Props) => {
           />
         )}
       />
-      {error && (
-        <div>Something went wrong while fetching stations... {error}</div>
-      )}
+      {error && <div>{error} (while fetching weather stations) </div>}
     </>
   )
 }

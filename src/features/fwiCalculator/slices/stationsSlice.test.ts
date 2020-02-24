@@ -4,13 +4,12 @@ import reducer, {
   getStationsSuccess
 } from 'features/fwiCalculator/slices/stationsSlice'
 
-describe('Station Slice', () => {
+describe('Stations Slice', () => {
   it('Should return initial state on first run', () => {
     const result = reducer(undefined, { type: '' })
-
-    // Assert
     expect(result).toEqual(stationsInitialState)
   })
+
   it('Should return new state after fetching stations', () => {
     const data = [
       {
@@ -27,9 +26,7 @@ describe('Station Slice', () => {
       }
     ]
     const nextState = reducer(stationsInitialState, getStationsSuccess(data))
-
-    // Assert
-    const rootState = { stations: nextState }
-    expect(rootState.stations.stations).toEqual(data)
+    expect(nextState).not.toBe(stationsInitialState) // check referential identity
+    expect(nextState.stations).toBe(data)
   })
 })

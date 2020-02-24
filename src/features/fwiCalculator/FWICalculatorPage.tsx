@@ -15,7 +15,7 @@ export const FWICalculatorPage = () => {
   }, [dispatch])
 
   const onStationChange = (station: Station | null) => {
-    console.log(station)
+    // Not yet implemented
   }
 
   return (
