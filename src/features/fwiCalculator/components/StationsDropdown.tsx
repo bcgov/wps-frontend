@@ -4,14 +4,14 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TextField } from '@material-ui/core'
 
 import { Station } from 'api/stationAPI'
-import { RootState } from 'app/rootReducer'
+import { selectStationsReducer } from 'app/rootReducer'
 
 interface Props {
   onStationChange: (station: Station | null) => void
 }
 
 export const WeatherStationsDropdown = (props: Props) => {
-  const { stations, error } = useSelector((state: RootState) => state.stations)
+  const { stations, error } = useSelector(selectStationsReducer)
   const onChange = (e: ChangeEvent<{}>, s: Station | null) => {
     props.onStationChange(s)
   }

@@ -4,10 +4,10 @@ import { Provider } from 'react-redux'
 
 import store from 'app/store'
 
-export function renderWithRedux(ui: React.ReactNode) {
+export const renderWithRedux = (ui: React.ReactNode) => {
   return {
     ...render(<Provider store={store}>{ui}</Provider>),
-    // adding `store` to the returned utilities to allow us
+    // Adding `store` to the returned utilities to allow us
     // to reference it in our tests (just try to avoid using
     // this to test implementation details).
     store
