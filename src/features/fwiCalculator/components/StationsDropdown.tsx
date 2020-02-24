@@ -21,7 +21,7 @@ export const WeatherStationsDropdown = (props: Props) => {
       <Autocomplete
         id="weather-station-dropdown"
         options={stations}
-        getOptionLabel={option => option.name}
+        getOptionLabel={option => `${option.name}(${option.code})`}
         onChange={onChange}
         style={{ width: 300 }}
         renderInput={params => (
@@ -33,9 +33,7 @@ export const WeatherStationsDropdown = (props: Props) => {
           />
         )}
       />
-      {error && (
-        <div>Something went wrong while fetching stations... {error}</div>
-      )}
+      {error && <div>{error} (while fetching weather stations) </div>}
     </>
   )
 }
