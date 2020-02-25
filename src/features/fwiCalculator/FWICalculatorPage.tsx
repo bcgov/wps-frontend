@@ -24,8 +24,11 @@ export const FWICalculatorPage = () => {
       <PageTitle title="FWI Calculator" />
       <Container>
         <WeatherStationsDropdown onStationChange={onStationChange} />
+<<<<<<< HEAD
         <br />
         <TimeRangeOptionsDropdown />
+=======
+>>>>>>> master
       </Container>
     </>
   )
