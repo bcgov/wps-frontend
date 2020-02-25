@@ -12,7 +12,7 @@ interface PercentilesState {
   result: PercentilesResponse | null
 }
 
-const initialState: PercentilesState = {
+export const percentileInitialState: PercentilesState = {
   isLoading: false,
   error: null,
   result: null
@@ -20,7 +20,7 @@ const initialState: PercentilesState = {
 
 const percentiles = createSlice({
   name: 'percentile',
-  initialState,
+  initialState: percentileInitialState,
   reducers: {
     getPercentilesStart(state: PercentilesState) {
       state.isLoading = true
