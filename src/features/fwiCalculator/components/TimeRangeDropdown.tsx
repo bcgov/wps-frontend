@@ -1,23 +1,33 @@
 import React from 'react'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TextField } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 
-export const timeRangeOptions = ['Last 10 Years']
+const useStyles = makeStyles({
+  root: {
+    width: 300
+  }
+})
+
+export const timeRangeOptions = ['10']
 
 export const TimeRangeOptionsDropdown = () => {
+  const classes = useStyles()
   return (
     <>
       <Autocomplete
+        disabled
         data-testid="time-range-dropdown"
         defaultValue={timeRangeOptions[0]}
         options={timeRangeOptions}
-        style={{ width: 300 }}
+        className={classes.root}
         renderInput={params => (
           <TextField
             {...params}
-            label="Time Range"
+            label="Time Range (years)"
             variant="outlined"
             fullWidth
+            size="small"
           />
         )}
       />
