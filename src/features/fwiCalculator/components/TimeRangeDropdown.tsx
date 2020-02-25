@@ -23,3 +23,5 @@ export const TimeRangeOptionsDropdown = () => {
     </>
   )
 }
+
+export default TimeRangeOptionsDropdown
