@@ -35,6 +35,9 @@ it('renders FWI calculator page', async () => {
   ])
   fireEvent.click(station1)
 
+  expect(selectStationsReducer(store.getState()).stations).toEqual(mockStations)
+
+  //Time range dropdown test
   expect(getByTestId('time-range-dropdown')).toBeInTheDocument()
 
   fireEvent.click(getByTestId('time-range-dropdown'))
@@ -42,8 +45,6 @@ it('renders FWI calculator page', async () => {
   const timeRange1 = await waitForElement(() => getByText(timeRangeOptions[0]))
 
   fireEvent.click(timeRange1)
-
-  expect(selectStationsReducer(store.getState()).stations).toEqual(mockStations)
 })
 
 it('renders error message when fetching stations failed', async () => {
