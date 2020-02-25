@@ -9,6 +9,7 @@ export const TimeRangeOptionsDropdown = () => {
     <>
       <Autocomplete
         data-testid="time-range-dropdown"
+        defaultValue={timeRangeOptions[0]}
         options={timeRangeOptions}
         style={{ width: 300 }}
         renderInput={params => (
