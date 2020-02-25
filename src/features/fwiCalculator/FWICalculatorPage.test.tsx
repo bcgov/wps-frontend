@@ -5,7 +5,7 @@ import axios from 'api/axios'
 import App from 'app/App'
 import { selectStationsReducer } from 'app/rootReducer'
 import { renderWithRedux } from 'utils/testUtils'
-import TimeRangeOptionsDropdown from './components/TimeRangeDropdown'
+import { timeRangeOptions } from 'features/fwiCalculator/components/TimeRangeDropdown'
 
 const mockAxios = new MockAdapter(axios)
 const mockStations = [
@@ -39,7 +39,7 @@ it('renders FWI calculator page', async () => {
 
   fireEvent.click(getByTestId('time-range-dropdown'))
 
-  const timeRange1 = await waitForElement(() => getByText('Last 10 Years'))
+  const timeRange1 = await waitForElement(() => getByText(timeRangeOptions[0]))
 
   fireEvent.click(timeRange1)
 

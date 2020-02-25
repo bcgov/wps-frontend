@@ -2,9 +2,9 @@ import React from 'react'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TextField } from '@material-ui/core'
 
-export const TimeRangeOptionsDropdown = () => {
-  const timeRangeOptions = ['Last 10 Years']
+export const timeRangeOptions = ['Last 10 Years']
 
+export const TimeRangeOptionsDropdown = () => {
   return (
     <>
       <Autocomplete
@@ -23,5 +23,3 @@ export const TimeRangeOptionsDropdown = () => {
     </>
   )
 }
-
-export default TimeRangeOptionsDropdown
