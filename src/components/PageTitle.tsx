@@ -1,9 +1,11 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+
 import { Container } from 'components/Container'
 
 const useStyles = makeStyles(theme => ({
   root: {
+    maxHeight: 60,
     marginBottom: '1rem',
     paddingBottom: '1rem',
     paddingTop: '1rem',
