@@ -5,12 +5,20 @@ import { TextField } from '@material-ui/core'
 
 import { Station } from 'api/stationAPI'
 import { selectStationsReducer } from 'app/rootReducer'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles({
+  root: {
+    width: 300
+  }
+})
 
 interface Props {
   onStationChange: (station: Station | null) => void
 }
 
 export const WeatherStationsDropdown = (props: Props) => {
+  const classes = useStyles()
   const { stations, error } = useSelector(selectStationsReducer)
   const onChange = (e: ChangeEvent<{}>, s: Station | null) => {
     props.onStationChange(s)
@@ -19,11 +27,11 @@ export const WeatherStationsDropdown = (props: Props) => {
   return (
     <>
       <Autocomplete
+        className={classes.root}
         data-testid="weather-station-dropdown"
         options={stations}
         getOptionLabel={option => `${option.name}(${option.code})`}
         onChange={onChange}
-        style={{ width: 300 }}
         renderInput={params => (
           <TextField
             {...params}

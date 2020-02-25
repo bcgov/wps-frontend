@@ -2,5 +2,5 @@ import React from 'react'
 import { Container as C, ContainerProps } from '@material-ui/core'
 
 export const Container = (props: ContainerProps) => {
-  return <C {...props} maxWidth="lg" />
+  return <C maxWidth="lg" {...props} />
 }
