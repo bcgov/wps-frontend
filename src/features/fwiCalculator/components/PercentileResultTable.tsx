@@ -14,7 +14,7 @@ import { Station } from 'api/stationAPI'
 
 const useStyles = makeStyles({
   root: {
-    width: 350,
+    width: 400,
     marginTop: 15,
     marginRight: 15
   }

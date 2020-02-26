@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { makeStyles } from '@material-ui/core/styles'
 
 import { Station } from 'api/stationAPI'
 import { selectPercentilesReducer } from 'app/rootReducer'
@@ -14,9 +15,16 @@ import {
   fetchPercentiles,
   resetPercentilesResult
 } from 'features/fwiCalculator/slices/percentilesSlice'
-import { PercentileResultTable } from './components/PercentileResultTable'
+import { PercentileResultTable } from 'features/fwiCalculator/components/PercentileResultTable'
+
+const useStyles = makeStyles({
+  resultTables: {
+    display: 'flex'
+  }
+})
 
 export const FWICalculatorPage = () => {
+  const classes = useStyles()
   const dispatch = useDispatch()
   const [stations, setStations] = useState<Station[]>([])
   const { result } = useSelector(selectPercentilesReducer)
@@ -63,7 +71,7 @@ export const FWICalculatorPage = () => {
           onResetClick={onResetClick}
         />
 
-        <div style={{ display: 'flex' }}>
+        <div className={classes.resultTables}>
           {stations.map(station => {
             const stationResult = result?.stations[station.code]
             if (!stationResult) return null
