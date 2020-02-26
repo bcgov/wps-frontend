@@ -14,6 +14,7 @@ import {
   fetchPercentiles,
   resetPercentilesResult
 } from 'features/fwiCalculator/slices/percentilesSlice'
+import { PercentileResultTable } from './components/PercentileResultTable'
 
 export const FWICalculatorPage = () => {
   const dispatch = useDispatch()
@@ -62,7 +63,20 @@ export const FWICalculatorPage = () => {
           onResetClick={onResetClick}
         />
 
-        {result && <pre>{JSON.stringify(result, null, 2)}</pre>}
+        <div style={{ display: 'flex' }}>
+          {stations.map(station => {
+            const stationResult = result?.stations[station.code]
+            if (!stationResult) return null
+
+            return (
+              <PercentileResultTable
+                key={station.code}
+                station={station}
+                stationResponse={stationResult}
+              />
+            )
+          })}
+        </div>
       </Container>
     </>
   )

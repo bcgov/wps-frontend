@@ -12,7 +12,7 @@ import { WEATHER_STATION_MAP_LINK } from 'utils/constants'
 
 const useStyles = makeStyles({
   root: {
-    width: 600
+    width: 700
   },
   mapIcon: {
     padding: 10
