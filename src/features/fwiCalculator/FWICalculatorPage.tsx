@@ -51,6 +51,7 @@ export const FWICalculatorPage = () => {
           stations={stations}
           onStationsChange={onStationsChange}
         />
+
         <TimeRangeOptionsDropdown />
 
         <PercentileTextfield />
