@@ -1,6 +1,6 @@
 #!/bin/bash
 #%
-#% OpenShift Build Helper
+#% OpenShift Cleanup Helper
 #%
 #%   Intended for use with a pull request-based pipeline.
 #%
@@ -17,7 +17,7 @@
 #%   ${THIS_FILE} 0 apply
 #%
 #%   Override variables at runtime.
-#%   GIT_BRANCH=branch PROJ_TOOLS=project PATH_BC=./bc.yaml ${THIS_FILE} 0 apply
+#%   PROJ_TOOLS=tools PROJ_DEPLOY=dev ${THIS_FILE} 0 apply
 #%
 
 # Halt conditions (errors, unsets, non-zero pipes), field separator and verbosity
@@ -49,13 +49,17 @@ $(oc whoami &>/dev/null) || {
 
 # Process commands
 #
-OC_COMMAND="oc -n ${PROJ_DEPLOY} get all -o name -l app=${NAME}-pr-${PR_NO}"
+OC_CLEAN_DEPLOY="oc -n ${PROJ_DEPLOY} get all -o name -l app=${NAME}-pr-${PR_NO}"
+OC_CLEAN_TOOLS="oc -n ${PROJ_TOOLS} get all -o name -l app=${NAME}-pr-${PR_NO}"
 #
 [ "${APPLY}" != "apply" ] || {
-	OC_COMMAND="oc -n ${PROJ_DEPLOY} delete all -o name -l app=${NAME}-pr-${PR_NO}"
+	OC_CLEAN_DEPLOY="oc -n ${PROJ_DEPLOY} delete all -o name -l app=${NAME}-pr-${PR_NO}"
+	OC_CLEAN_TOOLS="oc -n ${PROJ_TOOLS} delete all -o name -l app=${NAME}-pr-${PR_NO}"
 }
-eval "${OC_COMMAND}"
+eval "${OC_CLEAN_DEPLOY}"
+eval "${OC_CLEAN_TOOLS}"
 
 # Echo command
 #
-echo -e "\n${OC_COMMAND}\n"
+echo -e "\n${OC_CLEAN_DEPLOY}\n"
+echo -e "\n${OC_CLEAN_TOOLS}\n"
