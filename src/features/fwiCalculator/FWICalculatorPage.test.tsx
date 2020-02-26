@@ -37,11 +37,8 @@ it('renders FWI calculator page', async () => {
   fireEvent.click(station1)
   expect(selectStationsReducer(store.getState()).stations).toEqual(mockStations)
 
-  // Time range dropdown tests
-  expect(getByTestId('time-range-dropdown')).toBeInTheDocument()
-  //fireEvent.click(getByTestId('time-range-dropdown'))
-  //const timeRange1 = await waitForElement(() => getByText(timeRangeOptions[0]))
-  //fireEvent.click(timeRange1)
+  // Time range textfield tests
+  expect(getByTestId('time-range-textfield')).toBeInTheDocument()
 
   // Percentile textfield tests
   expect(getByTestId('percentile-textfield')).toBeInTheDocument()

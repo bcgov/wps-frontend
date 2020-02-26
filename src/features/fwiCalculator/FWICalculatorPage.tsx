@@ -8,8 +8,8 @@ import { Container } from 'components/Container'
 import { fetchStations } from 'features/fwiCalculator/slices/stationsSlice'
 import { WeatherStationsDropdown } from 'features/fwiCalculator/components/StationsDropdown'
 import { ActionButtons } from 'features/fwiCalculator/components/ActionButtons'
-import { TimeRangeOptionsDropdown } from 'features/fwiCalculator/components/TimeRangeDropdown'
-import { PercentileTextfield } from 'features/fwiCalculator/components/percentileTextfield'
+import { TimeRangeTextfield } from 'features/fwiCalculator/components/TimeRangeTextfield'
+import { PercentileTextfield } from 'features/fwiCalculator/components/PercentileTextfield'
 import {
   fetchPercentiles,
   resetPercentilesResult
@@ -52,7 +52,7 @@ export const FWICalculatorPage = () => {
           onStationsChange={onStationsChange}
         />
 
-        <TimeRangeOptionsDropdown />
+        <TimeRangeTextfield />
 
         <PercentileTextfield />
 
