@@ -10,7 +10,7 @@
 #%
 #% Examples:
 #%
-#%   Provide a PR number. Defaults to is a dry-run.
+#%   Provide a PR number. Default only returns object names.
 #%   ${THIS_FILE} 0
 #%
 #%   Apply when satisfied.
@@ -47,19 +47,23 @@ $(oc whoami &>/dev/null) || {
 	exit
 }
 
-# Process commands
+# Set and process commands
 #
-OC_CLEAN_DEPLOY="oc -n ${PROJ_DEPLOY} get all -o name -l app=${NAME}-pr-${PR_NO}"
-OC_CLEAN_TOOLS="oc -n ${PROJ_TOOLS} get all -o name -l app=${NAME}-pr-${PR_NO}"
-#
-[ "${APPLY}" != "apply" ] || {
-	OC_CLEAN_DEPLOY="oc -n ${PROJ_DEPLOY} delete all -o name -l app=${NAME}-pr-${PR_NO}"
-	OC_CLEAN_TOOLS="oc -n ${PROJ_TOOLS} delete all -o name -l app=${NAME}-pr-${PR_NO}"
-}
+APP_LABEL="${NAME}-pr-${PR_NO}"
+if [ "${APPLY}" == "apply" ]; then
+	OC_CLEAN_DEPLOY="oc -n ${PROJ_DEPLOY} delete all -o name -l app=${APP_LABEL}"
+	OC_CLEAN_TOOLS="oc -n ${PROJ_TOOLS} delete all -o name -l app=${APP_LABEL}"
+else
+	OC_CLEAN_DEPLOY="oc -n ${PROJ_DEPLOY} get all -o name -l app=${APP_LABEL}"
+	OC_CLEAN_TOOLS="oc -n ${PROJ_TOOLS} get all -o name -l app=${APP_LABEL}"
+	echo -e "\n*** This only a listing.  Use 'apply' to delete. ***"
+fi
+echo -e "\n${PROJ_DEPLOY}:"
 eval "${OC_CLEAN_DEPLOY}"
+echo -e "\n${PROJ_TOOLS}:"
 eval "${OC_CLEAN_TOOLS}"
 
-# Echo command
+# Echo commands
 #
-echo -e "\n${OC_CLEAN_DEPLOY}\n"
+echo -e "\n${OC_CLEAN_DEPLOY}"
 echo -e "\n${OC_CLEAN_TOOLS}\n"

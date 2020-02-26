@@ -10,7 +10,7 @@
 #%
 #% Examples:
 #%
-#%   Provide a PR number. Defaults to is a dry-run.
+#%   Provide a PR number. Defaults to a dry-run.
 #%   ${THIS_FILE} 0
 #%
 #%   Apply when satisfied.
