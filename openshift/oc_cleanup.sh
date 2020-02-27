@@ -20,23 +20,28 @@
 #%   PROJ_TOOLS=tools PROJ_DEPLOY=dev ${THIS_FILE} 0 apply
 #%
 
-# Halt conditions (errors, unsets, non-zero pipes), field separator and verbosity
+# Specify halt conditions (errors, unsets, non-zero pipes), field separator and verbosity
 #
 set -euo pipefail
 IFS=$'\n\t'
 [ ! "${VERBOSE:-}" == "true" ] || set -x
 
-# Parameters and environment vars
+# Receive parameters and source/load environment variables from a file
 #
 PR_NO=${1:-}
 APPLY=${2:-}
 source "$(dirname ${0})/envars"
 
-# Show help if no params
+# If no parameters have been passed show the help header from this script
 #
 [ "${#}" -gt 0 ] || {
 	THIS_FILE="$(dirname ${0})/$(basename ${0})"
-	cat ${THIS_FILE} | grep "^#%" | sed -e "s|^#%||g" -e "s|\${THIS_FILE}|${THIS_FILE}|g"
+
+	# Cat this file, grep #% lines and clean up with sed
+	cat ${THIS_FILE} |
+		grep "^#%" |
+		sed -e "s|^#%||g" |
+		sed -e "s|\${THIS_FILE}|${THIS_FILE}|g"
 	exit
 }
 
@@ -63,7 +68,7 @@ eval "${OC_CLEAN_DEPLOY}"
 echo -e "\n${PROJ_TOOLS}:"
 eval "${OC_CLEAN_TOOLS}"
 
-# Echo commands
+# Provide oc command instruction
 #
 echo -e "\n${OC_CLEAN_DEPLOY}"
 echo -e "\n${OC_CLEAN_TOOLS}\n"
