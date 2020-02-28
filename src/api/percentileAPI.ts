@@ -21,7 +21,7 @@ export interface StationSummaryResponse {
   station_name: string
 }
 
-interface MeanValues {
+export interface MeanValues {
   FFMC: number
   ISI: number
   BUI: number
