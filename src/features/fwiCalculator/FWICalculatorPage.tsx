@@ -86,7 +86,7 @@ export const FWICalculatorPage = () => {
             )
           })}
         </div>
-        {result ? (<MeanResult meanValues={result.mean_values}/>) : null}
+        {result ? <MeanResult meanValues={result.mean_values} /> : null}
       </Container>
     </>
   )

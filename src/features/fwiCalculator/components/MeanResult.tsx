@@ -1,47 +1,47 @@
 import React from 'react'
 import { MeanValues } from 'api/percentileAPI'
-import { 
-    Paper,
-    TableContainer,
-    Table,
-    TableRow,
-    TableCell,
-    TableBody
+import {
+  Paper,
+  TableContainer,
+  Table,
+  TableRow,
+  TableCell,
+  TableBody
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 interface Props {
-    meanValues: MeanValues
+  meanValues: MeanValues
 }
 
 const useStyles = makeStyles({
-    root: {
-      width: 400,
-      marginTop: 15,
-      marginRight: 15
-    }
-  })
+  root: {
+    width: 400,
+    marginTop: 15,
+    marginRight: 15
+  }
+})
 
 export const MeanResult = ({ meanValues }: Props) => {
-    const classes = useStyles()
-    return (
-        <TableContainer component={Paper} className={classes.root}>
-            <Table aria-label="simple table">
-                <TableBody>
-                    <TableRow>
-                        <TableCell>BUI percentile mean value</TableCell>
-                        <TableCell>{meanValues.BUI.toFixed(1)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>FFMC percentile mean value</TableCell>
-                        <TableCell>{meanValues.FFMC.toFixed(1)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>ISI percentile mean value</TableCell>
-                        <TableCell>{meanValues.ISI.toFixed(1)}</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
-        </TableContainer>
-    )
+  const classes = useStyles()
+  return (
+    <TableContainer component={Paper} className={classes.root}>
+      <Table aria-label="simple table">
+        <TableBody>
+          <TableRow>
+            <TableCell>BUI percentile mean value</TableCell>
+            <TableCell>{meanValues.BUI.toFixed(1)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>FFMC percentile mean value</TableCell>
+            <TableCell>{meanValues.FFMC.toFixed(1)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>ISI percentile mean value</TableCell>
+            <TableCell>{meanValues.ISI.toFixed(1)}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
+  )
 }
