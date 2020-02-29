@@ -91,22 +91,22 @@ pipeline {
                 }
             }
         }
-        stage('Backups (PROD)') {
-            agent { label 'deploy' }
-            steps {
-                script {
-                    sh "echo Tag known good prod images, backup databases, backup settings"
-                }
-            }
-        }
-        stage('Update routes (PROD)') {
-            agent { label 'deploy' }
-            steps {
-                script {
-                    sh "echo SMOKE TESTS"
-                }
-            }
-        }
+        // stage('Backups (PROD)') {
+        //     agent { label 'deploy' }
+        //     steps {
+        //         script {
+        //             sh "echo Tag known good prod images, backup databases, backup settings"
+        //         }
+        //     }
+        // }
+        // stage('Update routes (PROD)') {
+        //     agent { label 'deploy' }
+        //     steps {
+        //         script {
+        //             sh "echo SMOKE TESTS"
+        //         }
+        //     }
+        // }
         stage('Smoke tests (PROD)') {
             agent { label 'deploy' }
             steps {
