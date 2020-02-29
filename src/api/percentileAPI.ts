@@ -17,7 +17,7 @@ export interface StationSummaryResponse {
   ISI: number
   BUI: number
   season: SeasonResponse
-  year_range: YearRange
+  years: number[]
   station_name: string
 }
 

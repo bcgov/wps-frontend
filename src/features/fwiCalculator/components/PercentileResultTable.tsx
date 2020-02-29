@@ -27,9 +27,9 @@ interface Props {
 
 export const PercentileResultTable = ({ station, stationResponse }: Props) => {
   const classes = useStyles()
-  const { season, FFMC, BUI, ISI, year_range } = stationResponse
+  const { season, FFMC, BUI, ISI, years } = stationResponse
   const seasonRange = `${season.start_month}/${season.start_day} ~ ${season.end_month}/${season.end_day}`
-  const yearRange = `${year_range.start} ~ ${year_range.end}`
+  const yearRange = `${years}`
 
   return (
     <TableContainer component={Paper} className={classes.root}>
@@ -60,7 +60,7 @@ export const PercentileResultTable = ({ station, stationResponse }: Props) => {
             <TableCell>{seasonRange}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>Time Range</TableCell>
+            <TableCell>Years</TableCell>
             <TableCell>{yearRange}</TableCell>
           </TableRow>
           <TableRow>
