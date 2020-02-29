@@ -122,7 +122,7 @@ objects:
         app: ${NAME}-${SUFFIX}
       name: ${NAME}-${SUFFIX}-source
     spec:
-      host: ${NAME}-${SUFFIX}-source-${PROJECT_DEPLOY}.pathfinder.gov.bc.ca
+      host: ${NAME}-${SUFFIX}.pathfinder.gov.bc.ca
       port:
         targetPort: 8080-tcp
       to:
