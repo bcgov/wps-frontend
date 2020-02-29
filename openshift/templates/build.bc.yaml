@@ -105,7 +105,7 @@ objects:
       creationTimestamp: null
       labels:
         app: ${NAME}-${SUFFIX}
-      name: ${NAME}-docker-${SUFFIX}
+      name: ${NAME}-${SUFFIX}
     spec:
       nodeSelector: null
       runPolicy: SerialLatestOnly
