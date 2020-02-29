@@ -1,6 +1,6 @@
 #!/bin/bash
 #%
-#% OpenShift Deploy Helper
+#% OpenShift Deployment Promotion Helper
 #%
 #%   Intended for use with a pull request-based pipeline.
 #%
@@ -17,8 +17,19 @@
 #%   ${THIS_FILE} 0 apply
 #%
 #%   Override variables at runtime.
-#%   NAME=name PROJECT=project PATH_DC=./dc.yaml ${THIS_FILE} 0 apply
+#%   NAME=name ENV=project PATH_DC=./dc.yaml ${THIS_FILE} 0 apply
 #%
+#
+# If no parameters, then show this help header (cat file, grep #% lines and clean up with sed)
+#
+[ "${#}" -gt 0 ] || {
+	THIS_FILE="$(dirname ${0})/$(basename ${0})"
+	cat ${THIS_FILE} |
+		grep "^#%" |
+		sed -e "s|^#%||g" |
+		sed -e "s|\${THIS_FILE}|${THIS_FILE}|g"
+	exit
+}
 
 # Specify halt conditions (errors, unsets, non-zero pipes), field separator and verbosity
 #
@@ -32,19 +43,6 @@ PR_NO=${1:-}
 APPLY=${2:-}
 source "$(dirname ${0})/envars"
 
-# If no parameters have been passed show the help header from this script
-#
-[ "${#}" -gt 0 ] || {
-	THIS_FILE="$(dirname ${0})/$(basename ${0})"
-
-	# Cat this file, grep #% lines and clean up with sed
-	cat ${THIS_FILE} |
-		grep "^#%" |
-		sed -e "s|^#%||g" |
-		sed -e "s|\${THIS_FILE}|${THIS_FILE}|g"
-	exit
-}
-
 # Verify login
 #
 $(oc whoami &>/dev/null) || {
@@ -52,12 +50,16 @@ $(oc whoami &>/dev/null) || {
 	exit
 }
 
-# Process commands
+# Command to copy imagestreamtag from dev PR to prod (ENV is the after-dash portion of PROJ_PROD)
 #
-OC_PROMOTE="oc -n ${PROJ_TOOLS} import-image ${NAME}:prod --from=docker-registry.default.svc:5000/${PROJ_TOOLS}/${NAME}:pr-${PR_NO}"
-OC_PROCESS="oc -n ${PROJ_TOOLS} process -f ${PATH_DC} -p NAME=${NAME} -p SUFFIX=prod"
-OC_APPLY="oc -n auzhsi-prod apply -f -"
-eval "${OC_PROMOTE}"
+ENV=$(echo $PROJ_PROD | cut -d'-' -f2)
+SOURCE_IMG="docker-registry.default.svc:5000/${PROJ_TOOLS}/${NAME}:pr-${PR_NO}"
+OC_PROMOTE="oc -n ${PROJ_TOOLS} import-image ${NAME}:${ENV} --from=${SOURCE_IMG}"
+
+# Command to process and apply deployment template
+#
+OC_PROCESS="oc -n ${PROJ_TOOLS} process -f ${PATH_DC} -p NAME=${NAME} -p SUFFIX=${ENV}"
+OC_APPLY="oc -n ${PROJ_PROD} apply -f -"
 OC_COMMAND="${OC_PROCESS} | ${OC_APPLY}"
 #
 [ "${APPLY}" == "apply" ] || {
@@ -65,9 +67,11 @@ OC_COMMAND="${OC_PROCESS} | ${OC_APPLY}"
 	eval "${OC_PROCESS}"
 	echo -e "\n*** This is a dry run.  Use 'apply' to deploy. ***\n"
 }
-eval "${OC_COMMAND}"
 
-# Provide oc command instruction
+# Execute and output commands
 #
-echo -e "\n${OC_PROMOTE}\n"
+eval "${OC_PROMOTE}"
+eval "${OC_COMMAND}"
+#
+echo -e "\n${OC_PROMOTE}"
 echo -e "\n${OC_COMMAND}\n"
