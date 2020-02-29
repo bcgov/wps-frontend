@@ -16,9 +16,6 @@
 #%   Apply when satisfied.
 #%   ${THIS_FILE} 0 apply
 #%
-#%   Override variables at runtime.
-#%   NAME=name ENV=project PATH_DC=./dc.yaml ${THIS_FILE} 0 apply
-#%
 #
 # If no parameters, then show this help header (cat file, grep #% lines and clean up with sed)
 #
