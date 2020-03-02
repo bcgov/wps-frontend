@@ -9,13 +9,14 @@ import { Container } from 'components/Container'
 import { fetchStations } from 'features/fwiCalculator/slices/stationsSlice'
 import { WeatherStationsDropdown } from 'features/fwiCalculator/components/StationsDropdown'
 import { ActionButtons } from 'features/fwiCalculator/components/ActionButtons'
-import { TimeRangeTextfield } from 'features/fwiCalculator/components/TimeRangeTextfield'
 import { PercentileTextfield } from 'features/fwiCalculator/components/PercentileTextfield'
 import {
   fetchPercentiles,
   resetPercentilesResult
 } from 'features/fwiCalculator/slices/percentilesSlice'
 import { PercentileResultTable } from 'features/fwiCalculator/components/PercentileResultTable'
+import { TimeRangeSlider } from './components/TimeRangeSlider'
+import { YearRange } from 'api/percentileAPI'
 
 const useStyles = makeStyles({
   resultTables: {
@@ -26,7 +27,13 @@ const useStyles = makeStyles({
 export const FWICalculatorPage = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const timeRangeInitialState: YearRange = {
+    start: new Date().getFullYear() - 10,
+    end: new Date().getFullYear() - 1
+  }
+
   const [stations, setStations] = useState<Station[]>([])
+  const [timeRange, setTimeRange] = useState<YearRange>(timeRangeInitialState)
   const { result } = useSelector(selectPercentilesReducer)
 
   useEffect(() => {
@@ -40,16 +47,21 @@ export const FWICalculatorPage = () => {
     setStations(s)
   }
 
+  const onYearRangeChange = (yearRangeNumber: YearRange) => {
+    setTimeRange(yearRangeNumber)
+  }
+
   const onCalculateClick = () => {
     const stationCodes = stations.map(s => s.code)
     const percentile = 90
-    const yearRange = { start: 2010, end: 2019 }
+    const yearRange = timeRange
     dispatch(fetchPercentiles(stationCodes, percentile, yearRange))
   }
 
   const onResetClick = () => {
     setStations([])
     dispatch(resetPercentilesResult())
+    setTimeRange(timeRangeInitialState)
   }
 
   return (
@@ -61,7 +73,10 @@ export const FWICalculatorPage = () => {
           onStationsChange={onStationsChange}
         />
 
-        <TimeRangeTextfield />
+        <TimeRangeSlider
+          timeRange={timeRange}
+          onYearRangeChange={onYearRangeChange}
+        />
 
         <PercentileTextfield />
 
