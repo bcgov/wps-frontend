@@ -29,7 +29,18 @@ it('renders FWI calculator page', async () => {
   expect(selectStationsReducer(store.getState()).stations).toEqual([])
 
   expect(getByTestId('weather-station-dropdown')).toBeInTheDocument()
-  expect(getByTestId('time-range-textfield')).toBeInTheDocument()
+  fireEvent.click(getByTestId('weather-station-dropdown'))
+  const [station1] = await waitForElement(() => [
+    getByText('Station 1 (1)'),
+    getByText('Station 2 (2)')
+  ])
+  fireEvent.click(station1)
+  expect(selectStationsReducer(store.getState()).stations).toEqual(mockStations)
+
+  // Time range textfield tests
+  //expect(getByTestId('time-range-textfield')).toBeInTheDocument()
+
+  // Percentile textfield tests
   expect(getByTestId('percentile-textfield')).toBeInTheDocument()
 
   // Map icon tests
