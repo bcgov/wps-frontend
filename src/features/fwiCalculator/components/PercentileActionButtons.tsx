@@ -19,7 +19,7 @@ interface Props {
   onResetClick: () => void
 }
 
-export const ActionButtons = ({
+export const PercentileActionButtons = ({
   stations,
   onCalculateClick,
   onResetClick

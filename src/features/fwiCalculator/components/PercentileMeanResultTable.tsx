@@ -18,26 +18,28 @@ const useStyles = makeStyles({
   root: {
     width: 400,
     marginTop: 15,
-    marginRight: 15
+    marginRight: 15,
+    marginBottom: 30
   }
 })
 
-export const MeanResult = ({ meanValues }: Props) => {
+export const PercentileMeanResultTable = ({ meanValues }: Props) => {
   const classes = useStyles()
+
   return (
     <TableContainer component={Paper} className={classes.root}>
       <Table aria-label="simple table">
         <TableBody>
           <TableRow>
-            <TableCell>BUI percentile mean value</TableCell>
-            <TableCell>{meanValues.BUI.toFixed(1)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>FFMC percentile mean value</TableCell>
+            <TableCell>FFMC mean value</TableCell>
             <TableCell>{meanValues.FFMC.toFixed(1)}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell>ISI percentile mean value</TableCell>
+            <TableCell>BUI mean value</TableCell>
+            <TableCell>{meanValues.BUI.toFixed(1)}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>ISI mean value</TableCell>
             <TableCell>{meanValues.ISI.toFixed(1)}</TableCell>
           </TableRow>
         </TableBody>

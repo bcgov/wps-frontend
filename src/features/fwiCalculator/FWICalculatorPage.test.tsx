@@ -3,10 +3,10 @@ import MockAdapter from 'axios-mock-adapter'
 import { waitForElement, cleanup, fireEvent } from '@testing-library/react'
 
 import axios from 'api/axios'
-import App from 'app/App'
 import { selectStationsReducer } from 'app/rootReducer'
 import { renderWithRedux } from 'utils/testUtils'
 import { WEATHER_STATION_MAP_LINK } from 'utils/constants'
+import { FWICalculatorPage } from 'features/fwiCalculator/FWICalculatorPage'
 
 const mockAxios = new MockAdapter(axios)
 const mockStations = [
@@ -22,7 +22,9 @@ afterEach(() => {
 it('renders FWI calculator page', async () => {
   mockAxios.onGet('/stations').reply(200, { weather_stations: mockStations })
 
-  const { getByText, getByTestId, store } = renderWithRedux(<App />)
+  const { getByText, getByTestId, store } = renderWithRedux(
+    <FWICalculatorPage />
+  )
   const pageTitle = getByText(/FWI calculator/i)
   expect(pageTitle).toBeInTheDocument()
   expect(selectStationsReducer(store.getState()).stations).toEqual([])
@@ -53,7 +55,9 @@ it('renders FWI calculator page', async () => {
 it('renders error message when fetching stations failed', async () => {
   mockAxios.onGet('/stations').reply(404)
 
-  const { getByText, queryByText, store } = renderWithRedux(<App />)
+  const { getByText, queryByText, store } = renderWithRedux(
+    <FWICalculatorPage />
+  )
 
   expect(queryByText(/404/i)).not.toBeInTheDocument()
   expect(selectStationsReducer(store.getState()).error).toBeNull()
