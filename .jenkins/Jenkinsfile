@@ -6,7 +6,9 @@ pipeline {
         ver = "0.0.1"
         projTools = "auzhsi-tools"
         projDev = "auzhsi-dev"
+        projProd = "auzhsi-prod"
         suffix = "pr-${env.CHANGE_ID}"
+        rcToken="https://chat.pathfinder.gov.bc.ca/hooks/7A8RwSpZPDAqc6uXS/z8nRXX43oifYWELkwJKeLj4e86rtyfvtJdqdvjSE3XoK2sri"
     }
     options {
         disableResume()
