@@ -62,12 +62,15 @@ pipeline {
                 }
             }
         }
-        stage('Smoke tests (PROD)') {
+        stage('Post-promote (PROD)') {
             agent { label 'deploy' }
             steps {
                 script {
-                    sh "echo SMOKE TESTS"
-                }
+                    sh """
+                        echo "TO DO: echo Tag known good prod images, backup databases, backup settings"
+                        echo "Update on Rocket.Chat dev channel"
+                        curl -X POST -H "Content-Type: application/json" ${rcToken} -d '{"text":"${SUFFIX} deployed to ${projProd}."}'
+                    """                }
             }
         }
         stage('Cleanup') {
