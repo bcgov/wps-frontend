@@ -1,6 +1,6 @@
 import React from 'react'
 import { InputLabel, makeStyles } from '@material-ui/core'
-import WpsSlider from 'components/WpsSlider'
+import Slider from 'components/Slider'
 
 const useStyles = makeStyles({
   root: {
@@ -44,7 +44,7 @@ export const TimeRangeSlider = (props: Props) => {
   return (
     <div className={classes.root} data-testid="time-range-slider">
       <InputLabel className={classes.inputLabel}>Time Range (years)</InputLabel>
-      <WpsSlider
+      <Slider
         aria-label="Time Range"
         marks={TIME_RANGE_OPTIONS}
         max={MAX_YEARS}

@@ -1,10 +1,10 @@
-import { Slider, withStyles } from '@material-ui/core'
+import { Slider as S, withStyles } from '@material-ui/core'
 import theme from 'app/theme'
 
 const sliderBoxShadow =
   '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)'
 
-const WpsSlider = withStyles({
+const Slider = withStyles({
   root: {
     color: theme.palette.primary.dark,
     height: 2,
@@ -55,6 +55,6 @@ const WpsSlider = withStyles({
     opacity: 1,
     backgroundColor: 'currentColor'
   }
-})(Slider)
+})(S)
 
-export default WpsSlider
+export default Slider
