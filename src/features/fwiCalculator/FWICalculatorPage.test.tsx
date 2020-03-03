@@ -29,27 +29,9 @@ it('renders FWI calculator page', async () => {
   expect(selectStationsReducer(store.getState()).stations).toEqual([])
 
   expect(getByTestId('weather-station-dropdown')).toBeInTheDocument()
-  fireEvent.click(getByTestId('weather-station-dropdown'))
-  const [station1] = await waitForElement(() => [
-    getByText('Station 1 (1)'),
-    getByText('Station 2 (2)')
-  ])
-  fireEvent.click(station1)
-  expect(selectStationsReducer(store.getState()).stations).toEqual(mockStations)
 
-  // Time range textfield tests
-  //expect(getByTestId('time-range-textfield')).toBeInTheDocument()
+  expect(getByTestId('time-range-slider')).toBeInTheDocument()
 
-  // Time range slider tests
-  const timeRangeDivElement = getByTestId('time-range-slider')
-  expect(timeRangeDivElement).toBeInTheDocument()
-  const timeRangeSliderElement = timeRangeDivElement.children[1].children[2]
-  fireEvent.change(timeRangeSliderElement, {
-    target: { value: 20 }
-  })
-  expect(timeRangeSliderElement.getAttribute('value')).toEqual('20')
-
-  // Percentile textfield tests
   expect(getByTestId('percentile-textfield')).toBeInTheDocument()
 
   // Map icon tests
@@ -90,6 +72,18 @@ it('renders error message when fetching stations failed', async () => {
 
   await waitForElement(() => getByText(/404/i))
   expect(selectStationsReducer(store.getState()).error).toBeTruthy()
+})
+
+it('renders time range slider with selecting the range', async () => {
+  const { getByTestId } = renderWithRedux(<FWICalculatorPage />)
+
+  const timeRangeDivElement = getByTestId('time-range-slider')
+  expect(timeRangeDivElement).toBeInTheDocument()
+  const timeRangeSliderElement = timeRangeDivElement.children[1].children[2]
+  fireEvent.change(timeRangeSliderElement, {
+    target: { value: 20 }
+  })
+  expect(timeRangeSliderElement.getAttribute('value')).toEqual('20')
 })
 
 it('renders percentiles result when clicking on the calculate button', async () => {
