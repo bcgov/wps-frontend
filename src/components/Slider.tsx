@@ -12,8 +12,8 @@ const Slider = withStyles(theme => ({
     marginLeft: 2
   },
   thumb: {
-    height: 23,
-    width: 23,
+    height: 22,
+    width: 22,
     backgroundColor: '#fff',
     boxShadow: sliderBoxShadow,
     marginTop: -14,
