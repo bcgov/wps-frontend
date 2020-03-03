@@ -40,6 +40,15 @@ it('renders FWI calculator page', async () => {
   // Time range textfield tests
   //expect(getByTestId('time-range-textfield')).toBeInTheDocument()
 
+  // Time range slider tests
+  const timeRangeDivElement = getByTestId('time-range-slider')
+  expect(timeRangeDivElement).toBeInTheDocument()
+  const timeRangeSliderElement = timeRangeDivElement.children[1].children[2]
+  fireEvent.change(timeRangeSliderElement, {
+    target: { value: 20 }
+  })
+  expect(timeRangeSliderElement.getAttribute('value')).toEqual('20')
+
   // Percentile textfield tests
   expect(getByTestId('percentile-textfield')).toBeInTheDocument()
 
