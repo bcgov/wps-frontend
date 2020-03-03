@@ -34,6 +34,7 @@ export const PercentileActionButtons = ({
 
       <Button
         className={classes.calculateBtn}
+        data-testid="calculate-percentiles-button"
         disabled={stations.length === 0}
         variant="contained"
         color="primary"

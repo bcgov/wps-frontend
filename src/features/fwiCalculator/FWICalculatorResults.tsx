@@ -46,9 +46,9 @@ export const FWICalculatorResults = () => {
   )
 
   return (
-    <>
+    <div data-testid="percentile-result-tables">
       <div className={classes.stations}>{stationResults}</div>
       <PercentileMeanResultTable meanValues={result.mean_values} />
-    </>
+    </div>
   )
 }
