@@ -1,18 +1,19 @@
 import { Slider, withStyles } from '@material-ui/core'
+import theme from 'app/theme'
 
 const iOSBoxShadow =
   '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)'
 
 const IOSSlider = withStyles({
   root: {
-    color: '#3880ff',
+    color: theme.palette.primary.dark,
     height: 2,
     padding: '15px 0',
     width: 300
   },
   thumb: {
-    height: 28,
-    width: 28,
+    height: 23,
+    width: 23,
     backgroundColor: '#fff',
     boxShadow: iOSBoxShadow,
     marginTop: -14,
@@ -36,15 +37,15 @@ const IOSSlider = withStyles({
     }
   },
   track: {
-    height: 5
+    height: 2
   },
   rail: {
     height: 2,
     opacity: 0.5,
-    backgroundColor: '#bfbfbf'
+    backgroundColor: theme.palette.primary.light
   },
   mark: {
-    backgroundColor: '#bfbfbf',
+    backgroundColor: theme.palette.primary.dark,
     height: 8,
     width: 1,
     marginTop: -3

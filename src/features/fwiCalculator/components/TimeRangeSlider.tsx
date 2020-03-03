@@ -5,6 +5,9 @@ import { InputLabel, makeStyles } from '@material-ui/core'
 const useStyles = makeStyles({
   root: {
     marginTop: 20
+  },
+  inputLabel: {
+    marginBottom: 5
   }
 })
 
@@ -13,9 +16,13 @@ interface Props {
   onYearRangeChange: (yearRangeNumber: number) => void
 }
 
+const MIN_YEARS = 0
+
+const MAX_YEARS = 50
+
 const TIME_RANGE_OPTIONS = [
   {
-    value: 0,
+    value: MIN_YEARS,
     label: '0'
   },
   {
@@ -27,7 +34,7 @@ const TIME_RANGE_OPTIONS = [
     label: '20'
   },
   {
-    value: 50,
+    value: MAX_YEARS,
     label: 'Full'
   }
 ]
@@ -36,12 +43,12 @@ export const TimeRangeSlider = (props: Props) => {
   const classes = useStyles()
   return (
     <div className={classes.root} data-testid="time-range-slider">
-      <InputLabel>Time Range (years)</InputLabel>
+      <InputLabel className={classes.inputLabel}>Time Range (years)</InputLabel>
       <IOSSlider
         aria-label="Time Range"
         marks={TIME_RANGE_OPTIONS}
-        max={50}
-        min={0}
+        max={MAX_YEARS}
+        min={MIN_YEARS}
         onChange={(_, timeRange) => {
           if (typeof timeRange === 'number') {
             if (timeRange === 0) return
