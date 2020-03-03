@@ -14,17 +14,14 @@ import {
 import { PercentileActionButtons } from 'features/fwiCalculator/components/PercentileActionButtons'
 import { FWICalculatorResults } from 'features/fwiCalculator/FWICalculatorResults'
 import { TimeRangeSlider } from './components/TimeRangeSlider'
-import { YearRange } from 'api/percentileAPI'
+
+const defaultTimeRange = 10
 
 export const FWICalculatorPage = () => {
   const dispatch = useDispatch()
-  const timeRangeInitialState: YearRange = {
-    start: new Date().getFullYear() - 10,
-    end: new Date().getFullYear() - 1
-  }
 
   const [stations, setStations] = useState<Station[]>([])
-  const [timeRange, setTimeRange] = useState<YearRange>(timeRangeInitialState)
+  const [timeRange, setTimeRange] = useState<number>(defaultTimeRange)
 
   useEffect(() => {
     dispatch(fetchStations())
@@ -37,21 +34,25 @@ export const FWICalculatorPage = () => {
     setStations(s)
   }
 
-  const onYearRangeChange = (yearRangeNumber: YearRange) => {
-    setTimeRange(yearRangeNumber)
+  const onYearRangeChange = (timeRange: number) => {
+    setTimeRange(timeRange)
   }
 
   const onCalculateClick = () => {
     const stationCodes = stations.map(s => s.code)
     const percentile = 90
-    const yearRange = timeRange
+    const yearRange = {
+      start: new Date().getFullYear() - timeRange,
+      end: new Date().getFullYear() - 1
+    }
+
     dispatch(fetchPercentiles(stationCodes, percentile, yearRange))
   }
 
   const onResetClick = () => {
     setStations([])
     dispatch(resetPercentilesResult())
-    setTimeRange(timeRangeInitialState)
+    setTimeRange(defaultTimeRange)
   }
 
   return (
