@@ -11,7 +11,6 @@ metadata:
     openshift.io/provider-display-name: "Government of British Columbia" 
     openshift.io/documentation-url: "https://github.com/bcgov/wps-web" 
     openshift.io/support-url: "https://github.com/bcgov/wps-web"
-message: "Your admin credentials are ${ADMIN_USERNAME}:${ADMIN_PASSWORD}" 
 parameters:
   - name: NAME
     description: Module name
