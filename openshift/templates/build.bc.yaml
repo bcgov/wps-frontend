@@ -33,7 +33,6 @@ objects:
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
-      creationTimestamp: null
       labels:
         app: ${NAME}
         common: "true"
@@ -46,7 +45,6 @@ objects:
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
-      creationTimestamp: null
       labels:
         app: ${NAME}-${SUFFIX}
       name: ${NAME}-source
@@ -58,12 +56,10 @@ objects:
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
-      creationTimestamp: null
       labels:
         app: ${NAME}-${SUFFIX}
       name: ${NAME}-source-${SUFFIX}
     spec:
-      nodeSelector: null
       runPolicy: Parallel
       completionDeadlineSeconds: 1200 # 20 minutes
       output:
