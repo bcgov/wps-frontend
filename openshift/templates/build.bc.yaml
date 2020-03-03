@@ -11,22 +11,22 @@ metadata:
     openshift.io/provider-display-name: "Government of British Columbia" 
     openshift.io/documentation-url: "https://github.com/bcgov/wps-web" 
     openshift.io/support-url: "https://github.com/bcgov/wps-web"
-parameters:
-  - name: NAME
-    description: Module name
-    value: wps-web
-  - name: SUFFIX
-    description: Deployment suffix, e.g. pr-###
-    required: true
-  - name: GIT_URL
-    value: https://github.com/bcgov/wps-web.git
-  - name: GIT_BRANCH
-    description: PR branch
-    required: true
-  - name: API_BASE_URL
-    value: "https://wps-api-prod.pathfinder.gov.bc.ca"
 labels:
   app.kubernetes.io/part-of: "${NAME}"
+parameters:
+- name: NAME
+  description: Module name
+  value: wps-web
+- name: SUFFIX
+  description: Deployment suffix, e.g. pr-###
+  required: true
+- name: GIT_URL
+  value: https://github.com/bcgov/wps-web.git
+- name: GIT_BRANCH
+  description: PR branch
+  required: true
+- name: API_BASE_URL
+  value: "https://wps-api-prod.pathfinder.gov.bc.ca"
 objects:
   - apiVersion: v1
     kind: ImageStream
@@ -34,9 +34,9 @@ objects:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
-        app: ${NAME}
+        app: ${NAME}-${SUFFIX}
         common: "true"
-      name: ${NAME}-s2i
+      name: ${NAME}-${SUFFIX}-s2i
     spec:
       lookupPolicy:
         local: false
@@ -47,7 +47,7 @@ objects:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
         app: ${NAME}-${SUFFIX}
-      name: ${NAME}-source
+      name: ${NAME}-${SUFFIX}-source
     spec:
       lookupPolicy:
         local: false
@@ -58,14 +58,14 @@ objects:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
         app: ${NAME}-${SUFFIX}
-      name: ${NAME}-source-${SUFFIX}
+      name: ${NAME}-${SUFFIX}-source
     spec:
       runPolicy: Parallel
       completionDeadlineSeconds: 1200 # 20 minutes
       output:
         to:
           kind: ImageStreamTag
-          name: ${NAME}-source:${SUFFIX}
+          name: ${NAME}-${SUFFIX}-source:latest
       resources:
         limits:
           cpu: "2"
@@ -102,14 +102,14 @@ objects:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
         app: ${NAME}-${SUFFIX}
-      name: ${NAME}-${SUFFIX}
+      name: ${NAME}-${SUFFIX}-s2i
     spec:
       runPolicy: SerialLatestOnly
       completionDeadlineSeconds: 600 # 10 minutes
       output:
         to:
           kind: ImageStreamTag
-          name: ${NAME}-s2i:${SUFFIX}
+          name: ${NAME}-${SUFFIX}-s2i:latest
       resources:
         limits:
           cpu: "2"
@@ -124,7 +124,7 @@ objects:
         images:
           - from:
               kind: ImageStreamTag
-              name: ${NAME}-source:${SUFFIX}
+              name: ${NAME}-${SUFFIX}-source:latest
             paths:
               - destinationDir: "./"
                 sourcePath: /opt/app-root/src/build
