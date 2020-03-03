@@ -1,21 +1,22 @@
 import { Slider, withStyles } from '@material-ui/core'
 import theme from 'app/theme'
 
-const iOSBoxShadow =
+const sliderBoxShadow =
   '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)'
 
-const IOSSlider = withStyles({
+const WpsSlider = withStyles({
   root: {
     color: theme.palette.primary.dark,
     height: 2,
     padding: '15px 0',
-    width: 300
+    width: 300,
+    marginLeft: 2
   },
   thumb: {
     height: 23,
     width: 23,
     backgroundColor: '#fff',
-    boxShadow: iOSBoxShadow,
+    boxShadow: sliderBoxShadow,
     marginTop: -14,
     marginLeft: -14,
     '&:focus,&:hover,&$active': {
@@ -23,7 +24,7 @@ const IOSSlider = withStyles({
         '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.3),0 0 0 1px rgba(0,0,0,0.02)',
       // Reset on touch devices, it doesn't add specificity
       '@media (hover: none)': {
-        boxShadow: iOSBoxShadow
+        boxShadow: sliderBoxShadow
       }
     }
   },
@@ -56,4 +57,4 @@ const IOSSlider = withStyles({
   }
 })(Slider)
 
-export default IOSSlider
+export default WpsSlider

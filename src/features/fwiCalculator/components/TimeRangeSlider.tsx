@@ -1,6 +1,6 @@
 import React from 'react'
-import IOSSlider from 'features/fwiCalculator/components/IOSSlider'
 import { InputLabel, makeStyles } from '@material-ui/core'
+import WpsSlider from 'components/WpsSlider'
 
 const useStyles = makeStyles({
   root: {
@@ -18,7 +18,7 @@ interface Props {
 
 const MIN_YEARS = 0
 
-const MAX_YEARS = 50
+const MAX_YEARS = new Date().getFullYear() - 1970
 
 const TIME_RANGE_OPTIONS = [
   {
@@ -44,7 +44,7 @@ export const TimeRangeSlider = (props: Props) => {
   return (
     <div className={classes.root} data-testid="time-range-slider">
       <InputLabel className={classes.inputLabel}>Time Range (years)</InputLabel>
-      <IOSSlider
+      <WpsSlider
         aria-label="Time Range"
         marks={TIME_RANGE_OPTIONS}
         max={MAX_YEARS}
