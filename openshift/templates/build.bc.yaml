@@ -19,7 +19,7 @@ parameters:
 labels:
   app.kubernetes.io/part-of: "${NAME}"
 objects:
-  - apiVersion: image.openshift.io/v1
+  - apiVersion: v1
     kind: ImageStream
     metadata:
       annotations:
@@ -32,9 +32,7 @@ objects:
     spec:
       lookupPolicy:
         local: false
-    status:
-      dockerImageRepository: ""
-  - apiVersion: image.openshift.io/v1
+  - apiVersion: v1
     kind: ImageStream
     metadata:
       annotations:
@@ -46,9 +44,7 @@ objects:
     spec:
       lookupPolicy:
         local: false
-    status:
-      dockerImageRepository: ""
-  - apiVersion: build.openshift.io/v1
+  - apiVersion: v1
     kind: BuildConfig
     metadata:
       annotations:
@@ -65,7 +61,6 @@ objects:
         to:
           kind: ImageStreamTag
           name: ${NAME}-source:${SUFFIX}
-      postCommit: {}
       resources:
         limits:
           cpu: "2"
@@ -94,28 +89,22 @@ objects:
         type: Source
       triggers:
         - type: ConfigChange
-        - imageChange: {}
-          type: ImageChange
-    status:
-      lastVersion: 0
-  - apiVersion: build.openshift.io/v1
+        - type: ImageChange
+  - apiVersion: v1
     kind: BuildConfig
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
-      creationTimestamp: null
       labels:
         app: ${NAME}-${SUFFIX}
       name: ${NAME}-${SUFFIX}
     spec:
-      nodeSelector: null
       runPolicy: SerialLatestOnly
       completionDeadlineSeconds: 600 # 10 minutes
       output:
         to:
           kind: ImageStreamTag
           name: ${NAME}:${SUFFIX}
-      postCommit: {}
       resources:
         limits:
           cpu: "2"
@@ -144,7 +133,4 @@ objects:
         type: Docker
       triggers:
         - type: ConfigChange
-        - imageChange: {}
-          type: ImageChange
-    status:
-      lastVersion: 0
+        - type: ImageChange
