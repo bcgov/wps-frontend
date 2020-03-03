@@ -67,7 +67,9 @@ it('renders FWI calculator page', async () => {
 })
 
 it('renders weather stations dropdown with data', async () => {
-  mockAxios.onGet('/stations').reply(200, { weather_stations: mockStations })
+  mockAxios
+    .onGet('/stations')
+    .replyOnce(200, { weather_stations: mockStations })
   const { getByText, getByTestId, store } = renderWithRedux(
     <FWICalculatorPage />
   )
@@ -75,15 +77,16 @@ it('renders weather stations dropdown with data', async () => {
   expect(selectStationsReducer(store.getState()).stations).toEqual([])
   fireEvent.click(getByTestId('weather-station-dropdown'))
 
-  await waitForElement(() => [
+  const [station1] = await waitForElement(() => [
     getByText(`${mockStations[0].name} (${mockStations[0].code})`),
     getByText(`${mockStations[1].name} (${mockStations[1].code})`)
   ])
+  fireEvent.click(station1)
   expect(selectStationsReducer(store.getState()).stations).toEqual(mockStations)
 })
 
 it('renders error message when fetching stations failed', async () => {
-  mockAxios.onGet('/stations').reply(404)
+  mockAxios.onGet('/stations').replyOnce(404)
 
   const { getByText, queryByText, store } = renderWithRedux(
     <FWICalculatorPage />
@@ -97,8 +100,10 @@ it('renders error message when fetching stations failed', async () => {
 })
 
 it('renders percentiles result when clicking on the calculate button', async () => {
-  mockAxios.onGet('/stations').reply(200, { weather_stations: mockStations })
-  mockAxios.onPost('/percentiles').reply(200, mockPercentilesResponse)
+  mockAxios
+    .onGet('/stations')
+    .replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onPost('/percentiles').replyOnce(200, mockPercentilesResponse)
 
   const { getByText, getByTestId, store } = renderWithRedux(
     <FWICalculatorPage />
@@ -109,12 +114,24 @@ it('renders percentiles result when clicking on the calculate button', async () 
     getByText(`${mockStations[0].name} (${mockStations[0].code})`)
   )
   fireEvent.click(station1)
+
+  // Send the request
   fireEvent.click(getByTestId('calculate-percentiles-button'))
 
   expect(store.getState().percentiles.result).toBeNull()
 
   // Wait until the calculation is fetched
   await waitForElement(() => getByTestId('percentile-result-tables'))
+
+  // Check if the correct request body has been included
+  expect(mockAxios.history.post.length).toBe(1)
+  expect(mockAxios.history.post[0].data).toBe(
+    JSON.stringify({
+      stations: [1],
+      percentile: 90,
+      year_range: { start: 2010, end: 2019 }
+    })
+  )
 
   // See if mean values are rendered
   expect(store.getState().percentiles.result).toEqual(mockPercentilesResponse)
