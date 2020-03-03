@@ -36,7 +36,7 @@ objects:
       labels:
         app: ${NAME}
         common: "true"
-      name: ${NAME}
+      name: ${NAME}-s2i
     spec:
       lookupPolicy:
         local: false
@@ -109,7 +109,7 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: ${NAME}:${SUFFIX}
+          name: ${NAME}-s2i:${SUFFIX}
       resources:
         limits:
           cpu: "2"
