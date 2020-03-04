@@ -1,6 +1,6 @@
 #!/bin/bash
 #%
-#% OpenShift Deployment Promotion Helper
+#% OpenShift DEV-PROD ImageStreamTag Promotion Helper
 #%
 #%   Intended for use with a pull request-based pipeline.
 #%
@@ -47,28 +47,45 @@ $(oc whoami &>/dev/null) || {
 	exit
 }
 
-# Command to copy imagestreamtag from dev PR to prod (ENV is the after-dash portion of PROJ_PROD)
+# Vars
 #
-ENV=$(echo $PROJ_PROD | cut -d'-' -f2)
-SOURCE_IMG="docker-registry.default.svc:5000/${PROJ_TOOLS}/${NAME}:pr-${PR_NO}"
-OC_PROMOTE="oc -n ${PROJ_TOOLS} import-image ${NAME}:${ENV} --from=${SOURCE_IMG}"
+SUFFIX_DEV="pr-${PR_NO}"
+SUFFIX_PROD="$(echo ${PROJ_PROD} | cut -d'-' -f2)"
+ISTAG_PROMOTE="${NAME}:${SUFFIX_DEV}"
+ISTAG_IS_PROD="${NAME}:${SUFFIX_PROD}"
+SOURCE_IMG="docker-registry.default.svc:5000/${PROJ_TOOLS}/${NAME}-${SUFFIX_DEV}-s2i:latest"
 
-# Command to process and apply deployment template
+# Commands to import and label imagestreamtag as PROD (SUFFIX_PROD is the after-dash portion of PROJ_PROD)
 #
-OC_PROCESS="oc -n ${PROJ_TOOLS} process -f ${PATH_DC} -p NAME=${NAME} -p SUFFIX=${ENV}"
+OC_TAG_VACANT="! oc -n ${PROJ_TOOLS} get istag ${ISTAG_PROMOTE} -o name &>/dev/null"
+OC_TAG_DELETE="oc -n ${PROJ_TOOLS} delete istag ${ISTAG_PROMOTE}"
+OC_TAG_VACATE="${OC_TAG_VACANT} || ${OC_TAG_DELETE}"
+#
+OC_IMG_IMPORT="oc -n ${PROJ_TOOLS} import-image ${ISTAG_PROMOTE} --from=${SOURCE_IMG}"
+OC_IMG_TAG="oc -n ${PROJ_TOOLS} tag ${ISTAG_PROMOTE} ${ISTAG_IS_PROD}"
+
+# Command to process and promote imagestreamtag to PROD
+#
+OC_PROCESS="oc -n ${PROJ_TOOLS} process -f ${PATH_DC} -p NAME=${NAME} -p SUFFIX=${SUFFIX_DEV}"
 OC_APPLY="oc -n ${PROJ_PROD} apply -f -"
 OC_COMMAND="${OC_PROCESS} | ${OC_APPLY}"
-#
-[ "${APPLY}" == "apply" ] || {
-	OC_COMMAND+=" --dry-run"
-	eval "${OC_PROCESS}"
-	echo -e "\n*** This is a dry run.  Use 'apply' to deploy. ***\n"
-}
 
-# Execute and output commands
+# Process commands
 #
-eval "${OC_PROMOTE}"
-eval "${OC_COMMAND}"
+if [ "${APPLY}" == "apply" ]; then
+	eval "${OC_TAG_VACATE}"
+	eval "${OC_IMG_IMPORT}"
+	eval "${OC_IMG_TAG}"
+	eval "${OC_COMMAND}"
+else
+	OC_COMMAND+=" --dry-run"
+	eval "${OC_COMMAND}"
+	echo -e "\n*** This is a dry run.  Use 'apply' to deploy. ***"
+fi
+
+# Provide oc command instructions
 #
-echo -e "\n${OC_PROMOTE}"
+echo -e "\n${OC_TAG_VACATE}"
+echo -e "\n${OC_IMG_IMPORT}"
+echo -e "\n${OC_IMG_TAG}"
 echo -e "\n${OC_COMMAND}\n"
