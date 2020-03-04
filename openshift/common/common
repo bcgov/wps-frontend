@@ -39,9 +39,10 @@ $(oc whoami &>/dev/null) || {
 
 # Echo commands and dry run warnings
 #
-informer() {
-	[ "${APPLY}" ] ||
+display_helper() {
+	if [ ! "${APPLY}" ]; then
 		echo -e "\n*** This is a dry run.  Use 'apply' to deploy. ***"
+	fi
 	echo
 	for i in $*; do
 		echo -e "$i\n"
