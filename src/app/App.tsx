@@ -10,14 +10,14 @@ import { FWICalculatorPage } from 'features/fwiCalculator/FWICalculatorPage'
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: '#3e5c93',
+      light: '#3E5C93',
       main: '#003365',
-      dark: '#000c3a'
+      dark: '#000C3A'
     },
     secondary: {
-      light: '#fff263',
-      main: '#fbc02d',
-      dark: '#c49000'
+      light: '#FFF263',
+      main: '#FBC02D',
+      dark: '#C49000'
     },
     success: { main: '#44D77A' },
     error: { main: '#FF3E34' },
