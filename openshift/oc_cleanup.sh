@@ -26,7 +26,7 @@ source "$(dirname ${0})/common/common"
 # Set and process commands
 #
 APP_LABEL="${NAME}-pr-${PR_NO}"
-if [ "${APPLY}" == "apply" ]; then
+if [ "${APPLY}" ]; then
 	OC_CLEAN_DEPLOY="oc -n ${PROJ_DEV} delete all -o name -l app=${APP_LABEL}"
 	OC_CLEAN_TOOLS="oc -n ${PROJ_TOOLS} delete all -o name -l app=${APP_LABEL}"
 else
@@ -41,5 +41,4 @@ eval "${OC_CLEAN_TOOLS}"
 
 # Provide oc command instruction
 #
-echo -e "\n${OC_CLEAN_DEPLOY}"
-echo -e "\n${OC_CLEAN_TOOLS}\n"
+informer "${OC_CLEAN_DEPLOY}" "${OC_CLEAN_TOOLS}"

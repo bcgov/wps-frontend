@@ -45,20 +45,15 @@ OC_COMMAND="${OC_PROCESS} | ${OC_APPLY}"
 
 # Process commands
 #
-if [ "${APPLY}" == "apply" ]; then
+if [ "${APPLY}" ]; then
 	eval "${OC_TAG_VACATE}"
 	eval "${OC_IMG_IMPORT}"
 	eval "${OC_IMG_TAG}"
-	eval "${OC_COMMAND}"
 else
 	OC_COMMAND+=" --dry-run"
-	eval "${OC_COMMAND}"
-	echo -e "\n*** This is a dry run.  Use 'apply' to deploy. ***"
 fi
+eval "${OC_COMMAND}"
 
-# Provide oc command instructions
+# Provide oc command instruction
 #
-echo -e "\n${OC_TAG_VACATE}"
-echo -e "\n${OC_IMG_IMPORT}"
-echo -e "\n${OC_IMG_TAG}"
-echo -e "\n${OC_COMMAND}\n"
+informer "${OC_TAG_VACATE}" "${OC_IMG_IMPORT}" "${OC_IMG_TAG}" "${OC_COMMAND}"

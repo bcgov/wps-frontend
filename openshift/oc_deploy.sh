@@ -19,23 +19,18 @@ source "$(dirname ${0})/common/common"
 #%   Apply when satisfied.
 #%   ${THIS_FILE} 0 apply
 #%
-#%   Override variables at runtime.
-#%   NAME=name PROJECT=project PATH_DC=./dc.yaml ${THIS_FILE} 0 apply
-#%
 
-# Process commands
+# OpenShift commands
 #
 OC_PROCESS="oc -n ${PROJ_TOOLS} process -f ${PATH_DC} -p NAME=${NAME} -p SUFFIX=pr-${PR_NO}"
 OC_APPLY="oc -n ${PROJ_DEV} apply -f -"
 OC_COMMAND="${OC_PROCESS} | ${OC_APPLY}"
 #
-[ "${APPLY}" == "apply" ] || {
+[ "${APPLY}" ] ||
 	OC_COMMAND+=" --dry-run"
-	eval "${OC_PROCESS}"
-	echo -e "\n*** This is a dry run.  Use 'apply' to deploy. ***\n"
-}
+eval "${OC_PROCESS}"
 eval "${OC_COMMAND}"
 
 # Provide oc command instruction
 #
-echo -e "\n${OC_COMMAND}\n"
+informer "${OC_COMMAND}"
