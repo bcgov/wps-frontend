@@ -51,17 +51,6 @@ objects:
     spec:
       lookupPolicy:
         local: false
-  # - apiVersion: v1
-  # kind: ImageStream
-  # metadata:
-  #   annotations:
-  #     openshift.io/generated-by: OpenShiftNewBuild
-  #   labels:
-  #     app: ${NAME}-${SUFFIX}
-  #   name: ${NAME}-${SUFFIX}-unitTest
-  # spec:
-  #   lookupPolicy:
-  #     local: false
   - apiVersion: v1
     kind: BuildConfig
     metadata:
@@ -77,6 +66,8 @@ objects:
         to:
           kind: ImageStreamTag
           name: ${NAME}-${SUFFIX}-source:latest
+      postCommit:
+        script: "npm run test:ci"
       resources:
         limits:
           cpu: "2"
@@ -121,8 +112,6 @@ objects:
         to:
           kind: ImageStreamTag
           name: ${NAME}-${SUFFIX}-s2i:latest
-      postCommit:
-        script: "npm run test:ci"
       resources:
         limits:
           cpu: "2"
