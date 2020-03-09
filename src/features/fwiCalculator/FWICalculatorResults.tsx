@@ -52,17 +52,17 @@ export const FWICalculatorResults = () => {
   return (
     <div data-testid="percentile-result-tables" className={classes.root}>
       <GridContainer className={classes.gridContainer}>
-        <GridItem lg={12} md={12}>
-          <PercentileCalcDocumentation />
-        </GridItem>
-      </GridContainer>
-      <GridContainer className={classes.gridContainer}>
         {stationResults}
         {isMoreThanOneResult && (
           <GridItem>
             <PercentileMeanResultTable meanValues={result.mean_values} />
           </GridItem>
         )}
+      </GridContainer>
+      <GridContainer className={classes.gridContainer}>
+        <GridItem lg={12} md={12}>
+          <PercentileCalcDocumentation />
+        </GridItem>
       </GridContainer>
     </div>
   )
