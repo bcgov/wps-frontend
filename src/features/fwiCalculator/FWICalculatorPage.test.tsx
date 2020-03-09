@@ -19,7 +19,7 @@ afterEach(() => {
   mockAxios.reset()
   cleanup()
 })
-PURPOSEFUL FAIL!!!
+
 it('renders FWI calculator page', async () => {
   const { getByText, getByTestId, store } = renderWithRedux(
     <FWICalculatorPage />
