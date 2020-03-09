@@ -2,7 +2,7 @@ pipeline {
     agent none
     environment {
         // Pipeline-wide vars
-        name =  "wps-test"
+        name =  "wps-web"
         ver = "0.0.1"
         projTools = "auzhsi-tools"
         projDev = "auzhsi-dev"
