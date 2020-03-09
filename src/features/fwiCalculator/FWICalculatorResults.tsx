@@ -47,6 +47,7 @@ export const FWICalculatorResults = () => {
       )
     }
   )
+  const isMoreThanOneResult = stationResults.length > 1
 
   return (
     <div data-testid="percentile-result-tables" className={classes.root}>
@@ -57,11 +58,11 @@ export const FWICalculatorResults = () => {
       </GridContainer>
       <GridContainer className={classes.gridContainer}>
         {stationResults}
-      </GridContainer>
-      <GridContainer className={classes.gridContainer}>
-        <GridItem lg={6} sm={6}>
-          <PercentileMeanResultTable meanValues={result.mean_values} />
-        </GridItem>
+        {isMoreThanOneResult && (
+          <GridItem>
+            <PercentileMeanResultTable meanValues={result.mean_values} />
+          </GridItem>
+        )}
       </GridContainer>
     </div>
   )
