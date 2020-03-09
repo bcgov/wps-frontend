@@ -23,7 +23,7 @@ source "$(dirname ${0})/common/common"
 # Create OpenShift commands to consume
 #
 # Process a template (mostly variable substition)
-OC_PROCESS="oc -n ${PROJ_TOOLS} process -f ${PATH_BC} -p NAME=${NAME} -p SUFFIX=pr-${PR_NO} -p GIT_URL=${GIT_URL} -p GIT_BRANCH=${GIT_BRANCH}"
+OC_PROCESS="oc -n ${PROJ_TOOLS} process -f ${PATH_BC} -p NAME=${NAME} -p SUFFIX=pr-${PR_NO} -p GIT_BRANCH=${GIT_BRANCH}"
 # Apply a template (can use --dry-run)
 OC_APPLY="oc -n "${PROJ_TOOLS}" apply -f -"
 # Pipe the first command into the second
@@ -41,11 +41,11 @@ eval "${OC_COMMAND}"
 #
 if [ "${APPLY}" ]; then
 	# Identify buildconfig objects
-	POD_SOURCE=$(oc get bc -n ${PROJ_TOOLS} -o name -l app=${NAME}-pr-${PR_NO} | grep "source")
-	POD_DOCKER=$(oc get bc -n ${PROJ_TOOLS} -o name -l app=${NAME}-pr-${PR_NO} | grep -v "source")
+	BUILD_PODS=$(oc get bc -n ${PROJ_TOOLS} -o name -l app=${NAME}-pr-${PR_NO})
 	# Follow building of these objects (creates wait condition, lots of output!)
-	oc logs -n ${PROJ_TOOLS} --follow ${POD_SOURCE}
-	oc logs -n ${PROJ_TOOLS} --follow ${POD_DOCKER}
+	for p in "${BUILD_PODS}"; do
+		oc logs -n ${PROJ_TOOLS} --follow $p
+	done
 fi
 
 # Provide oc command instruction
