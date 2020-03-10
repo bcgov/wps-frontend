@@ -59,7 +59,7 @@ export const FWICalculatorPage = () => {
 
   return (
     <>
-      <PageHeader />
+      <PageHeader title="Predictive Services Unit" />
       <PageTitle title="FWI Calculator" />
       <Container>
         <WeatherStationsDropdown
