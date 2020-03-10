@@ -5,19 +5,21 @@ import { FIDER_LINK } from 'utils/constants'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: 65,
+    // minHeight: 65,
     background: theme.palette.primary.main,
     borderBottomWidth: 2,
     borderBottomStyle: 'solid',
-    borderBottomColor: theme.palette.secondary.main,
-    display: 'flex',
-    alignItems: 'center'
-  },
-  logo: {
-    width: 175
+    borderBottomColor: theme.palette.secondary.main
   },
   container: {
-    display: 'flex'
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  logo: {
+    width: 175,
+    marginTop: '10px',
+    marginBottom: '10px'
   },
   title: {
     color: theme.palette.primary.contrastText,
@@ -25,8 +27,6 @@ const useStyles = makeStyles(theme => ({
   },
   titleWrapper: {
     display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
     alignItems: 'center'
   },
   contact: {
@@ -50,24 +50,24 @@ export const PageHeader = ({ title }: Props) => {
   return (
     <nav className={classes.root}>
       <Container className={classes.container}>
-        <a href="https://gov.bc.ca">
-          <img
-            className={classes.logo}
-            src={process.env.PUBLIC_URL + '/images/BCID_H_rgb_rev.svg'}
-            alt="B.C. Government logo"
-          />
-        </a>
         <div className={classes.titleWrapper}>
-          <div className={classes.title}>{title}</div>
-          <a
-            className={classes.contact}
-            href={FIDER_LINK}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Contact
+          <a href="https://gov.bc.ca">
+            <img
+              className={classes.logo}
+              src={process.env.PUBLIC_URL + '/images/BCID_H_rgb_rev.svg'}
+              alt="B.C. Government logo"
+            />
           </a>
+          <div className={classes.title}>{title}</div>
         </div>
+        <a
+          className={classes.contact}
+          href={FIDER_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Contact
+        </a>
       </Container>
     </nav>
   )
