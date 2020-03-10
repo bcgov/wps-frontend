@@ -26,16 +26,16 @@ parameters:
     value: auzhsi-tools
   - name: CPU_REQUEST
     description: Requested CPU
-    value: 500m
+    value: 1000m
   - name: CPU_LIMIT
     description: CPU upper limit
-    value: 500m
+    value: 1000m
   - name: MEMORY_REQUEST
     description: Requested memory
-    value: 1Gi
+    value: 2Gi
   - name: MEMORY_LIMIT
     description: Memory upper limit
-    value: 1Gi
+    value: 2Gi
 objects:
   - apiVersion: v1
     kind: DeploymentConfig
