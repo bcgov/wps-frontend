@@ -6,13 +6,15 @@ import { selectPercentilesReducer } from 'app/rootReducer'
 import { PercentileMeanResultTable } from 'features/fwiCalculator/components/PercentileMeanResultTable'
 import { PercentileStationResultTable } from 'features/fwiCalculator/components/PercentileStationResultTable'
 import { ErrorMessage } from 'components/ErrorMessage'
+import { GridItem, GridContainer } from 'components/Grid'
+import { PercentileCalcDocumentation } from 'features/fwiCalculator/components/PercentileCalcDocumentation'
 
 const useStyles = makeStyles({
-  stations: {
-    display: 'flex'
+  root: {
+    marginTop: 15
   },
-  error: {
-    marginTop: 5
+  gridContainer: {
+    marginBottom: 15
   }
 })
 
@@ -36,19 +38,32 @@ export const FWICalculatorResults = () => {
   const stationResults = Object.entries(result.stations).map(
     ([stationCode, stationResponse]) => {
       return (
-        <PercentileStationResultTable
-          key={stationCode}
-          stationCode={stationCode}
-          stationResponse={stationResponse}
-        />
+        <GridItem key={stationCode}>
+          <PercentileStationResultTable
+            stationCode={stationCode}
+            stationResponse={stationResponse}
+          />
+        </GridItem>
       )
     }
   )
+  const isMoreThanOneResult = stationResults.length > 1
 
   return (
-    <div data-testid="percentile-result-tables">
-      <div className={classes.stations}>{stationResults}</div>
-      <PercentileMeanResultTable meanValues={result.mean_values} />
+    <div data-testid="percentile-result-tables" className={classes.root}>
+      <GridContainer className={classes.gridContainer}>
+        {stationResults}
+        {isMoreThanOneResult && (
+          <GridItem>
+            <PercentileMeanResultTable meanValues={result.mean_values} />
+          </GridItem>
+        )}
+      </GridContainer>
+      <GridContainer className={classes.gridContainer}>
+        <GridItem lg={12} md={12}>
+          <PercentileCalcDocumentation />
+        </GridItem>
+      </GridContainer>
     </div>
   )
 }

@@ -8,26 +8,14 @@ import {
   TableCell,
   TableBody
 } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
 
 interface Props {
   meanValues: MeanValues
 }
 
-const useStyles = makeStyles({
-  root: {
-    width: 400,
-    marginTop: 15,
-    marginRight: 15,
-    marginBottom: 30
-  }
-})
-
 export const PercentileMeanResultTable = ({ meanValues }: Props) => {
-  const classes = useStyles()
-
   return (
-    <TableContainer component={Paper} className={classes.root}>
+    <TableContainer component={Paper}>
       <Table aria-label="simple table">
         <TableBody>
           <TableRow>

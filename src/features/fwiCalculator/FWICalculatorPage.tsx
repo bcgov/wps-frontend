@@ -17,6 +17,8 @@ import { FWICalculatorResults } from 'features/fwiCalculator/FWICalculatorResult
 import { TimeRangeSlider } from './components/TimeRangeSlider'
 
 const defaultTimeRange = 10
+const defaultPercentile = 90
+const currYear = new Date().getFullYear()
 
 export const FWICalculatorPage = () => {
   const dispatch = useDispatch()
@@ -41,14 +43,12 @@ export const FWICalculatorPage = () => {
 
   const onCalculateClick = () => {
     const stationCodes = stations.map(s => s.code)
-    const percentile = 90
-    const currYear = new Date().getFullYear()
     const yearRange = {
       start: currYear - timeRange,
       end: currYear - 1
     }
 
-    dispatch(fetchPercentiles(stationCodes, percentile, yearRange))
+    dispatch(fetchPercentiles(stationCodes, defaultPercentile, yearRange))
   }
 
   const onResetClick = () => {
