@@ -36,11 +36,8 @@ const useStyles = makeStyles({
 })
 
 export const FWICalculatorDisclaimerModal = () => {
-  console.log(process.env.REACT_APP_HIDE_DISCLAIMER)
   const classes = useStyles()
-  const [open, setOpen] = React.useState(
-    process.env.REACT_APP_HIDE_DISCLAIMER === undefined
-  )
+  const [open, setOpen] = React.useState(true)
 
   const handleClose = () => {
     setOpen(false)
