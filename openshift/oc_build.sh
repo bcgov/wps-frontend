@@ -39,6 +39,7 @@ eval "${OC_COMMAND}"
 
 # Follow builds if deploying (wait condition) and ensure sure they pass successfully
 #
+OC_BUILD_RESULT=""
 if [ "${APPLY}" ]; then
 	APP_NAME=${NAME}-pr-${PR_NO}
 	# Identify buildconfig objects
