@@ -55,6 +55,15 @@ objects:
             name: ${NAME}-${SUFFIX}
         spec:
           automountServiceAccountToken: false
+          triggers:
+            - type: "ConfigChange"
+              type: "ImageChange"
+              imageChangeParams:
+                automatic: true
+                from:
+                  kind: "ImageStreamTag"
+                  name: "${NAME}:${SUFFIX}"
+                  namespace: "${PROJECT_TOOLS}"
           containers:
             - image: ${DOCKER_REGISTRY}/${PROJECT_TOOLS}/${NAME}:${SUFFIX}
               name: ${NAME}
