@@ -1,18 +1,19 @@
 import React from 'react'
 import { Container } from 'components/Container'
 import { makeStyles } from '@material-ui/core/styles'
+import { FIDER_LINK } from 'utils/constants'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    maxHeight: 65,
+    height: 65,
     background: theme.palette.primary.main,
     borderBottomWidth: 2,
     borderBottomStyle: 'solid',
-    borderBottomColor: '#fcba19',
-    paddingBottom: 10
+    borderBottomColor: theme.palette.secondary.main,
+    display: 'flex',
+    alignItems: 'center'
   },
   logo: {
-    marginTop: 10,
     width: 175
   },
   container: {
@@ -20,10 +21,22 @@ const useStyles = makeStyles(theme => ({
   },
   title: {
     color: theme.palette.primary.contrastText,
-    fontSize: '1.7rem',
-    marginTop: '1rem'
-    // paddingBottom: '1rem',
-    // paddingTop: '1rem'
+    fontSize: '1.7rem'
+  },
+  titleWrapper: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    alignItems: 'center'
+  },
+  contact: {
+    color: 'white',
+    fontStyle: 'bold',
+    fontSize: '1.1em',
+    textDecoration: 'none',
+    '&:hover': {
+      textDecoration: 'underline'
+    }
   }
 }))
 
@@ -44,7 +57,17 @@ export const PageHeader = ({ title }: Props) => {
             alt="B.C. Government logo"
           />
         </a>
-        <div className={classes.title}>{title}</div>
+        <div className={classes.titleWrapper}>
+          <div className={classes.title}>{title}</div>
+          <a
+            className={classes.contact}
+            href={FIDER_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Contact
+          </a>
+        </div>
       </Container>
     </nav>
   )
