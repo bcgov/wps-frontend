@@ -42,6 +42,8 @@ objects:
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
+      labels:
+        app: ${NAME}-${SUFFIX}
       name: ${NAME}-${SUFFIX}
     spec:
       replicas: 1
