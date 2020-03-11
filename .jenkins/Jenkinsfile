@@ -40,7 +40,7 @@ pipeline {
             agent { label 'build' }
             steps {
                 script {
-                    sh "GIT_BRANCH=${env.CHANGE_BRANCH} ./openshift/scripts/oc_build.sh ${env.CHANGE_ID} apply"
+                    sh "GIT_BRANCH=${env.CHANGE_BRANCH} ./openshift/scripts/oc_build.sh ${suffix} apply"
                 }
             }
         }
@@ -48,7 +48,7 @@ pipeline {
             agent { label 'deploy' }
             steps {
                 script {
-                    sh "./openshift/scripts/oc_deploy.sh ${env.CHANGE_ID} apply"
+                    sh "./openshift/scripts/oc_deploy.sh ${suffix} apply"
                 }
             }
         }
@@ -60,7 +60,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "./openshift/scripts/oc_promote.sh ${env.CHANGE_ID} apply"
+                    sh "./openshift/scripts/oc_promote.sh ${suffix} apply"
                 }
             }
         }
@@ -78,7 +78,7 @@ pipeline {
             agent { label 'deploy' }
             steps {
                 script {
-                    sh "./openshift/scripts/oc_cleanup.sh ${env.CHANGE_ID} apply"
+                    sh "./openshift/scripts/oc_cleanup.sh ${suffix} apply"
                 }
             }
         }
