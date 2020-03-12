@@ -41,7 +41,7 @@ objects:
       lookupPolicy:
         local: false
   - apiVersion: v1
-    kind: BuildConfig
+    kind: Build
     metadata:
       annotations:
         openshift.io/generated-by: OpenShiftNewBuild
