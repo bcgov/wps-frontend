@@ -14,7 +14,7 @@ import {
 } from 'features/fwiCalculator/slices/percentilesSlice'
 import { PercentileActionButtons } from 'features/fwiCalculator/components/PercentileActionButtons'
 import { FWICalculatorResults } from 'features/fwiCalculator/FWICalculatorResults'
-import { TimeRangeSlider } from './components/TimeRangeSlider'
+import { TimeRangeSlider } from 'features/fwiCalculator/components/TimeRangeSlider'
 
 const defaultTimeRange = 10
 const defaultPercentile = 90
@@ -53,14 +53,15 @@ export const FWICalculatorPage = () => {
 
   const onResetClick = () => {
     setStations([])
-    dispatch(resetPercentilesResult())
     setTimeRange(defaultTimeRange)
+    dispatch(resetPercentilesResult())
   }
 
   return (
     <div data-testid="fwi-calculator-page">
       <PageHeader title="Predictive Services Unit" />
       <PageTitle title="FWI Calculator" />
+
       <Container>
         <WeatherStationsDropdown
           stations={stations}
