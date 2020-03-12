@@ -71,6 +71,7 @@ objects:
       strategy:
         type: Docker
         dockerStrategy:
+          noCache: true
           env:
             - name: REACT_APP_API_BASE_URL
               value: ${API_BASE_URL}
