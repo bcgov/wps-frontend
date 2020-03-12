@@ -49,8 +49,10 @@ if [ "${APPLY}" ]; then
 	BUILD_LAST=$(oc -n ${PROJ_TOOLS} get bc/${APP_NAME} -o 'jsonpath={.status.lastVersion}')
 	# Command to get the build result
 	BUILD_RESULT=$(oc -n ${PROJ_TOOLS} get build/${APP_NAME}-${BUILD_LAST} -o 'jsonpath={.status.phase}')
+	
 	# Make sure that result is a successful completion
 	if [ "${BUILD_RESULT}" != "Complete" ]; then
+		echo "Build result: ${BUILD_RESULT}"
 		echo -e "\n*** Build not complete! ***\n"
 		exit 1
 	fi
