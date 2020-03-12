@@ -42,7 +42,7 @@ It correctly bundles React in production mode and optimizes the build for the be
 3. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 
-## License
+## License 
 
 This project is licensed under the [Apache License, Version 2.0](https://github.com/bcgov/wps-web/blob/master/LICENSE).
 
