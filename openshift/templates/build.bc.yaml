@@ -66,7 +66,7 @@ objects:
       source:
         git:
           uri: ${GIT_URL}
-          ref: origin/${GIT_BRANCH}
+          ref: ${GIT_BRANCH}
         type: Git
       strategy:
         type: Docker
