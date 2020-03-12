@@ -54,6 +54,8 @@ objects:
         to:
           kind: ImageStreamTag
           name: ${NAME}:${SUFFIX}
+      postCommit:
+        script: "npm run lint & npm run test:ci"
       resources:
         limits:
           cpu: "2"
