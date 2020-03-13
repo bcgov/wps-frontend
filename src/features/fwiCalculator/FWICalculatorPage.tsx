@@ -61,6 +61,7 @@ export const FWICalculatorPage = () => {
     <div data-testid="fwi-calculator-page">
       <PageHeader title="Predictive Services Unit" />
       <PageTitle title="FWI Calculator" />
+
       <Container>
         <WeatherStationsDropdown
           stations={stations}
