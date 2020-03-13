@@ -5,7 +5,6 @@ import { FIDER_LINK } from 'utils/constants'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    // minHeight: 65,
     background: theme.palette.primary.main,
     borderBottomWidth: 2,
     borderBottomStyle: 'solid',
