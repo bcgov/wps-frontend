@@ -1,0 +1,19 @@
+name: Pull Request Deployment
+on: pull_request
+jobs:
+  deploy:
+    name: OpenShift Deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Pipeline Action
+        uses: bcgov/openshift-launchpad-deployment@master
+        with:
+          MODE: client
+          AUTH_TOKEN: ${{ secrets.auzhsi_dev_token_l6wll }}
+          NAMESPACE: auzhsi-dev
+          APP_NAME: wps-web-pr-${{ github.event.number }}
+          BRANCH: action
+          CLIENT_PORT: 3000
+          API_URL: https://wps-api-prod.pathfinder.gov.bc.ca
