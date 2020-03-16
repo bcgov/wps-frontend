@@ -14,6 +14,6 @@ jobs:
           AUTH_TOKEN: ${{ secrets.action_token }}
           NAMESPACE: auzhsi-dev
           APP_NAME: wps-web-pr-${{ github.event.number }}
-          BRANCH: action
+          BRANCH: ${{ github.event.pull_request.head.ref }}
           CLIENT_PORT: 3000
           API_URL: https://wps-api-prod.pathfinder.gov.bc.ca
