@@ -11,7 +11,7 @@ jobs:
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           MODE: client
-          AUTH_TOKEN: ${{ secrets.auzhsi_dev_token_l6wll }}
+          AUTH_TOKEN: ${{ secrets.action_token }}
           NAMESPACE: auzhsi-dev
           APP_NAME: wps-web-pr-${{ github.event.number }}
           BRANCH: action
