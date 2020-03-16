@@ -62,7 +62,7 @@ export const PageHeader = ({ title }: Props) => {
         </div>
         <a
           className={classes.contact}
-          href={FIDER_LINK}
+          href={process.env.REACT_APP_FIDER_LINK}
           target="_blank"
           rel="noopener noreferrer"
         >
