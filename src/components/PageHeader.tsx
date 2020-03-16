@@ -1,7 +1,6 @@
 import React from 'react'
 import { Container } from 'components/Container'
 import { makeStyles } from '@material-ui/core/styles'
-import { FIDER_LINK } from 'utils/constants'
 
 const useStyles = makeStyles(theme => ({
   root: {
