@@ -1,5 +1,8 @@
 FROM node:10
 
+# URL for API
+ENV API_URL=https://wps-api-prod.pathfinder.gov.bc.ca
+
 # Set working directory
 WORKDIR /app
 
