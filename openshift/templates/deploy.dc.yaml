@@ -44,10 +44,8 @@ objects:
   - apiVersion: v1
     kind: ConfigMap
     data:
-      REACT_APP_API_BASE_URL: "https://wps-api-prod.pathfinder.gov.bc.ca/"
-      REACT_APP_FIDER_LINK: "https://psufider.pathfinder.gov.bc.ca/"
-      env.api-base-url: 'https://wps-api-prod.pathfinder.gov.bc.ca'
-      env.fider-url: 'https://psufider.pathfinder.gov.bc.ca'
+      REACT_APP_API_BASE_URL: "${URL_API}"
+      REACT_APP_FIDER_LINK: "${URL_FIDER}"
     metadata:
       labels:
         app: ${NAME}-${SUFFIX}
@@ -87,12 +85,12 @@ objects:
                   valueFrom:
                     configMapKeyRef:
                       name: ${NAME}-${SUFFIX}
-                      key: env.api-base-url
+                      key: REACT_APP_API_BASE_URL
                 - name: REACT_APP_FIDER_LINK
                   valueFrom:
                     configMapKeyRef:
                       name: ${NAME}-${SUFFIX}
-                      key: env.fider-url
+                      key: REACT_APP_API_BASE_URL
               ports:
                 - containerPort: 3000
               resources:
