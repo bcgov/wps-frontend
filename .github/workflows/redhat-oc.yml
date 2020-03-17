@@ -1,21 +1,17 @@
-name: OpenShift Action
-on:
-  pull_request:
-    branches: [ master ]
+name: Example workflow for Openshift Action
+on: [push]
 jobs:
   run:
-    runs-on: ubuntu-latest
-  steps:
-  - name: Red Hat OpenShift Action
-    uses: redhat-developer/openshift-actions@v2.0
-    with:
-      # Choose the oc version you want to use to execute the command. It can be a version or an url where to download oc cli desired. If left blank latest oc cli will be used.
-      version: 3.11 # optional, default is latest
-      # The URL of the Openshift cluster
-      openshift_server_url: https://console.pathfinder.gov.bc.ca:8443 # optional
-      # JSON with values to connect to the Openshift cluster
-      parameters: # optional
-      # Oc command to be executed
-      cmd: oc whoami # optional
-      # Check if oc is already installed in the machine and use that if available
-      useLocalOc: # optional
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: OpenShift Action
+      uses: redhat-developer/openshift-actions@v1.1
+      with:
+        version: 'latest'
+        openshift_server_url: ${{ secrets.openshift_server_url }}
+        parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
+        cmd: |
+          'get is -n openshift'
+          'version'
+          'whoami'
