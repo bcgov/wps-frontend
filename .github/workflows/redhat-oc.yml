@@ -13,5 +13,19 @@ jobs:
         parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
         cmd: |
           'get is -n openshift'
+    - name: OpenShift Action
+      uses: redhat-developer/openshift-actions@v1.1
+      with:
+        version: 'latest'
+        openshift_server_url: ${{ secrets.openshift_server_url }}
+        parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
+        cmd: |
           'version'
+    - name: OpenShift Action
+      uses: redhat-developer/openshift-actions@v1.1
+      with:
+        version: 'latest'
+        openshift_server_url: ${{ secrets.openshift_server_url }}
+        parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
+        cmd: |
           'whoami'
