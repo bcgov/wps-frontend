@@ -1,35 +1,42 @@
+# This is a collection of bits from sample workflows
+#
 name: Example workflow for Openshift Action
-on: [push]
-jobs:
-  run:
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v1
-    - name: OpenShift Action
-      uses: redhat-developer/openshift-actions@v1.1
-      with:
-        version: 'latest'
-        openshift_server_url: ${{ secrets.openshift_server_url }}
-        parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
-        cmd: |
-          'version'
-          'whoami'
-    - name: OpenShift Action
-      uses: redhat-developer/openshift-actions@v1.1
-      with:
-        version: 'latest'
-        openshift_server_url: ${{ secrets.openshift_server_url }}
-        parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
-        cmd: |
-          'whoami'
 
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
-      env:
-        CI: true
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # node-version: [10.x, 12.x]
+        node-version: [10.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm ci
+        run: npm ci
+      - name: npm run build --if-present
+        run: npm run build --if-present
+      - name: npm test
+        run: npm test
+        env:
+          CI: true
+
+      - name: OpenShift junk commands
+        uses: redhat-developer/openshift-actions@v1.1
+        run: ls -laR
+        with:
+          version: 'latest'
+          openshift_server_url: ${{ secrets.openshift_server_url }}
+          parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
+          cmd: |
+            'version'
+            'whoami'
+            'get is -n auzhsi-tools'
