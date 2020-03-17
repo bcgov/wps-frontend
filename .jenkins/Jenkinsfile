@@ -64,11 +64,11 @@ pipeline {
                 }
             }
         }
-        stage('Post-promote (PROD)') {
+        stage('Deploy (PROD)') {
             agent { label 'deploy' }
             steps {
                 script {
-                    sh "./openshift/scripts/oc_deploy.sh PROD apply"
+                    sh "PROJ_TARGET=${auzhsi-prod} ./openshift/scripts/oc_deploy.sh PROD apply"
                 }
             }
         }
@@ -76,7 +76,7 @@ pipeline {
             agent { label 'deploy' }
             steps {
                 script {
-                    sh "PROJ_TARGET=${auzhsi-prod} ./openshift/scripts/oc_cleanup.sh ${suffix} apply"
+                    sh "./openshift/scripts/oc_cleanup.sh ${suffix} apply"
                 }
             }
         }
