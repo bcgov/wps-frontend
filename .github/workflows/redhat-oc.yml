@@ -12,15 +12,8 @@ jobs:
         openshift_server_url: ${{ secrets.openshift_server_url }}
         parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
         cmd: |
-          'get is -n openshift'
-    - name: OpenShift Action
-      uses: redhat-developer/openshift-actions@v1.1
-      with:
-        version: 'latest'
-        openshift_server_url: ${{ secrets.openshift_server_url }}
-        parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
-        cmd: |
           'version'
+          'whoami'
     - name: OpenShift Action
       uses: redhat-developer/openshift-actions@v1.1
       with:
@@ -29,3 +22,14 @@ jobs:
         parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
         cmd: |
           'whoami'
+
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+      env:
+        CI: true
