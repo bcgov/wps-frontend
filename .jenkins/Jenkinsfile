@@ -68,7 +68,7 @@ pipeline {
             agent { label 'deploy' }
             steps {
                 script {
-                    sh "PROJ_TARGET=${auzhsi-prod} ./openshift/scripts/oc_deploy.sh PROD apply"
+                    sh "PROJ_TARGET=${projProd} ./openshift/scripts/oc_deploy.sh prod apply"
                 }
             }
         }

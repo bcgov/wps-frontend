@@ -44,8 +44,8 @@ objects:
   - apiVersion: v1
     kind: ConfigMap
     data:
-      REACT_APP_API_BASE_URL: "${URL_API}"
-      REACT_APP_FIDER_LINK: "${URL_FIDER}"
+      env.api-base-url: "${URL_API}"
+      env.fider-url: "${URL_FIDER}"
     metadata:
       labels:
         app: ${NAME}-${SUFFIX}
@@ -85,12 +85,12 @@ objects:
                   valueFrom:
                     configMapKeyRef:
                       name: ${NAME}-${SUFFIX}
-                      key: REACT_APP_API_BASE_URL
+                      key: env.api-base-url
                 - name: REACT_APP_FIDER_LINK
                   valueFrom:
                     configMapKeyRef:
                       name: ${NAME}-${SUFFIX}
-                      key: REACT_APP_FIDER_LINK
+                      key: env.fider-url
               ports:
                 - containerPort: 3000
               resources:
