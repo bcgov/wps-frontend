@@ -90,7 +90,7 @@ objects:
                   valueFrom:
                     configMapKeyRef:
                       name: ${NAME}-${SUFFIX}
-                      key: REACT_APP_API_BASE_URL
+                      key: REACT_APP_FIDER_LINK
               ports:
                 - containerPort: 3000
               resources:
