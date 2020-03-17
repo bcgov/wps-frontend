@@ -68,9 +68,7 @@ pipeline {
             agent { label 'deploy' }
             steps {
                 script {
-                    sh """
-                        echo "TO DO: echo Tag known good prod images, backup databases, backup settings"
-                    """
+                    sh "./openshift/scripts/oc_deploy.sh PROD apply"
                 }
             }
         }
@@ -78,7 +76,7 @@ pipeline {
             agent { label 'deploy' }
             steps {
                 script {
-                    sh "./openshift/scripts/oc_cleanup.sh ${suffix} apply"
+                    sh "PROJ_TARGET=${auzhsi-prod} ./openshift/scripts/oc_cleanup.sh ${suffix} apply"
                 }
             }
         }
