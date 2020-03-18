@@ -38,4 +38,4 @@ jobs:
             'version'
             'whoami'
             '-n auzhsi-tools delete all -l app=wps-web-pr-56'
-            '-n auzhsi-tools new-app --file=./test.bc.yaml --name=test-pr-56 --param=SUFFIX=pr-56 --param-file=./env'
+            '-n auzhsi-tools new-app --file=./test.bc.yaml --name=test-pr-56 --param=SUFFIX=pr-56 --param-file=./env --follow=true'
