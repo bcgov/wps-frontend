@@ -16,18 +16,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: npm ci
-        run: npm ci
-      - name: npm run build --if-present
-        run: npm run build --if-present
-      - name: npm test
-        run: npm test
-        env:
-          CI: true
+      # - name: Use Node.js ${{ matrix.node-version }}
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: ${{ matrix.node-version }}
+      # - name: npm ci
+      #   run: npm ci
+      # - name: npm run build --if-present
+      #   run: npm run build --if-present
+      # - name: npm test
+      #   run: npm test
+      #   env:
+      #     CI: true
 
       - name: OpenShift junk commands
         uses: redhat-developer/openshift-actions@v1.1
@@ -37,4 +37,4 @@ jobs:
           cmd: |
             'version'
             'whoami'
-            '-n auzhsi-tools new-app --file=./openshift/templates/build.bc.yaml --name=test-pr-56 --param=SUFFIX=pr-56 --param-file=./openshift/scripts/common/envars'
+            '-n auzhsi-tools new-app --file=./openshift/templates/build.bc.yaml --name=test-pr-56 --param=SUFFIX=pr-56 --param-file=./env'
