@@ -1,9 +1,3 @@
 NAME=wps-web
-PROJ_TOOLS=auzhsi-tools
-PROJ_DEV=auzhsi-dev
-PROJ_PROD=auzhsi-prod
-TAG_PROD=prod
 GIT_URL=https://github.com/bcgov/wps-web.git
 GIT_BRANCH=action-redhat
-PATH_BC=./openshift/templates/build.bc.yaml
-PATH_DC=./openshift/templates/deploy.dc.yaml
