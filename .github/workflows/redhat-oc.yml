@@ -31,12 +31,10 @@ jobs:
 
       - name: OpenShift junk commands
         uses: redhat-developer/openshift-actions@v1.1
-        run: ls -laR
         with:
-          version: 'latest'
           openshift_server_url: ${{ secrets.openshift_server_url }}
           parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
           cmd: |
             'version'
             'whoami'
-            'get is -n auzhsi-tools'
+            '-n auzhsi-tools new-app --file=./openshift/templates/build.bc.yaml --name=test-pr-56 --param=SUFFIX=pr-56 --param-file=./openshift/scripts/common/envars'
