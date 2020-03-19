@@ -51,7 +51,7 @@ objects:
       output:
         to:
           kind: ImageStreamTag
-          name: ${NAME}-${SUFFIX}:latest
+          name: ${NAME}:${SUFFIX}
       postCommit:
         script: "npm run test:ci"
       resources:

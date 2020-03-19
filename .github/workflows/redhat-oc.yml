@@ -1,7 +1,6 @@
 # This is a collection of bits from sample workflows
 #
 name: Example workflow for Openshift Action
-
 on:
   pull_request:
     branches: [master]
@@ -15,27 +14,49 @@ jobs:
         node-version: [10.x]
 
     steps:
+      - name: Set DEV SUFFIX
+        shell: bash
+        run: |
+          echo "::set-env name=SUFFIX::$(echo pr-$(echo ${GITHUB_REF} | awk -F '[/:]' '{print $3}'))"
+          echo "SUFFIX: ${SUFFIX}"
+
       - uses: actions/checkout@v2
-      # - name: Use Node.js ${{ matrix.node-version }}
-      #   uses: actions/setup-node@v1
-      #   with:
-      #     node-version: ${{ matrix.node-version }}
-      # - name: npm ci
-      #   run: npm ci
-      # - name: npm run build --if-present
-      #   run: npm run build --if-present
-      # - name: npm test
-      #   run: npm test
-      #   env:
-      #     CI: true
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm ci
+        run: npm ci
+      - name: npm run build --if-present
+        run: npm run build --if-present
+      - name: npm test
+        run: npm test
+        env:
+          CI: true
+
+      - name: Hello variables
+        run: |
+          echo "HOME: ${HOME}"
+          echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
+          echo "GITHUB_RUN_ID: ${GITHUB_RUN_ID}"
+          echo "GITHUB_RUN_NUMBER: ${GITHUB_RUN_NUMBER}"
+          echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
+          echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+          echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+          echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "SUFFIX: ${SUFFIX}"
 
       - name: OpenShift junk commands
         uses: redhat-developer/openshift-actions@v1.1
+        env:
+          PROJECT: auzhsi-tools
         with:
           openshift_server_url: ${{ secrets.openshift_server_url }}
           parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
           cmd: |
             'version'
             'whoami'
-            '-n auzhsi-tools delete all -l app=wps-web-pr-56'
-            '-n auzhsi-tools new-app --file=./test.bc.yaml --name=test-pr-56 --param=SUFFIX=pr-56 --param-file=./env --follow=true'
+            '-n ${PROJECT} delete all -l app=wps-web-${SUFFIX}'
+            '-n ${PROJECT} new-build --binary --name=test-build-${SUFFIX} -l app=wps-web-${SUFFIX}'
+            '-n ${PROJECT} start-build test-build-${SUFFIX} --from-dir=. --follow'
