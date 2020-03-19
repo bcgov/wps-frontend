@@ -1,6 +1,4 @@
-# This is a collection of bits from sample workflows
-#
-name: Example workflow for Openshift Action
+name: OpenShift (build) and npm (ci, build, test)
 on:
   pull_request:
     branches: [master]
@@ -17,21 +15,26 @@ jobs:
       - name: Set DEV SUFFIX
         shell: bash
         run: |
-          echo "::set-env name=SUFFIX::$(echo pr-$(echo ${GITHUB_REF} | awk -F '[/:]' '{print $3}'))"
+          echo "::set-env name=SUFFIX::$(echo pr-$(echo ${GITHUB_REF} | awk -F '[/:]' '{print $3}')-github)"
 
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: npm ci
-        run: npm ci
-      - name: npm run build --if-present
-        run: npm run build --if-present
-      - name: npm test
-        run: npm test
-        env:
-          CI: true
+      - name: List
+        run: ls -laR
+      - name: Script runner
+        run: ./openshift/scripts/oc_build.sh pr-56 apply
+
+      # - name: Use Node.js ${{ matrix.node-version }}
+      #   uses: actions/setup-node@v1
+      #   with:
+      #     node-version: ${{ matrix.node-version }}
+      # - name: npm ci
+      #   run: npm ci
+      # - name: npm run build --if-present
+      #   run: npm run build --if-present
+      # - name: npm test
+      #   run: npm test
+      #   env:
+      #     CI: true
 
       - name: Hello variables
         run: |
@@ -46,16 +49,16 @@ jobs:
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "SUFFIX: ${SUFFIX}"
 
-      - name: OpenShift DEV Build
-        uses: redhat-developer/openshift-actions@v1.1
-        env:
-          PROJECT: auzhsi-tools
-        with:
-          openshift_server_url: ${{ secrets.openshift_server_url }}
-          parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
-          cmd: |
-            'whoami'
-            'version'
-            '-n ${PROJECT} delete all -l app=wps-web-${SUFFIX}'
-            '-n ${PROJECT} new-build --binary --name=test-build-${SUFFIX} -l app=wps-web-${SUFFIX}'
-            '-n ${PROJECT} start-build test-build-${SUFFIX} --from-dir=. --follow'
+      # - name: OpenShift DEV Build
+      #   uses: redhat-developer/openshift-actions@v1.1
+      #   env:
+      #     PROJECT: auzhsi-tools
+      #   with:
+      #     openshift_server_url: ${{ secrets.openshift_server_url }}
+      #     parameters: '{"apitoken": "${{ secrets.action_token }}", "acceptUntrustedCerts": "true"}'
+      #     cmd: |
+      #       'whoami'
+      #       'version'
+      #       '-n ${PROJECT} delete all -l app=wps-web-${SUFFIX}'
+      #       '-n ${PROJECT} new-build --binary --name=test-build-${SUFFIX} -l app=wps-web-${SUFFIX}'
+      #       '-n ${PROJECT} start-build test-build-${SUFFIX} --from-dir=. --follow'
