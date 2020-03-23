@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ash
 #
 source "$(dirname ${0})/common/common"
 
