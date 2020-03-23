@@ -1,4 +1,4 @@
-NAME="${NAME:-$(basename -s .git $(git config --get remote.origin.url))}"
+NAME="${NAME:-test-name}"
 PROJ_TOOLS="${PROJ_TOOLS:-auzhsi-tools}"
 PROJ_DEV="${PROJ_DEV:-auzhsi-dev}"
 PROJ_PROD="${PROJ_PROD:-auzhsi-prod}"
