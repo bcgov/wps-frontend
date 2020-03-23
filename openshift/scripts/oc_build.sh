@@ -44,21 +44,22 @@ eval "${OC_PROCESS} | ${OC_APPLY}"
 if [ "${APPLY}" ]; then
 	eval "${OC_CANCEL_BUILD}" 
 	eval "${OC_START_BUILD}"
+
+	# Follow builds if deploying and ensure they pass successfully
+	APP_NAME="${NAME}-${SUFFIX}"
+	# Get the most recent build version
+	BUILD_LAST=$(oc -n ${PROJ_TOOLS} get bc/${APP_NAME} -o 'jsonpath={.status.lastVersion}')
+	# Command to get the build result
+	BUILD_RESULT=$(oc -n ${PROJ_TOOLS} get build/${APP_NAME}-${BUILD_LAST} -o 'jsonpath={.status.phase}')
+
+	# Make sure that result is a successful completion
+	if [ "${BUILD_RESULT}" != "Complete" ]; then
+		echo "Build result: ${BUILD_RESULT}"
+		echo -e "\n*** Build not complete! ***\n"
+		exit 1
+	fi
 fi
 
-# Follow builds if deploying and ensure they pass successfully
-APP_NAME="${NAME}-${SUFFIX}"
-# Get the most recent build version
-BUILD_LAST=$(oc -n ${PROJ_TOOLS} get bc/${APP_NAME} -o 'jsonpath={.status.lastVersion}')
-# Command to get the build result
-BUILD_RESULT=$(oc -n ${PROJ_TOOLS} get build/${APP_NAME}-${BUILD_LAST} -o 'jsonpath={.status.phase}')
-
-# Make sure that result is a successful completion
-if [ "${BUILD_RESULT}" != "Complete" ]; then
-	echo "Build result: ${BUILD_RESULT}"
-	echo -e "\n*** Build not complete! ***\n"
-	exit 1
-fi
 
 # Provide oc command instruction
 #
