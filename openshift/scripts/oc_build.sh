@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/sh
 #
 source "$(dirname ${0})/common/common"
 
@@ -34,16 +34,18 @@ OC_APPLY="oc -n ${PROJ_TOOLS} apply -f -"
 # Cancel non complete builds and start a new build (apply or don't run)
 #
 OC_CANCEL_BUILD="oc -n ${PROJ_TOOLS} cancel-build bc/${NAME}-${SUFFIX}"
+[ "${APPLY}" ] || OC_CANCEL_BUILD=""
 OC_START_BUILD="oc -n ${PROJ_TOOLS} start-build ${NAME}-${SUFFIX} --follow=true"
+[ "${APPLY}" ] || OC_START_BUILD=""
 
 # Execute commands
 #
 eval "${OC_PROCESS}"
 eval "${OC_PROCESS} | ${OC_APPLY}"
-if [ "${APPLY}" ]; then
-	eval "${OC_CANCEL_BUILD}" 
-	eval "${OC_START_BUILD}"
+eval "${OC_CANCEL_BUILD}"
+eval "${OC_START_BUILD}"
 
+if [ "${APPLY}" ]; then
 	# Follow builds if deploying and ensure they pass successfully
 	APP_NAME="${NAME}-${SUFFIX}"
 	# Get the most recent build version
