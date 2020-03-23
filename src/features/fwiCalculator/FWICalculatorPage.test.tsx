@@ -130,19 +130,19 @@ it('renders percentiles result when clicking on the calculate button', async () 
   // Check if mean values are rendered
   expect(store.getState().percentiles.result).toEqual(mockPercentilesResponse)
   getByText(
-    mockPercentilesResponse.mean_values.FFMC.toFixed(
-      FWI_VALUES_DECIMAL_POINT
-    ).toString()
+    mockPercentilesResponse.mean_values.ffmc
+      .toFixed(FWI_VALUES_DECIMAL_POINT)
+      .toString()
   )
   getByText(
-    mockPercentilesResponse.mean_values.BUI.toFixed(
-      FWI_VALUES_DECIMAL_POINT
-    ).toString()
+    mockPercentilesResponse.mean_values.bui
+      .toFixed(FWI_VALUES_DECIMAL_POINT)
+      .toString()
   )
   getByText(
-    mockPercentilesResponse.mean_values.ISI.toFixed(
-      FWI_VALUES_DECIMAL_POINT
-    ).toString()
+    mockPercentilesResponse.mean_values.isi
+      .toFixed(FWI_VALUES_DECIMAL_POINT)
+      .toString()
   )
 
   // Check if the documentation is rendered
