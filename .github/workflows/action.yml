@@ -1,6 +1,9 @@
 name: Pull Request Build & Deployment with scripts
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+    branches: [master]
 
 jobs:
   build:
@@ -14,7 +17,6 @@ jobs:
         uses: bcgov/openshift-launchpad-deployment@custom-script
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
-          CLUSTER: auzhsi-tools
           BRANCH: ${{ github.event.pull_request.head.ref }}
           APP_NAME: wps-web-pr${{ github.event.number }}-coco
           SCRIPT: openshift/scripts/oc_build.sh pr-${{ github.event.number }}-coco
