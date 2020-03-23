@@ -1,0 +1,21 @@
+name: Pull Request Build & Deployment with scripts
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: OpenShift Deployment Using GH Action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build image
+        uses: DerekRoberts/ghaction@wps
+        with:
+          AUTH_TOKEN: ${{ secrets.action_token }}
+          APP_NAME: wps-web-pr${{ github.event.number }}-derek
+          COMMAND: oc_build.sh pr-${{ github.event.number }}-derek
