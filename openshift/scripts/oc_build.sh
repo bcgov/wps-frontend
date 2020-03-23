@@ -1,6 +1,5 @@
 #!/bin/ash
 #
-set -x
 source "$(dirname ${0})/common/common"
 
 #%
