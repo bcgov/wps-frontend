@@ -17,5 +17,5 @@ jobs:
         uses: DerekRoberts/ghaction@wps
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
-          APP_NAME: wps-web-pr${{ github.event.number }}-derek
+          # APP_NAME: wps-web-pr${{ github.event.number }}-derek
           COMMAND: oc_build.sh pr-${{ github.event.number }}-derek
