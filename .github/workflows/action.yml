@@ -1,0 +1,18 @@
+name: Pull Request Build & Deployment with scripts
+
+on: pull_request
+
+jobs:
+  build:
+    name: OpenShift Deployment Using GH Action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build image
+        uses: bcgov/openshift-launchpad-deployment@custom-script
+        with:
+          AUTH_TOKEN: ${{ secrets.action_token }}
+          NAMESPACE: auzhsi-tools
+          SCRIPT: openshift/scripts/oc_build.sh pr-${{ github.event.number }}-coco apply
