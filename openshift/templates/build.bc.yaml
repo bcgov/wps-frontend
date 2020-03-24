@@ -68,6 +68,4 @@ objects:
         type: Git
       strategy:
         type: Docker
-      triggers:
-        - type: ConfigChange
-        - type: ImageChange
+      triggers: []
