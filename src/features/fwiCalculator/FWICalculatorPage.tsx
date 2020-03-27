@@ -20,8 +20,6 @@ const defaultTimeRange = 10
 const defaultPercentile = 90
 const currYear = new Date().getFullYear()
 
-console.log('hello!')
-
 export const FWICalculatorPage = () => {
   const dispatch = useDispatch()
 
