@@ -47,6 +47,7 @@ fi
 #
 eval "${OC_PROCESS}"
 eval "${OC_PROCESS} | ${OC_APPLY}"
+sleep 5 # little bit of delay to ensure to deploy the latest image
 eval "${OC_DEPLOY}"
 eval "${OC_LOG}"
 
