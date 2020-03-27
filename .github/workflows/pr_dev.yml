@@ -39,7 +39,7 @@ jobs:
         uses: bcgov/openshift-launchpad-deployment@custom-script
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
-          SCRIPT: "GIT_BRANCH=${GIT_BRANCH} openshift/scripts/oc_templates.sh ${SUFFIX} apply"
+          SCRIPT: "openshift/scripts/oc_templates.sh ${SUFFIX} apply"
 
       - name: Build image
         uses: bcgov/openshift-launchpad-deployment@custom-script
