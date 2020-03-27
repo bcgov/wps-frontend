@@ -56,7 +56,7 @@ export const WeatherStationsDropdown = (props: Props) => {
               variant="outlined"
               fullWidth
               size="small"
-              helperText="Select up to 3 weather stations."
+              helperText="Can select up to 3 weather stations."
             />
           )}
         />
