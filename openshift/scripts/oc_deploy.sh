@@ -34,7 +34,7 @@ OC_PROCESS="oc -n ${PROJ_TOOLS} process -f ${PATH_DC} -p NAME=${NAME_APP} -p SUF
 OC_APPLY="oc -n ${PROJ_TARGET} apply -f -"
 [ "${APPLY}" ] || OC_APPLY="${OC_APPLY} --dry-run"
 
-# Deploy the app and log the result
+# Deploy and follow the progress
 # 
 OC_DEPLOY="oc -n ${PROJ_TARGET} rollout latest dc/${NAME_OBJ}"
 OC_LOG="oc -n ${PROJ_TARGET} logs -f dc/${NAME_OBJ}"
@@ -47,7 +47,6 @@ fi
 #
 eval "${OC_PROCESS}"
 eval "${OC_PROCESS} | ${OC_APPLY}"
-sleep 5 # little bit of delay to ensure to deploy the latest image
 eval "${OC_DEPLOY}"
 eval "${OC_LOG}"
 
