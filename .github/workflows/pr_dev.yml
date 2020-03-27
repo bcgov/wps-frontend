@@ -34,6 +34,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Create or Update objects
+        uses: bcgov/openshift-launchpad-deployment@custom-script
+        with:
+          AUTH_TOKEN: ${{ secrets.action_token }}
+          SCRIPT: openshift/scripts/oc_templates.sh ${SUFFIX} apply
+
       - name: Build image
         uses: bcgov/openshift-launchpad-deployment@custom-script
         with:
