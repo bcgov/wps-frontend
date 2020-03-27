@@ -4,7 +4,7 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
 import { FWICalculatorDisclaimerModal } from 'features/fwiCalculator/FWICalculatorDisclaimerModal'
 import { FWICalculatorPage } from 'features/fwiCalculator/FWICalculatorPage'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { FWCalculatorPage } from 'features/fwCalculator/FWCalculatorPage'
 
 // Theme documentation: https://material-ui.com/customization/palette/
