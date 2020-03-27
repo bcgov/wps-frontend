@@ -71,6 +71,7 @@ objects:
           automountServiceAccountToken: false
           containers:
             - image: ${DOCKER_REGISTRY}/${PROJECT_TOOLS}/${NAME}:${SUFFIX}
+              imagePullPolicy: Always
               name: ${NAME}
               env:
                 - name: REACT_APP_API_BASE_URL
