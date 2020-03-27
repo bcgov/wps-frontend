@@ -21,27 +21,11 @@ source "$(dirname ${0})/common/common"
 #%   ${THIS_FILE} pr-0 apply
 #%
 
-# Process a template (mostly variable substition)
-#
-OC_PROCESS="oc -n ${PROJ_TOOLS} process -f ${PATH_BC} -p NAME=${NAME_APP} -p SUFFIX=${SUFFIX} -p GIT_BRANCH=${GIT_BRANCH}"
-
-# Apply a template (apply or use --dry-run)
-#
-OC_APPLY="oc -n ${PROJ_TOOLS} apply -f -"
-[ "${APPLY}" ] || OC_APPLY="${OC_APPLY} --dry-run"
-
-# Cancel non complete builds and start a new build (apply or don't run)
-#
-OC_CANCEL_BUILD="oc -n ${PROJ_TOOLS} cancel-build bc/${NAME_OBJ}"
-[ "${APPLY}" ] || OC_CANCEL_BUILD=""
 OC_START_BUILD="oc -n ${PROJ_TOOLS} start-build ${NAME_OBJ} --follow=true"
 [ "${APPLY}" ] || OC_START_BUILD=""
 
 # Execute commands
 #
-eval "${OC_PROCESS}"
-eval "${OC_PROCESS} | ${OC_APPLY}"
-eval "${OC_CANCEL_BUILD}"
 eval "${OC_START_BUILD}"
 
 if [ "${APPLY}" ]; then
@@ -60,4 +44,4 @@ fi
 
 # Provide oc command instruction
 #
-display_helper "${OC_PROCESS} | ${OC_APPLY}" "${OC_CANCEL_BUILD}" "${OC_START_BUILD}"
+display_helper "${OC_START_BUILD}"
