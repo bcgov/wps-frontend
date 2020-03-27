@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Cleanup Script
-        uses: bcgov/openshift-launchpad-deployment@custom-script
+        uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
           SCRIPT: openshift/scripts/oc_cleanup.sh ${SUFFIX} apply
