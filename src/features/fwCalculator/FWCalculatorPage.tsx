@@ -3,25 +3,23 @@ import Keycloak from 'keycloak-js'
 import { initOptions } from 'utils/keycloak.json'
 
 export const FWCalculatorPage = () => {
-  const keycloak = Keycloak(initOptions)
+  const [isAuthenciated, setAuthenciation] = React.useState(false)
+  React.useEffect(() => {
+    const keycloak = Keycloak(initOptions)
+    keycloak
+      .init({ onLoad: 'login-required', checkLoginIframe: false })
+      .then(authenticated => {
+        if (!authenticated) {
+          window.location.reload()
+        } else {
+          setAuthenciation(authenticated)
+        }
+        setTimeout(() => {
+          keycloak.updateToken(60)
+        }, 60000)
+      })
+  }, [])
 
-  keycloak.init({ onLoad: 'login-required' }).success(authenticated => {
-    if (!authenticated) {
-      window.location.reload()
-    } else {
-      console.info('Authenticated')
-    }
-    const keycloakToken: string = keycloak.token ? keycloak.token : ''
-    const keycloakRefreshToken: string = keycloak.refreshToken
-      ? keycloak.refreshToken
-      : ''
-
-    localStorage.setItem('react-token', keycloakToken)
-    localStorage.setItem('react-refresh-token', keycloakRefreshToken)
-
-    setTimeout(() => {
-      keycloak.updateToken(60)
-    }, 60000)
-  })
-  return <header>Hello World!!!</header>
+  if (isAuthenciated) return <header>Hello World!!!</header>
+  else return <div />
 }
