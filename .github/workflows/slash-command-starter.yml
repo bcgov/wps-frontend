@@ -1,0 +1,41 @@
+# https://github.com/peter-evans/slash-command-dispatch
+# https://github.com/peter-evans/slash-command-dispatch/blob/master/docs/getting-started.md
+#
+name: Slash Command Starter
+
+on:
+  repository_dispatch:
+    types: [example-command]
+
+jobs:
+  slashCommandStarter:
+    name: Slash Command Starter
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slash Command Starter
+        uses: peter-evans/slash-command-dispatch@v1.1.2
+        with:
+          # A repo scoped GitHub Personal Access Token.
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          # An optional GitHub token to use for reactions.
+          reaction-token: # optional
+          # Add reactions to comments containing commands.
+          reactions: # optional
+          # A comma separated list of commands.
+          commands: 
+          # The repository permission level required by the user to dispatch commands.
+          permission: # optional
+          # The issue type required for commands.
+          issue-type: # optional
+          # Allow edited comments to trigger command dispatches.
+          allow-edits: # optional
+          # The full name of the repository to send the dispatch events.
+          repository: # optional
+          # The repository dispatch event type suffix for the commands.
+          event-type-suffix: # optional
+          # Parse named arguments and add them to the command payload.
+          named-args: # optional
+          # JSON configuration for commands.
+          config: # optional
+          # JSON configuration from a file for commands.
+          config-from-file: # optional

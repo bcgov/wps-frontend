@@ -1,11 +1,15 @@
 # https://github.com/peter-evans/slash-command-dispatch
 # https://github.com/peter-evans/slash-command-dispatch/blob/master/docs/getting-started.md
-name: example-command
+#
+name: Add reactions
+
 on:
   repository_dispatch:
     types: [example-command]
+
 jobs:
   example:
+    name: Add reaction
     runs-on: ubuntu-latest
     steps:
       - name: Add reaction

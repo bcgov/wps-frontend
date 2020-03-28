@@ -1,9 +1,15 @@
+# https://github.com/peter-evans/slash-command-dispatch
+# https://github.com/peter-evans/slash-command-dispatch/blob/master/docs/getting-started.md
+#
 name: Slash Command Dispatch
+
 on:
   issue_comment:
     types: [created]
+
 jobs:
   slashCommandDispatch:
+    name: Slash Command Dispatch
     runs-on: ubuntu-latest
     steps:
       - name: Slash Command Dispatch
@@ -11,4 +17,4 @@ jobs:
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           commands: example
-          repository: DerekRoberts/slash-command-processor
+          repository: bcgov/wps-web@chatOps
