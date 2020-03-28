@@ -1,0 +1,21 @@
+# https://github.com/peter-evans/slash-command-dispatch
+# https://github.com/peter-evans/slash-command-dispatch/blob/master/docs/getting-started.md
+#
+name: Add reactions
+
+on:
+  repository_dispatch:
+    types: [example-command]
+
+jobs:
+  example:
+    name: Add reaction
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add reaction
+        uses: peter-evans/create-or-update-comment@v1.1.2
+        with:
+          token: ${{ secrets.action_token }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+          reaction-type: hooray
