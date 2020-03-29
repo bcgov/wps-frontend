@@ -3,9 +3,6 @@ name: DEV
 on:
   pull_request:
     branches:
-      - master
-      - test
-      - demo
 
 jobs:
   lint_and_test:
