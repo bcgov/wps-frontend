@@ -1,8 +1,9 @@
-name: DEV
+name: TEST
 
 on:
-  pull_request:
+  push:
     branches:
+      - test
 
 jobs:
   lint_and_test:
@@ -25,11 +26,6 @@ jobs:
     name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Set Variables
-        shell: bash
-        run: |
-          echo "::set-env name=SUFFIX::pr-${{ github.event.number }}"
-          
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -37,10 +33,16 @@ jobs:
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
-          SCRIPT: GIT_BRANCH=${GITHUB_HEAD_REF} openshift/scripts/oc_build.sh ${SUFFIX} apply
+          SCRIPT: GIT_BRANCH=test openshift/scripts/oc_build.sh test apply
 
-      - name: Deploy to Dev
+      - name: Deploy to Test
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
-          SCRIPT: openshift/scripts/oc_deploy.sh ${SUFFIX} apply
+          SCRIPT: PROJ_DEV=auzhsi-test openshift/scripts/oc_deploy.sh test apply
+
+      - name: Tag Successful Image
+        uses: bcgov/openshift-launchpad-deployment@master
+        with:
+          AUTH_TOKEN: ${{ secrets.action_token }}
+          SCRIPT: TAG_PROD=test-deployed ./openshift/scripts/oc_promote.sh test apply
