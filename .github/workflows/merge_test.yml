@@ -40,3 +40,9 @@ jobs:
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
           SCRIPT: PROJ_DEV=auzhsi-test openshift/scripts/oc_deploy.sh test apply
+
+      - name: Tag Successful Image
+        uses: bcgov/openshift-launchpad-deployment@master
+        with:
+          AUTH_TOKEN: ${{ secrets.action_token }}
+          SCRIPT: TAG_PROD=test-deployed ./openshift/scripts/oc_promote.sh test apply
