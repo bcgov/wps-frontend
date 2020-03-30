@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add reaction
-        uses: peter-evans/create-or-update-comment@v1.1.2
+        uses: peter-evans/create-or-update-comment@v1
         with:
           token: ${{ secrets.action_token }}
           repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
