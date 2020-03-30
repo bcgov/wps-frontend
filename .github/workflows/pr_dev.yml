@@ -8,21 +8,21 @@ on:
       - demo
 
 jobs:
-  # lint_and_test:
-  #   name: Lint and Unit Test
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       node-version: [10.x]
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Use Node.js ${{ matrix.node-version }}
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: ${{ matrix.node-version }}
-  #     - run: npm install
-  #     - run: npm run lint
-  #     - run: npm run test:ci
+  lint_and_test:
+    name: Lint and Unit Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm run lint
+      - run: npm run test:ci
 
   build_and_deploy:
     name: Build and Deploy
