@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - master
+      - !pre-master
 
 jobs:
   lint_and_test:
