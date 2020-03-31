@@ -51,7 +51,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: 'Hello Test'
-      description: 'Greet someone and record the time'
       uses: bcgov/openshift-launchpad-deployment@master
       inputs:
         who-to-greet:  
