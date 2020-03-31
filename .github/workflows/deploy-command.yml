@@ -27,6 +27,6 @@ jobs:
 
       - name: Deploy to Prod
         uses: bcgov/openshift-launchpad-deployment@master
-          with:
-            AUTH_TOKEN: ${{ secrets.action_token }}
-            SCRIPT: "PROJ_TARGET=${projProd} openshift/scripts/oc_deploy.sh prod apply"
+        with:
+          AUTH_TOKEN: ${{ secrets.action_token }}
+          SCRIPT: 'PROJ_TARGET=${projProd} openshift/scripts/oc_deploy.sh prod apply'
