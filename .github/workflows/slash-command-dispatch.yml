@@ -5,11 +5,11 @@ on:
     types: [created]
 
 jobs:
-  slashCommandDispatch:
-    name: Slash Command Dispatch
+  deployCommandDispatch:
+    name: Deploy Command Dispatch
     runs-on: ubuntu-latest
     steps:
-      - name: Slash Command Dispatch
+      - name: Deploy Command Dispatch
         uses: peter-evans/slash-command-dispatch@v1
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
