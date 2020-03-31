@@ -1,0 +1,34 @@
+# Post-merge or push build for a DEMO instance in auzhsi-test
+#
+name: DEMO
+
+on:
+  push:
+    branches:
+      - demo
+
+jobs:
+  build_and_deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build image
+        uses: bcgov/openshift-launchpad-deployment@master
+        with:
+          AUTH_TOKEN: ${{ secrets.action_token }}
+          SCRIPT: GIT_BRANCH=test openshift/scripts/oc_build.sh demo apply
+
+      - name: Deploy to Test
+        uses: bcgov/openshift-launchpad-deployment@master
+        with:
+          AUTH_TOKEN: ${{ secrets.action_token }}
+          SCRIPT: PROJ_DEV=auzhsi-test openshift/scripts/oc_deploy.sh demo apply
+
+      - name: Tag Successful Image
+        uses: bcgov/openshift-launchpad-deployment@master
+        with:
+          AUTH_TOKEN: ${{ secrets.action_token }}
+          SCRIPT: TAG_PROD=test-deployed ./openshift/scripts/oc_promote.sh demo apply
