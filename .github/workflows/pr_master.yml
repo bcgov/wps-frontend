@@ -36,5 +36,5 @@ jobs:
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
-          SCRIPT: TAG_PRODopenshift/scripts/oc_promote.sh ${SUFFIX} apply
+          SCRIPT: openshift/scripts/oc_promote.sh ${SUFFIX} apply
         if: ${{env.GITHUB_HEAD_REF}} == 'pre-master'
