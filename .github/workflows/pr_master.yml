@@ -1,9 +1,9 @@
-name: TEST-PROD
+name: PRE-MASTER
 
 on:
   pull_request:
     branches:
-      - test-release
+      - master
 
 jobs:
   build_and_deploy:
@@ -13,7 +13,7 @@ jobs:
       - name: Set Variables
         shell: bash
         run: |
-          echo "::set-env name=SUFFIX::pr-${{ github.event.number }}"
+          echo "::set-env name=SUFFIX::pre-master"
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -22,19 +22,19 @@ jobs:
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
-          SCRIPT: GIT_BRANCH=test-master openshift/scripts/oc_build.sh test apply
-        if: ${{env.GITHUB_HEAD_REF}} == 'test-master'
+          SCRIPT: GIT_BRANCH=pre-master openshift/scripts/oc_build.sh ${SUFFIX} apply
+        if: ${{env.GITHUB_HEAD_REF}} == 'pre-master'
 
       - name: Deploy to Dev
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
-          SCRIPT: PROJ_PROD=auzhsi-test openshift/scripts/oc_deploy.sh test apply
-        if: ${{env.GITHUB_HEAD_REF}} == 'test-master'
+          SCRIPT: PROJ_PROD=auzhsi-test openshift/scripts/oc_deploy.sh ${SUFFIX} apply
+        if: ${{env.GITHUB_HEAD_REF}} == 'pre-master'
       
       - name: Promote Image
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
-          SCRIPT: TAG_PROD=test-release openshift/scripts/oc_promote.sh test apply
-        if: ${{env.GITHUB_HEAD_REF}} == 'test-master'
+          SCRIPT: TAG_PRODopenshift/scripts/oc_promote.sh ${SUFFIX} apply
+        if: ${{env.GITHUB_HEAD_REF}} == 'pre-master'
