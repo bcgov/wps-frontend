@@ -3,7 +3,7 @@ name: DEV
 on:
   pull_request:
     branches:
-      - nothing
+      - hmm
 
 jobs:
   lint_and_test:
