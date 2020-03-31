@@ -52,6 +52,7 @@ jobs:
     steps:
     - name: 'Hello Test'
       description: 'Greet someone and record the time'
+      uses: bcgov/openshift-launchpad-deployment@master
       inputs:
         who-to-greet:  
           description: 'Who to greet'
