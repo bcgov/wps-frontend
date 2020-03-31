@@ -3,7 +3,7 @@ name: DEV
 on:
   pull_request:
     branches:
-      - master
+      - nothing
 
 jobs:
   lint_and_test:
@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           echo "::set-env name=SUFFIX::pr-${{ github.event.number }}"
-          
+
       - name: Checkout
         uses: actions/checkout@v2
 
