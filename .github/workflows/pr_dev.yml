@@ -50,7 +50,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      name: 'Hello Test'
+    - name: 'Hello Test'
       description: 'Greet someone and record the time'
       inputs:
         who-to-greet:  
