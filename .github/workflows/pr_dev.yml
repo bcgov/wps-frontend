@@ -3,11 +3,7 @@ name: DEV
 on:
   pull_request:
     branches:
-<<<<<<< HEAD
-      - hmm
-=======
       - master
->>>>>>> d7707ff8012f55b245dcf77dd540c4447dbf41dd
 
 jobs:
   lint_and_test:
