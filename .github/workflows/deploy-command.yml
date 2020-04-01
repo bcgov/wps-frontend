@@ -15,6 +15,9 @@ jobs:
           echo "::set-env name=projProd::auzhsi-prod"
           echo "::set-env name=SUFFIX::${{ github.event.client_payload.slash_command.arg1 }}"
 
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Promote Image
         uses: bcgov/openshift-launchpad-deployment@master
         with:
