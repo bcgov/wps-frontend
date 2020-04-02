@@ -19,16 +19,10 @@ jobs:
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
-          SCRIPT: GIT_BRANCH=test openshift/scripts/oc_build.sh demo apply
+          SCRIPT: GIT_BRANCH=demo openshift/scripts/oc_build.sh demo apply
 
       - name: Deploy to Test
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
           SCRIPT: PROJ_DEV=auzhsi-test openshift/scripts/oc_deploy.sh demo apply
-
-      - name: Tag Successful Image
-        uses: bcgov/openshift-launchpad-deployment@master
-        with:
-          AUTH_TOKEN: ${{ secrets.action_token }}
-          SCRIPT: TAG_PROD=test-deployed ./openshift/scripts/oc_promote.sh demo apply
