@@ -46,7 +46,6 @@ parameters:
     value: 8wl6x4cp
   - name: KEYCLOAK_CLIENT
     value: security-admin-console
-
 objects:
   - apiVersion: v1
     kind: ConfigMap
