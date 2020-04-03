@@ -79,3 +79,6 @@ jspm_packages/
 
 # IDE - VSCode
 .vscode/*
+
+# keycloak json
+keycloak.json
