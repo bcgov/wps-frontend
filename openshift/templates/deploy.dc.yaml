@@ -40,12 +40,27 @@ parameters:
   - name: MEMORY_LIMIT
     description: Memory upper limit
     value: 2Gi
+  - name: KEYCLOAK_URL_AUTH
+    value: https://sso.pathfinder.gov.bc.ca/auth
+  - name: KEYCLOAK_REALM
+    value: 8wl6x4cp
+  - name: KEYCLOAK_CLIENT
+    value: security-admin-console
+
 objects:
   - apiVersion: v1
     kind: ConfigMap
     data:
       env.api-base-url: "${URL_API}"
       env.fider-url: "${URL_FIDER}"
+      keycloak.json: |-
+          {
+            "initOptions": {
+              "url": "${KEYCLOAK_URL_AUTH}",
+              "realm": "${KEYCLOAK_REALM}",
+              "clientId": "${KEYCLOAK_CLIENT}"
+            }
+          }
     metadata:
       labels:
         app: ${NAME}-${SUFFIX}
@@ -72,6 +87,10 @@ objects:
           containers:
             - image: ${DOCKER_REGISTRY}/${PROJECT_TOOLS}/${NAME}:${SUFFIX}
               imagePullPolicy: Always
+              volumeMounts:
+                - name: ${NAME}-${SUFFIX}
+                  mountPath: /app/src/utils/keycloak.json
+                  subPath: keycloak.json
               name: ${NAME}
               env:
                 - name: REACT_APP_API_BASE_URL
@@ -93,6 +112,10 @@ objects:
                 requests:
                   cpu: ${CPU_REQUEST}
                   memory: ${MEMORY_REQUEST}
+          volumes:
+            - name: ${NAME}-${SUFFIX}
+              configMap:
+                name: ${NAME}-${SUFFIX}
   - apiVersion: v1
     kind: Service
     metadata:
