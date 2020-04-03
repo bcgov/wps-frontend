@@ -35,7 +35,8 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'none',
     '&:hover': {
       textDecoration: 'underline'
-    }
+    },
+    marginRight: '10px'
   }
 }))
 
@@ -59,22 +60,24 @@ export const PageHeader = ({ title }: Props) => {
           </a>
           <div className={classes.title}>{title}</div>
         </div>
-        <a
-          className={classes.contact}
-          href={process.env.REACT_APP_FIDER_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Contact
-        </a>
-        <a
-          className={classes.contact}
-          href="/fireWeatherCalculator"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Fire Weather
-        </a>
+        <div>
+          <a
+            className={classes.contact}
+            href="/fireWeatherCalculator"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            FireWeather
+          </a>
+          <a
+            className={classes.contact}
+            href={process.env.REACT_APP_FIDER_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Contact
+          </a>
+        </div>
       </Container>
     </nav>
   )
