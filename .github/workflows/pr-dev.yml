@@ -3,9 +3,7 @@ name: DEV
 on:
   pull_request:
     branches:
-      - master
-    branches-ignore:
-      - demo
+      - 'master'
 
 jobs:
   lint-and-test:
