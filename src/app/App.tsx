@@ -5,7 +5,7 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import { FWICalculatorDisclaimerModal } from 'features/fwiCalculator/FWICalculatorDisclaimerModal'
 import { FWICalculatorPage } from 'features/fwiCalculator/FWICalculatorPage'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import { FWCalculatorPage } from 'features/fwCalculator/FWCalculatorPage'
+import { FireWeatherPage } from 'features/fireWeather/FireWeatherPage'
 
 // Theme documentation: https://material-ui.com/customization/palette/
 // Theme demo: https://material.io/resources/color/#!/?view.left=1&view.right=1&primary.color=003365&secondary.color=FBC02D
@@ -50,8 +50,8 @@ const App = () => {
               <FWICalculatorPage />
             )}
           </Route>
-          <Route path="/fireWeatherCalculator" exact>
-            <FWCalculatorPage />
+          <Route path="/fire-weather" exact>
+            <FireWeatherPage />
           </Route>
         </Router>
       </ThemeProvider>
