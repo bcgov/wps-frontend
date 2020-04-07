@@ -9,7 +9,7 @@ describe('Authentication Slice', () => {
     expect(result).toEqual(authenticationInitialState)
   })
 
-  it('Should return new state after fetching stations', () => {
+  it('Should return new state after fetching authentication', () => {
     const nextState = reducer(
       authenticationInitialState,
       getAuthenticationSuccess(true)
