@@ -21,13 +21,18 @@ source "$(dirname ${0})/common/common"
 #%   ${THIS_FILE} pr-0 apply
 #%
 
+# Use keycloak prod url when deploying to prod
+if [ "${SUFFIX}" = "prod" ]; then
+    KEYCLOAK_AUTH_URL=${KEYCLOAK_PROD_URL}
+fi
+
 # Target project override for Dev or Prod deployments
 #
 PROJ_TARGET="${PROJ_TARGET:-${PROJ_DEV}}"
 
 # Process a template (mostly variable substition)
 #
-OC_PROCESS="oc -n ${PROJ_TOOLS} process -f ${PATH_DC} -p NAME=${NAME_APP} -p SUFFIX=${SUFFIX}"
+OC_PROCESS="oc -n ${PROJ_TOOLS} process -f ${PATH_DC} -p NAME=${NAME_APP} -p SUFFIX=${SUFFIX} -p KEYCLOAK_AUTH_URL=${KEYCLOAK_AUTH_URL}"
 
 # Apply a template (apply or use --dry-run)
 #
