@@ -1,6 +1,6 @@
 {
     "initOptions": {
-    "url": "https://sso.pathfinder.gov.bc.ca/auth",
+    "url": "https://sso-dev.pathfinder.gov.bc.ca/auth",
     "realm": "8wl6x4cp",
     "clientId": "wps-web"
   }
