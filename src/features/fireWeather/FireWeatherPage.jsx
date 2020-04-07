@@ -31,12 +31,11 @@ export const FireWeatherPage = () => {
           dispatch(getAuthenticationSuccess(authenticated))
         }
         setTimeout(() => {
-          try {
-            keycloak.updateToken(60)
-          } catch (err) {
-            dispatch(getAuthenticationFailed(err))
-          }
+          keycloak.updateToken(60)
         }, 6000)
+      })
+      .catch(err => {
+        dispatch(getAuthenticationFailed(err))
       })
   }, [dispatch])
 

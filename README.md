@@ -22,7 +22,7 @@ Installs all dependencies in the node_modules folder.
 
 ### Executing program
 
-In the project directory, create `.env` file at root using `.env.example` as a sample and then you can run:
+In the project directory, create `.env` file at root using `.env.example` as a sample, then you can run:
 
 #### `npm start`
 
