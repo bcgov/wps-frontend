@@ -82,10 +82,6 @@ objects:
           containers:
             - image: ${DOCKER_REGISTRY}/${PROJECT_TOOLS}/${NAME}:${SUFFIX}
               imagePullPolicy: Always
-              volumeMounts:
-                - name: ${NAME}-${SUFFIX}
-                  mountPath: /app/src/utils/keycloak.json
-                  subPath: keycloak.json
               name: ${NAME}
               env:
                 - name: REACT_APP_API_BASE_URL
