@@ -42,7 +42,7 @@ parameters:
     value: 2Gi
   - name: KEYCLOAK_AUTH_URL
     description: Keycloak url for authentication
-    required: true
+    value: https://sso-dev.pathfinder.gov.bc.ca/auth
   - name: KEYCLOAK_REALM
     value: 8wl6x4cp
   - name: KEYCLOAK_CLIENT
