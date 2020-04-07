@@ -24,6 +24,8 @@ source "$(dirname ${0})/common/common"
 # Use keycloak prod url when deploying to prod
 if [ "${SUFFIX}" = "prod" ]; then
     KEYCLOAK_AUTH_URL=${KEYCLOAK_PROD_URL}
+else
+    KEYCLOAK_AUTH_URL=${KEYCLOAK_DEV_URL}
 fi
 
 # Target project override for Dev or Prod deployments

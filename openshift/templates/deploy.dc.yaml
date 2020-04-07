@@ -41,7 +41,8 @@ parameters:
     description: Memory upper limit
     value: 2Gi
   - name: KEYCLOAK_AUTH_URL
-    value: https://sso-dev.pathfinder.gov.bc.ca/auth
+    description: Keycloak url for authentication
+    required: true
   - name: KEYCLOAK_REALM
     value: 8wl6x4cp
   - name: KEYCLOAK_CLIENT
