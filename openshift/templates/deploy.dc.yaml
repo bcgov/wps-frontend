@@ -45,7 +45,7 @@ parameters:
   - name: KEYCLOAK_REALM
     value: 8wl6x4cp
   - name: KEYCLOAK_CLIENT
-    value: security-admin-console
+    value: wps-web
 objects:
   - apiVersion: v1
     kind: ConfigMap
@@ -55,7 +55,7 @@ objects:
       keycloak.json: |-
           {
             "initOptions": {
-              "url": "${KEYCLOAK_URL_AUTH}",
+              "url": "${KEYCLOAK_AUTH_URL}",
               "realm": "${KEYCLOAK_REALM}",
               "clientId": "${KEYCLOAK_CLIENT}"
             }
