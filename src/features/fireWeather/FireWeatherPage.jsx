@@ -2,7 +2,10 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { initOptions } from 'utils/keycloak.json'
 import { selectAuthenticationReducer } from 'app/rootReducer'
-import { createAuthentication } from './slices/authenticationSlice'
+import {
+  createAuthentication,
+  resetAuthentication
+} from './slices/authenticationSlice'
 
 export const FireWeatherPage = () => {
   const { isAuthenticated } = useSelector(selectAuthenticationReducer)
@@ -26,6 +29,7 @@ export const FireWeatherPage = () => {
         })
         .then(authenticated => {
           if (!authenticated) {
+            dispatch(resetAuthentication())
             window.location.reload()
           } else {
             dispatch(createAuthentication(authenticated))

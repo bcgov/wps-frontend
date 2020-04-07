@@ -30,6 +30,9 @@ const auth = createSlice({
       action: PayloadAction<boolean>
     ) {
       state.isAuthenticated = action.payload
+    },
+    resetAuthentication(state: AuthenticationState) {
+      state.isAuthenticated = false
     }
   }
 })
@@ -37,7 +40,8 @@ const auth = createSlice({
 export const {
   getAuthenticationStart,
   getAuthenticationFailed,
-  getAuthenticationSuccess
+  getAuthenticationSuccess,
+  resetAuthentication
 } = auth.actions
 
 export default auth.reducer
