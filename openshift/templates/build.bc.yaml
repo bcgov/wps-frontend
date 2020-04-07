@@ -33,7 +33,6 @@ objects:
         openshift.io/generated-by: OpenShiftNewBuild
       labels:
         app: ${NAME}-${SUFFIX}
-        common: "true"
       name: ${NAME}-${SUFFIX}
     spec:
       lookupPolicy:
