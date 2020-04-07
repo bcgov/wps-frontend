@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { initOptions } from 'utils/keycloak.json'
+import { selectAuthenticationReducer } from 'app/rootReducer'
+import { createAuthentication } from './slices/authenticationSlice'
 
-export const FWCalculatorPage = () => {
-  const [isAuthenciated, setAuthenciation] = React.useState(false)
+export const FireWeatherPage = () => {
+  const { isAuthenticated } = useSelector(selectAuthenticationReducer)
+  const dispatch = useDispatch()
+
   useEffect(() => {
     const script = document.createElement('script')
 
@@ -23,15 +28,15 @@ export const FWCalculatorPage = () => {
           if (!authenticated) {
             window.location.reload()
           } else {
-            setAuthenciation(authenticated)
+            dispatch(createAuthentication(authenticated))
           }
           setTimeout(() => {
             keycloak.updateToken(60)
           }, 6000)
         })
     }
-  }, [])
+  }, [dispatch])
 
-  if (isAuthenciated) return <header>Hello World!!!</header>
+  if (isAuthenticated) return <header>Hello World!!!</header>
   else return <div />
 }
