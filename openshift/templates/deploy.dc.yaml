@@ -53,14 +53,9 @@ objects:
     data:
       env.api-base-url: "${URL_API}"
       env.fider-url: "${URL_FIDER}"
-      keycloak.json: |-
-          {
-            "initOptions": {
-              "url": "${KEYCLOAK_AUTH_URL}",
-              "realm": "${KEYCLOAK_REALM}",
-              "clientId": "${KEYCLOAK_CLIENT}"
-            }
-          }
+      env.keycloak-auth-url: "${KEYCLOAK_AUTH_URL}"
+      env.keycloak-realm: "${KEYCLOAK_REALM}"
+      env.keycloak-client: "${KEYCLOAK_CLIENT}"
     metadata:
       labels:
         app: ${NAME}-${SUFFIX}
@@ -103,6 +98,21 @@ objects:
                     configMapKeyRef:
                       name: ${NAME}-${SUFFIX}
                       key: env.fider-url
+                - name: REACT_APP_KEYCLOAK_AUTH_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ${NAME}-${SUFFIX}
+                      key: env.keycloak-auth-url
+                - name: REACT_APP_KEYCLOAK_REALM
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ${NAME}-${SUFFIX}
+                      key: env.keycloak-realm
+                - name: REACT_APP_KEYCLOAK_CLIENT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: ${NAME}-${SUFFIX}
+                      key: env.keycloak-client
               ports:
                 - containerPort: 3000
               resources:
@@ -112,10 +122,6 @@ objects:
                 requests:
                   cpu: ${CPU_REQUEST}
                   memory: ${MEMORY_REQUEST}
-          volumes:
-            - name: ${NAME}-${SUFFIX}
-              configMap:
-                name: ${NAME}-${SUFFIX}
   - apiVersion: v1
     kind: Service
     metadata:

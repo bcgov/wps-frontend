@@ -22,8 +22,7 @@ Installs all dependencies in the node_modules folder.
 
 ### Executing program
 
-1. In the project directory, create `.env` file at root using `.env.example` as a sample and
-2. Create `keycloak.json` file at /src/utils/ using `keycloak.example.json` as a sample and then you can run:
+In the project directory, create `.env` file at root using `.env.example` as a sample and then you can run:
 
 #### `npm start`
 
@@ -41,9 +40,8 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 ##### Running the application in docker:
 1. Create `.env` file at root using `.env.example` as a sample
-2. Create `keycloak.json` file at /src/utils/ using `keycloak.example.json` as a sample
-3. Run `docker-compose build` and then `docker-compose up`
-4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+2. Run `docker-compose build` and then `docker-compose up`
+3. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 
 ## License

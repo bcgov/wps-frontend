@@ -45,14 +45,3 @@ export const {
 } = auth.actions
 
 export default auth.reducer
-
-export const createAuthentication = (
-  authenticated: boolean
-): AppThunk => async dispatch => {
-  try {
-    dispatch(getAuthenticationStart())
-    dispatch(getAuthenticationSuccess(authenticated))
-  } catch (err) {
-    dispatch(getAuthenticationFailed(err.toString()))
-  }
-}

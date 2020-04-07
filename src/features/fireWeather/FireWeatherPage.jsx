@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { initOptions } from 'utils/keycloak.json'
 import { selectAuthenticationReducer } from 'app/rootReducer'
 import {
-  createAuthentication,
-  resetAuthentication
+  getAuthenticationSuccess,
+  resetAuthentication,
+  getAuthenticationFailed
 } from './slices/authenticationSlice'
 
 export const FireWeatherPage = () => {
@@ -12,35 +12,39 @@ export const FireWeatherPage = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const script = document.createElement('script')
-
-    script.src = `${initOptions.url}/js/keycloak.js`
-    script.async = true
-
-    const keyCloakScript = document.body.appendChild(script)
-
-    keyCloakScript.onload = () => {
-      const keycloak = window.Keycloak(initOptions)
-      keycloak
-        .init({
-          onLoad: 'login-required',
-          promiseType: 'native',
-          checkLoginIframe: false
-        })
-        .then(authenticated => {
-          if (!authenticated) {
-            dispatch(resetAuthentication())
-            window.location.reload()
-          } else {
-            dispatch(createAuthentication(authenticated))
-          }
-          setTimeout(() => {
+    const keycloak = window.Keycloak({
+      url: process.env.REACT_APP_KEYCLOAK_AUTH_URL,
+      realm: process.env.REACT_APP_KEYCLOAK_REALM,
+      clientId: process.env.REACT_APP_KEYCLOAK_CLIENT
+    })
+    keycloak
+      .init({
+        onLoad: 'login-required',
+        promiseType: 'native',
+        checkLoginIframe: false
+      })
+      .then(authenticated => {
+        if (!authenticated) {
+          dispatch(resetAuthentication())
+          window.location.reload()
+        } else {
+          dispatch(getAuthenticationSuccess(authenticated))
+        }
+        setTimeout(() => {
+          try {
             keycloak.updateToken(60)
-          }, 6000)
-        })
-    }
+          } catch (err) {
+            dispatch(getAuthenticationFailed(err))
+          }
+        }, 6000)
+      })
   }, [dispatch])
 
   if (isAuthenticated) return <header>Hello World!!!</header>
-  else return <div />
+  else
+    return (
+      <div>
+        <p>Page is loading....</p>
+      </div>
+    )
 }
