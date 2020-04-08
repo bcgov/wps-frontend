@@ -37,7 +37,7 @@ parameters:
     description: Memory upper limit
     value: 2Gi
   - name: WPS_WEB_GLOBAL_PROPS
-    value: ${NAME}-global
+    value: wps-web-global
 objects:
   - apiVersion: v1
     kind: DeploymentConfig
