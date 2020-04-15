@@ -1,9 +1,7 @@
-name: DEV
+name: Development Rollout
 
 on:
   pull_request:
-    branches:
-      - master
 
 jobs:
   lint-and-test:
