@@ -26,10 +26,28 @@ jobs:
     name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Set Variables
+      - name: Set and Echo Variables
         shell: bash
         run: |
+          echo -e "\n\n--- Environment Variables ---\n"
+          echo "HOME: ${HOME}"
+          echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
+          echo "GITHUB_RUN_ID: ${GITHUB_RUN_ID}"
+          echo "GITHUB_RUN_NUMBER: ${GITHUB_RUN_NUMBER}"
+          echo "GITHUB_ACTION: ${GITHUB_ACTION}"
+          echo "GITHUB_ACTIONS: ${GITHUB_ACTIONS}"
+          echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
+          echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+          echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+          echo "GITHUB_EVENT_PATH: ${GITHUB_EVENT_PATH}"
+          echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
+          echo "GITHUB_SHA: ${GITHUB_SHA}"
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
+          echo "GITHUB_BASE_REF: ${GITHUB_BASE_REF}"
+          echo -e "\n\n--- Workflow (Custom) Variables ---\n"
           echo "::set-env name=SUFFIX::pr-${{ github.event.number }}"
+          echo "SUFFIX: ${SUFFIX}"
 
       - name: Checkout
         uses: actions/checkout@v2
