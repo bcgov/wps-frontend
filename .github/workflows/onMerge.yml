@@ -43,25 +43,25 @@ jobs:
           echo "TARGET: ${TARGET}"
 
       - name: Checkout
-        if: github.event.pull_request.merged == true
+        # if: github.event.pull_request.merged == true
         uses: actions/checkout@v2
 
       - name: Build
-        if: github.event.pull_request.merged == true
+        # if: github.event.pull_request.merged == true
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
           SCRIPT: GIT_BRANCH=${BRANCH} openshift/scripts/oc_build.sh ${SUFFIX} apply
 
       - name: Deploy
-        if: github.event.pull_request.merged == true
+        # if: github.event.pull_request.merged == true
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
           SCRIPT: PROJ_DEV=${TARGET} openshift/scripts/oc_deploy.sh ${SUFFIX} apply
 
       - name: Comment on PR
-        if: github.event.pull_request.merged == true
+        # if: github.event.pull_request.merged == true
         uses: thollander/actions-comment-pull-request@master
         with:
           message: 'Rollout triggered!  Please see the appropriate "Post-merge Rollout" GitHub Action. https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22'
