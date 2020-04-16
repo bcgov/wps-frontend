@@ -6,7 +6,7 @@ name: Post-merge Comment
 
 on:
   pull_request:
-    types: [closed]
+    types: [opened]
 
 jobs:
   variables:
@@ -14,8 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Comment on PR
-        if: github.event.pull_request.merged == true
         uses: thollander/actions-comment-pull-request@master
         with:
-          message: 'Rollout triggered!  Please see the appropriate "Post-merge Rollout" GitHub Action. https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22'
+          message: 'Thanks for your contribution!  Please see CONTRIBUTING.md for details.  \nIMPORTANT: When merged a persistent deployment will begin at the following link:  https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22'
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
