@@ -1,7 +1,7 @@
 import reducer, {
   percentileInitialState,
   getPercentilesSuccess
-} from 'features/fwiCalculator/slices/percentilesSlice'
+} from 'features/percentileCalculator/slices/percentilesSlice'
 import { PercentilesResponse } from 'api/percentileAPI'
 
 describe('Percentiles Slice', () => {

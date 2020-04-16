@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Modal, Card, Button } from '@material-ui/core'
 import InfoIcon from '@material-ui/icons/Info'
 
-import { FWICalculatorPage } from 'features/fwiCalculator/FWICalculatorPage'
+import { PercentileCalculatorPage } from 'features/percentileCalculator/pages/PercentileCalculatorPage'
 
 const useStyles = makeStyles({
   cardWrapper: {
@@ -39,7 +39,7 @@ interface Props {
   showDisclaimer: boolean
 }
 
-export const FWICalculatorPageWithDisclaimer = (props: Props) => {
+export const PercentileCalculatorPageWithDisclaimer = (props: Props) => {
   const classes = useStyles()
   const [show, setShow] = React.useState(props.showDisclaimer)
 
@@ -48,7 +48,7 @@ export const FWICalculatorPageWithDisclaimer = (props: Props) => {
   }
 
   if (!show) {
-    return <FWICalculatorPage />
+    return <PercentileCalculatorPage />
   }
 
   return (
