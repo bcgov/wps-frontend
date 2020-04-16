@@ -2,9 +2,7 @@ import React from 'react'
 import { CssBaseline } from '@material-ui/core'
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 
-import { FWICalculatorPageWithDisclaimer } from 'features/fwiCalculator/FWICalculatorPageWithDisclaimer'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
-import { FireWeatherPage } from 'features/fireWeather/FireWeatherPage'
+import { Routes } from 'app/Routes'
 
 // Theme documentation: https://material-ui.com/customization/palette/
 // Theme demo: https://material.io/resources/color/#!/?view.left=1&view.right=1&primary.color=003365&secondary.color=FBC02D
@@ -34,21 +32,12 @@ const theme = createMuiTheme({
   }
 })
 
-const shouldShowModal = process.env.REACT_APP_HIDE_DISCLAIMER === undefined
-
 const App = () => {
   return (
     <React.StrictMode>
       <CssBaseline />
       <ThemeProvider theme={theme}>
-        <Router>
-          <Route path="/" exact>
-            <FWICalculatorPageWithDisclaimer show={shouldShowModal} />
-          </Route>
-          <Route path="/fire-weather" exact>
-            <FireWeatherPage />
-          </Route>
-        </Router>
+        <Routes />
       </ThemeProvider>
     </React.StrictMode>
   )
