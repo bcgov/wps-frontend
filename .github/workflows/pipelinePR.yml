@@ -1,10 +1,7 @@
-name: Development Rollout
+name: Pipeline - Pull Request
 
 on:
   pull_request:
-    - opened
-    - edited
-    - closed
 
 jobs:
   lint-and-test:
@@ -29,7 +26,7 @@ jobs:
     if: github.event.pull_request.state == open
     runs-on: ubuntu-latest
     steps:
-      - name: Set and Echo Variables
+      - name: Variables
         shell: bash
         run: |
           echo -e "\n\n--- Environment Variables ---\n"
@@ -56,21 +53,21 @@ jobs:
         if: github.event.pull_request.state == open
         uses: actions/checkout@v2
 
-      - name: Build image
+      - name: Builds
         if: github.event.pull_request.state == open
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
           SCRIPT: GIT_BRANCH=${GITHUB_HEAD_REF} openshift/scripts/oc_build.sh ${SUFFIX} apply
 
-      - name: Deploy to Dev
+      - name: Deploy
         if: github.event.pull_request.state == open
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
           SCRIPT: openshift/scripts/oc_deploy.sh ${SUFFIX} apply
 
-      - name: Cleanup Script
+      - name: Cleanup
         if: github.event.pull_request.state == closed
         uses: bcgov/openshift-launchpad-deployment@master
         with:
