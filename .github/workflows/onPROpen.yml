@@ -1,21 +1,20 @@
-# Provide post-merge (prod, test, demo) instructions in with a comment
+# Welcomes and directs contributors with a comment
 #
-# Triggers on PR close, but only comments if merged==true
+# Triggers on newly opened pull requests
 #
-name: Post-merge Comment
+name: Open PR Comment
 
 on:
   pull_request:
-    types: [closed]
+    types: [opened]
 
 jobs:
   variables:
-    name: Comment on Merged Pull Request
+    name: Comment on New Pull Request
     runs-on: ubuntu-latest
     steps:
       - name: Comment on PR
-        if: github.event.pull_request.merged == true
         uses: thollander/actions-comment-pull-request@master
         with:
-          message: 'Rollout triggered!  Please see the appropriate "Post-merge Rollout" GitHub Action. https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22'
+          message: 'Thanks for the pull request!  Please see [CONTRIBUTING.md](https://github.com/bcgov/wps-web/blob/master/CONTRIBUTING.yaml) for details.  <br>IMPORTANT: When this PR is merged you must make sure the [Post-merge Rollout](https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22) completes successfully.'
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
