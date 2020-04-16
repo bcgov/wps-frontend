@@ -29,7 +29,7 @@ jobs:
           echo "GITHUB_BASE_REF: ${GITHUB_BASE_REF}"
           echo -e "\n--- Workflow (Custom) Variables ---\n"
           BRANCH=${GITHUB_BASE_REF}
-          SUFFIX="${BRANCH}"
+          SUFFIX="${BRANCH,,}"
           TARGET="auzhsi-test"
           if [ "${BRANCH}" == "master" ]; then
             # TARGET="auzhsi-prod"
