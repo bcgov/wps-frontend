@@ -1,8 +1,10 @@
-name: DEV
+name: Cleanup
 
 on:
   pull_request:
     types: [closed]
+    branch:
+      - 'temporarily-skipped'
 jobs:
   clean-up:
     name: Clean OpenShift artifacts
