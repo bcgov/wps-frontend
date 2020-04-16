@@ -2,7 +2,7 @@ import { combineReducers } from '@reduxjs/toolkit'
 
 import stationsReducer from 'features/percentileCalculator/slices/stationsSlice'
 import percentilesReducer from 'features/percentileCalculator/slices/percentilesSlice'
-import authenticationReducer from 'features/fireWeather/slices/authenticationSlice'
+import authenticationReducer from 'features/auth/slices/authenticationSlice'
 
 const rootReducer = combineReducers({
   stations: stationsReducer,

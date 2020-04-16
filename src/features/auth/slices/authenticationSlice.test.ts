@@ -1,7 +1,7 @@
 import reducer, {
   authenticationInitialState,
   getAuthenticationSuccess
-} from 'features/fireWeather/slices/authenticationSlice'
+} from 'features/auth/slices/authenticationSlice'
 
 describe('Authentication Slice', () => {
   it('Should return initial state on first run', () => {
