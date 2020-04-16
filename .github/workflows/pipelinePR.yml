@@ -6,7 +6,7 @@ on:
 jobs:
   lint-and-test:
     name: Lint and Unit Test
-    if: github.event.pull_request.state == open
+    if: github.event.pull_request == open
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,9 +23,25 @@ jobs:
 
   build-and-deploy:
     name: Build and Deploy
-    if: github.event.pull_request.state == open
     runs-on: ubuntu-latest
     steps:
+      - name: Echo 1
+        if: github.event.pull_request.state == 'open'
+        shell: bash
+        run: echo -e "This PR is OPEN"
+      - name: Echo 2
+        if: github.event.pull_request.state == 'closed'
+        shell: bash
+        run: echo -e "This PR is CLOSED"
+      - name: Echo 3
+        if: github.event.pull_request.state != 'open' || github.event.pull_request.state != 'closed'
+        shell: bash
+        run: |
+          echo -e "This is Schrodinger's PR.  It is both open and closed until observed.  Or neither."
+          echo -e "Pull Request Object: ${{ github.event.pull_request.state }}"
+
+
+
       - name: Variables
         shell: bash
         run: |
@@ -45,30 +61,37 @@ jobs:
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
           echo "GITHUB_BASE_REF: ${GITHUB_BASE_REF}"
+          
           echo -e "\n\n--- Workflow (Custom) Variables ---\n"
           echo "::set-env name=SUFFIX::pr-${{ github.event.number }}"
           echo "SUFFIX: ${SUFFIX}"
 
+          
+          echo -e "\n\n--- Event Variables ---\n"
+          # echo "github.event.pull_request: " github.event.pull_request
+          echo -e "{\"github.event.pull_request":\""github.event.pull_request"\"}"
+
+
       - name: Checkout
-        if: github.event.pull_request.state == open
+        if: github.event.pull_request.state == 'open'
         uses: actions/checkout@v2
 
       - name: Builds
-        if: github.event.pull_request.state == open
+        if: github.event.pull_request.state == 'open'
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
           SCRIPT: GIT_BRANCH=${GITHUB_HEAD_REF} openshift/scripts/oc_build.sh ${SUFFIX} apply
 
       - name: Deploy
-        if: github.event.pull_request.state == open
+        if: github.event.pull_request.state == 'open'
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
           SCRIPT: openshift/scripts/oc_deploy.sh ${SUFFIX} apply
 
       - name: Cleanup
-        if: github.event.pull_request.state == closed
+        if: github.event.pull_request.state != 'open'
         uses: bcgov/openshift-launchpad-deployment@master
         with:
           AUTH_TOKEN: ${{ secrets.action_token }}
