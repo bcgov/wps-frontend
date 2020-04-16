@@ -2,7 +2,7 @@
 #
 # Triggers on newly opened pull requests
 #
-name: Open PR Comment
+name: PR Comments
 
 on:
   pull_request:
@@ -21,8 +21,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Comment on PR
-      if: github.event.pull_request.merged == true
-      uses: thollander/actions-comment-pull-request@master
-      with:
-        message: 'IMPORTANT: Please ensure the [Post-merge Rollout](https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22) completes successfully.'
-        GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+        if: github.event.pull_request.merged == true
+        uses: thollander/actions-comment-pull-request@master
+        with:
+          message: 'IMPORTANT: Please ensure the [Post-merge Rollout](https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22) completes successfully.'
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
