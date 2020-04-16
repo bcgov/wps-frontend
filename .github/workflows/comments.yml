@@ -17,12 +17,21 @@ jobs:
         if: github.event.pull_request.merged == false && github.event.pull_request.comments == 0
         uses: thollander/actions-comment-pull-request@master
         with:
-          message: 'Thanks for the pull request!  Please see [CONTRIBUTING.md](https://github.com/bcgov/wps-web/blob/master/CONTRIBUTING.yaml) for details.  <br>IMPORTANT: When this PR is merged you must make sure the [Post-merge Rollout](https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22) completes successfully.'
+          message: |
+            Thanks for the pull request! <br>
+            Please see [CONTRIBUTING.md](https://github.com/bcgov/wps-web/blob/master/CONTRIBUTING.yaml)
+            for details. <br><br>
+            IMPORTANT: Make sure any
+            [post-merge rollouts](https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22)
+            complete successfully.
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Comment on PR
         if: github.event.pull_request.merged == true
         uses: thollander/actions-comment-pull-request@master
         with:
-          message: 'IMPORTANT: Please ensure the [Post-merge Rollout](https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22) completes successfully.'
+          message:  |
+            IMPORTANT: Please ensure the
+            [Post-merge Rollout](https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22)
+            completes successfully.
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
