@@ -10,10 +10,7 @@ describe('Authentication Slice', () => {
   })
 
   it('Should return new state after fetching authentication', () => {
-    const nextState = reducer(
-      authenticationInitialState,
-      getAuthenticationSuccess(true)
-    )
+    const nextState = reducer(authenticationInitialState, getAuthenticationSuccess(true))
     expect(nextState).not.toBe(authenticationInitialState) // check referential identity
     expect(nextState.isAuthenticated).toBe(true)
   })

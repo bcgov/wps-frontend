@@ -67,10 +67,7 @@ export const FWICalculatorPage = () => {
           onStationsChange={onStationsChange}
         />
 
-        <TimeRangeSlider
-          timeRange={timeRange}
-          onYearRangeChange={onYearRangeChange}
-        />
+        <TimeRangeSlider timeRange={timeRange} onYearRangeChange={onYearRangeChange} />
 
         <PercentileTextfield />
 

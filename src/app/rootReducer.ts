@@ -17,5 +17,4 @@ export default rootReducer
 
 export const selectStationsReducer = (state: RootState) => state.stations
 export const selectPercentilesReducer = (state: RootState) => state.percentiles
-export const selectAuthenticationReducer = (state: RootState) =>
-  state.authentication
+export const selectAuthenticationReducer = (state: RootState) => state.authentication

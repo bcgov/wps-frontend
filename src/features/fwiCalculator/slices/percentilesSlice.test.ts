@@ -21,10 +21,7 @@ describe('Percentiles Slice', () => {
       percentile: 90,
       year_range: { start: 2010, end: 2019 }
     }
-    const nextState = reducer(
-      percentileInitialState,
-      getPercentilesSuccess(data)
-    )
+    const nextState = reducer(percentileInitialState, getPercentilesSuccess(data))
     expect(nextState).not.toBe(percentileInitialState)
     expect(nextState.result).toBe(data)
   })

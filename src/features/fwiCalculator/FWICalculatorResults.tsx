@@ -24,11 +24,7 @@ export const FWICalculatorResults = () => {
 
   if (error) {
     return (
-      <ErrorMessage
-        message={error}
-        when="while getting the calculation"
-        marginTop={5}
-      />
+      <ErrorMessage message={error} when="while getting the calculation" marginTop={5} />
     )
   }
 
