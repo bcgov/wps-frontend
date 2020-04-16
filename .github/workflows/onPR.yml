@@ -2,8 +2,7 @@ name: Development Rollout
 
 on:
   pull_request:
-    branch:
-      - 'temporarily-skipped'
+
 jobs:
   lint-and-test:
     name: Lint and Unit Test

@@ -44,7 +44,7 @@ jobs:
           echo "TARGET: ${TARGET}"
 
       - name: Comment on PR
-        # if: github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == true
         uses: thollander/actions-comment-pull-request@master
         with:
           message: 'Rollout triggered!  Please see the appropriate "Post-merge Rollout" GitHub Action. https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22'
