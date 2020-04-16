@@ -3,7 +3,6 @@ name: Cleanup
 on:
   pull_request:
     types: [closed]
-
 jobs:
   clean-up:
     name: Clean OpenShift artifacts
