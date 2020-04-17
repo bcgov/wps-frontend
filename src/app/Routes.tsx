@@ -3,10 +3,11 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 
 import { FireWeatherPage } from 'features/fireWeather/FireWeatherPage'
 import { PercentileCalculatorPageWithDisclaimer } from 'features/percentileCalculator/pages/PercentileCalculatorPageWithDisclaimer'
+import { HIDE_DISCLAIMER } from 'utils/constants'
+
+const shouldShowDisclaimer = HIDE_DISCLAIMER === undefined
 
 const NoMatch = () => <div>Page not found.</div>
-
-const shouldShowDisclaimer = process.env.REACT_APP_HIDE_DISCLAIMER === undefined
 
 export const Routes = () => {
   return (
