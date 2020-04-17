@@ -28,7 +28,7 @@ interface Props {
   onStationsChange: (stations: Station[]) => void
 }
 
-export const WeatherStationsDropdown = (props: Props) => {
+export const WeatherStationDropdown = (props: Props) => {
   const classes = useStyles()
   const { stations, error } = useSelector(selectStationsReducer)
 

@@ -5,8 +5,8 @@ import { Station } from 'api/stationAPI'
 import { PageHeader } from 'components/PageHeader'
 import { PageTitle } from 'components/PageTitle'
 import { Container } from 'components/Container'
-import { fetchStations } from 'features/percentileCalculator/slices/stationsSlice'
-import { WeatherStationsDropdown } from 'features/percentileCalculator/components/StationsDropdown'
+import { fetchWeatherStations } from 'features/weatherStations/slices/stationsSlice'
+import { WeatherStationDropdown } from 'features/weatherStations/components/WeatherStationDropdown'
 import { PercentileTextfield } from 'features/percentileCalculator/components/PercentileTextfield'
 import {
   fetchPercentiles,
@@ -26,7 +26,7 @@ export const PercentileCalculatorPage = () => {
   const [timeRange, setTimeRange] = useState<number>(defaultTimeRange)
 
   useEffect(() => {
-    dispatch(fetchStations())
+    dispatch(fetchWeatherStations())
   }, [dispatch])
 
   const onStationsChange = (s: Station[]) => {
@@ -62,10 +62,7 @@ export const PercentileCalculatorPage = () => {
       <PageHeader title="Predictive Services Unit" />
       <PageTitle title="Percentile Calculator" />
       <Container>
-        <WeatherStationsDropdown
-          stations={stations}
-          onStationsChange={onStationsChange}
-        />
+        <WeatherStationDropdown stations={stations} onStationsChange={onStationsChange} />
 
         <TimeRangeSlider timeRange={timeRange} onYearRangeChange={onYearRangeChange} />
 
