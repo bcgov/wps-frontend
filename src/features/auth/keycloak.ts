@@ -1,10 +1,11 @@
 import { KEYCLOAK_AUTH_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT } from 'utils/constants'
+import { KeycloakInitOptions } from 'types/keycloak'
 
-export const keycloakInitOption = {
+export const keycloakInitOption: KeycloakInitOptions = {
   onLoad: 'login-required',
   promiseType: 'native',
   checkLoginIframe: false
-} as const
+}
 
 export const getKeycloakInstance = () => {
   try {

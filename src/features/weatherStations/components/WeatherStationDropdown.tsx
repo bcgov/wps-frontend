@@ -1,8 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TextField, Tooltip, IconButton } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import MapIcon from '@material-ui/icons/Map'
 
 import { Station } from 'api/stationAPI'
@@ -56,7 +56,7 @@ export const WeatherStationDropdown = (props: Props) => {
               variant="outlined"
               fullWidth
               size="small"
-              helperText="Can select up to 3 weather stations."
+              helperText="Select up to 3 weather stations."
             />
           )}
         />

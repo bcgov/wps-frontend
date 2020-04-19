@@ -14,7 +14,7 @@ import {
 } from 'features/percentileCalculator/slices/percentilesSlice'
 import { PercentileActionButtons } from 'features/percentileCalculator/components/PercentileActionButtons'
 import { PercentileResults } from 'features/percentileCalculator/components/PercentileResults'
-import { TimeRangeSlider } from '../components/TimeRangeSlider'
+import { TimeRangeSlider } from 'features/percentileCalculator/components/TimeRangeSlider'
 
 const defaultTimeRange = 10
 const defaultPercentile = 90
@@ -53,8 +53,8 @@ export const PercentileCalculatorPage = () => {
 
   const onResetClick = () => {
     setStations([])
-    dispatch(resetPercentilesResult())
     setTimeRange(defaultTimeRange)
+    dispatch(resetPercentilesResult())
   }
 
   return (
