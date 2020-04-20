@@ -6,7 +6,7 @@ name: PR Comments
 
 on:
   pull_request:
-    types: [opened,closed]
+    types: [opened, closed]
 
 jobs:
   variables:
@@ -19,10 +19,10 @@ jobs:
         with:
           message: |
             Thanks for the pull request! <br>
-            Please see [CONTRIBUTING.md](https://github.com/bcgov/wps-web/blob/master/CONTRIBUTING.yaml)
-            for details. <br><br>
-            IMPORTANT: Make sure any
-            [post-merge rollouts](https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22)
+            Please see [CONTRIBUTING.md](https://github.com/bcgov/wps-web/blob/master/CONTRIBUTING.yaml) \
+            for details. <br>
+            IMPORTANT: Make sure any \
+            [post-merge rollouts](https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22) \
             complete successfully.
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -31,7 +31,8 @@ jobs:
         uses: thollander/actions-comment-pull-request@master
         with:
           message:  |
-            IMPORTANT: Please ensure the
-            [Post-merge Rollout](https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22)
+            This pull request has been merged! <br>
+            ACTION: Please ensure the \
+            [Post-merge Rollout](https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Post-merge+Rollout%22) \
             completes successfully.
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
