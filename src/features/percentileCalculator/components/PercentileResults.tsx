@@ -24,7 +24,11 @@ export const PercentileResults = () => {
 
   if (error) {
     return (
-      <ErrorMessage message={error} when="while getting the calculation" marginTop={5} />
+      <ErrorMessage
+        message={error}
+        when="while getting the calculation result"
+        marginTop={5}
+      />
     )
   }
 

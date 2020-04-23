@@ -31,6 +31,7 @@ interface Props {
 export const WeatherStationDropdown = (props: Props) => {
   const classes = useStyles()
   const { stations, error } = useSelector(selectStationsReducer)
+  const isError = Boolean(error)
 
   const onMapIconClick = () => {
     window.open(WEATHER_STATION_MAP_LINK, '_blank')
@@ -56,7 +57,8 @@ export const WeatherStationDropdown = (props: Props) => {
               variant="outlined"
               fullWidth
               size="small"
-              helperText="Select up to 3 weather stations."
+              error={isError}
+              helperText={!isError && 'Select up to 3 weather stations.'}
             />
           )}
         />

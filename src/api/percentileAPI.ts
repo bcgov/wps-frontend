@@ -1,4 +1,4 @@
-import axios from 'api/axios'
+import axios, { getErrorMessage } from 'api/axios'
 
 interface Season {
   start_month: number
@@ -56,6 +56,6 @@ export async function getPercentiles(
     })
     return data
   } catch (err) {
-    throw err
+    throw getErrorMessage(err)
   }
 }

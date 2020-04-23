@@ -47,6 +47,6 @@ export const fetchWeatherStations = (): AppThunk => async dispatch => {
     const stations = await getStations()
     dispatch(getStationsSuccess(stations))
   } catch (err) {
-    dispatch(getStationsFailed(err.toString()))
+    dispatch(getStationsFailed(err))
   }
 }
