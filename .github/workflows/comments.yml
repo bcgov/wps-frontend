@@ -18,9 +18,9 @@ jobs:
         if: github.event.pull_request.merged == false && github.event.pull_request.comments == 0
         uses: thollander/actions-comment-pull-request@master
         with:
-          message: |
+          message: >-
             Thanks for the pull request! <br>
-            Please see [CONTRIBUTING.md](https://github.com/bcgov/wps-web/blob/master/CONTRIBUTING.yaml) \
+            Please see [CONTRIBUTING.md](https://github.com/bcgov/wps-web/blob/master/CONTRIBUTING.yaml) 
             for details.
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
@@ -28,7 +28,7 @@ jobs:
         if: github.event.pull_request.merged == true
         uses: thollander/actions-comment-pull-request@master
         with:
-          message:  |
+          message: >-
             This pull request has been merged! <br>
             ACTION: Please ensure any post-merge steps have been taken.
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
