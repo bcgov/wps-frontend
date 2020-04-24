@@ -10,10 +10,10 @@ import { authenticate } from 'features/auth/slices/authenticationSlice'
 import { fetchWeatherStations } from 'features/weatherStations/slices/stationsSlice'
 import { WeatherStationDropdown } from 'features/weatherStations/components/WeatherStationDropdown'
 
-export const FireWeatherPage = () => {
+export const FWICalculatorPage = () => {
   const dispatch = useDispatch()
 
-  const [stations, setStations] = useState<Station[]>([])
+  const [selectedStations, setStations] = useState<Station[]>([])
 
   const { isAuthenticated, authenticating, error } = useSelector(
     selectAuthenticationReducer
@@ -25,9 +25,6 @@ export const FireWeatherPage = () => {
   }, [dispatch])
 
   const onStationsChange = (s: Station[]) => {
-    if (s.length > 3) {
-      return
-    }
     setStations(s)
   }
 
@@ -44,11 +41,14 @@ export const FireWeatherPage = () => {
   }
 
   return (
-    <div data-testid="fire-weather-page">
+    <div data-testid="fwi-calculator-page">
       <PageHeader title="Predictive Services Unit" />
-      <PageTitle title="Fire Weather Calculator" />
+      <PageTitle title="Fire Weather Index Calculator" />
       <Container>
-        <WeatherStationDropdown stations={stations} onStationsChange={onStationsChange} />
+        <WeatherStationDropdown
+          stations={selectedStations}
+          onStationsChange={onStationsChange}
+        />
       </Container>
     </div>
   )

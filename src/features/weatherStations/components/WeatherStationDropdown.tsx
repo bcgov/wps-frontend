@@ -26,13 +26,14 @@ const useStyles = makeStyles({
 interface Props {
   stations: Station[]
   onStationsChange: (stations: Station[]) => void
+  maxNumOfSelect?: number
 }
 
 export const WeatherStationDropdown = (props: Props) => {
   const classes = useStyles()
   const { stations, error } = useSelector(selectStationsReducer)
   const isError = Boolean(error)
-
+  const maxNumOfSelect = props.maxNumOfSelect || 3
   const onMapIconClick = () => {
     window.open(WEATHER_STATION_MAP_LINK, '_blank')
   }
@@ -47,6 +48,9 @@ export const WeatherStationDropdown = (props: Props) => {
           options={stations}
           getOptionLabel={option => `${option.name} (${option.code})`}
           onChange={(_, stations) => {
+            if (stations.length > maxNumOfSelect) {
+              return
+            }
             props.onStationsChange(stations)
           }}
           value={props.stations}
@@ -58,7 +62,7 @@ export const WeatherStationDropdown = (props: Props) => {
               fullWidth
               size="small"
               error={isError}
-              helperText={!isError && 'Select up to 3 weather stations.'}
+              helperText={!isError && `Select up to ${maxNumOfSelect} weather stations.`}
             />
           )}
         />

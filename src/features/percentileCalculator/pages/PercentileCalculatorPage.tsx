@@ -22,7 +22,7 @@ const defaultPercentile = 90
 export const PercentileCalculatorPage = () => {
   const dispatch = useDispatch()
 
-  const [stations, setStations] = useState<Station[]>([])
+  const [selectedStations, setStations] = useState<Station[]>([])
   const [timeRange, setTimeRange] = useState<number>(defaultTimeRange)
 
   useEffect(() => {
@@ -30,9 +30,6 @@ export const PercentileCalculatorPage = () => {
   }, [dispatch])
 
   const onStationsChange = (s: Station[]) => {
-    if (s.length > 3) {
-      return
-    }
     setStations(s)
   }
 
@@ -41,7 +38,7 @@ export const PercentileCalculatorPage = () => {
   }
 
   const onCalculateClick = () => {
-    const stationCodes = stations.map(s => s.code)
+    const stationCodes = selectedStations.map(s => s.code)
     const currYear = new Date().getFullYear()
     const yearRange = {
       start: currYear - timeRange,
@@ -62,14 +59,17 @@ export const PercentileCalculatorPage = () => {
       <PageHeader title="Predictive Services Unit" />
       <PageTitle title="Percentile Calculator" />
       <Container>
-        <WeatherStationDropdown stations={stations} onStationsChange={onStationsChange} />
+        <WeatherStationDropdown
+          stations={selectedStations}
+          onStationsChange={onStationsChange}
+        />
 
         <TimeRangeSlider timeRange={timeRange} onYearRangeChange={onYearRangeChange} />
 
         <PercentileTextfield />
 
         <PercentileActionButtons
-          stations={stations}
+          stations={selectedStations}
           onCalculateClick={onCalculateClick}
           onResetClick={onResetClick}
         />
