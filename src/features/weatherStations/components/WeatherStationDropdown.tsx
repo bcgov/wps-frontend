@@ -78,7 +78,7 @@ export const WeatherStationDropdown = (props: Props) => {
           </IconButton>
         </Tooltip>
       </div>
-      {error && <ErrorMessage message={error} when="while fetching weather stations" />}
+      {error && <ErrorMessage context="while fetching weather stations" />}
     </>
   )
 }

@@ -23,13 +23,7 @@ export const PercentileResults = () => {
   const { result, error } = useSelector(selectPercentilesReducer)
 
   if (error) {
-    return (
-      <ErrorMessage
-        message={error}
-        when="while getting the calculation result"
-        marginTop={5}
-      />
-    )
+    return <ErrorMessage context="while getting the calculation result" marginTop={5} />
   }
 
   if (!result) return null

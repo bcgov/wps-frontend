@@ -1,4 +1,4 @@
-import axios, { getErrorMessage } from 'api/axios'
+import axios from 'api/axios'
 
 export interface Station {
   code: number
@@ -18,6 +18,6 @@ export async function getStations(): Promise<Station[]> {
     const { data } = await axios.get<StationsResponse>(url)
     return data.weather_stations
   } catch (err) {
-    throw getErrorMessage(err)
+    throw err.toString()
   }
 }
