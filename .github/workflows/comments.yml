@@ -7,7 +7,7 @@ name: PR Comments
 
 on:
   pull_request:
-    types: [opened, closed]
+    types: [opened, reopened, synchronize, closed]
 
 jobs:
   variables:
