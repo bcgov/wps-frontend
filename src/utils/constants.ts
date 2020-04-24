@@ -6,9 +6,9 @@ export const FWI_VALUES_DECIMAL_POINT = 2
 export const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL || '{{.Env.REACT_APP_API_BASE_URL}}'
 export const HIDE_DISCLAIMER = process.env.REACT_APP_HIDE_DISCLAIMER
-export const KEYCLOAK_AUTH_URL =
+export const KC_AUTH_URL =
   process.env.REACT_APP_KEYCLOAK_AUTH_URL || '{{.Env.REACT_APP_KEYCLOAK_AUTH_URL}}'
-export const KEYCLOAK_REALM =
+export const KC_REALM =
   process.env.REACT_APP_KEYCLOAK_REALM || '{{.Env.REACT_APP_KEYCLOAK_REALM}}'
-export const KEYCLOAK_CLIENT =
+export const KC_CLIENT =
   process.env.REACT_APP_KEYCLOAK_CLIENT || '{{.Env.REACT_APP_KEYCLOAK_CLIENT}}'

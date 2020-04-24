@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { AppThunk } from 'app/store'
-import { getKeycloakInstance, keycloakInitOption } from 'features/auth/keycloak'
+import { getKCInstance, kcInitOption } from 'features/auth/keycloak'
 
 interface AuthState {
   authenticating: boolean
@@ -48,8 +48,9 @@ export default auth.reducer
 
 export const authenticate = (): AppThunk => dispatch => {
   dispatch(authenticationStart())
-  getKeycloakInstance()
-    .init(keycloakInitOption)
+  const instance = getKCInstance()
+  instance
+    .init(kcInitOption)
     .then(isAuthenticated => {
       dispatch(authenticationFinished(isAuthenticated))
     })
