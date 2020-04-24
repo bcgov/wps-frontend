@@ -1,11 +1,11 @@
-name: Post-merge Rollout
+name: Pipeline - Merge
 
 on:
   pull_request:
     types: [closed]
 jobs:
   variables:
-    name: Build and Deploy from Target Branch
+    name: Build and Deploy from Merge
     runs-on: ubuntu-latest
     steps:
       - name: Set and Echo Variables
