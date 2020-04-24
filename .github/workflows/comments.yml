@@ -15,8 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Comment on PR
-        if: github.event.pull_request.merged == false && github.event.pull_request.comments == 0 && \
-            github.event.pull_request.state == 'open'
+        if: github.event.pull_request.merged == false && github.event.pull_request.comments == 0 && github.event.pull_request.state == 'open'
         uses: thollander/actions-comment-pull-request@master
         with:
           message: >-
