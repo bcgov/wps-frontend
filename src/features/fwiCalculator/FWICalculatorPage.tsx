@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Button } from '@material-ui/core'
 
 import { Station } from 'api/stationAPI'
 import { selectAuthenticationReducer } from 'app/rootReducer'
@@ -9,6 +10,7 @@ import { Container } from 'components/Container'
 import { authenticate } from 'features/auth/slices/authenticationSlice'
 import { fetchWeatherStations } from 'features/weatherStations/slices/stationsSlice'
 import { WeatherStationDropdown } from 'features/weatherStations/components/WeatherStationDropdown'
+import { fetchWeatherPredictions } from 'features/fwiCalculator/slices/WeatherPredictionsSlice'
 
 export const FWICalculatorPage = () => {
   const dispatch = useDispatch()
@@ -26,6 +28,9 @@ export const FWICalculatorPage = () => {
 
   const onStationsChange = (s: Station[]) => {
     setStations(s)
+  }
+  const onSubmitClick = () => {
+    dispatch(fetchWeatherPredictions(selectedStations))
   }
 
   if (error) {
@@ -49,6 +54,9 @@ export const FWICalculatorPage = () => {
           stations={selectedStations}
           onStationsChange={onStationsChange}
         />
+        <Button variant="contained" onClick={onSubmitClick}>
+          Submit
+        </Button>
       </Container>
     </div>
   )

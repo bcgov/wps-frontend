@@ -13,13 +13,13 @@ export const Routes = () => {
   return (
     <Router>
       <Switch>
-        <Redirect exact from="/" to="/percentile-calculator" />
+        <Redirect exact from="/" to="/percentile-calculator/" />
 
-        <Route path="/percentile-calculator">
+        <Route path="/percentile-calculator/">
           <PercentileCalculatorPageWithDisclaimer showDisclaimer={shouldShowDisclaimer} />
         </Route>
 
-        <Route path="/fwi-calculator">
+        <Route path="/fwi-calculator/">
           <FWICalculatorPage />
         </Route>
 

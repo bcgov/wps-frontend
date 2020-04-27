@@ -7,16 +7,11 @@ export const kcInitOption: KeycloakInitOptions = {
   checkLoginIframe: false
 }
 
-export const getKCInstance = () => {
-  try {
-    const instance = window.Keycloak<'native'>({
-      url: KC_AUTH_URL,
-      realm: KC_REALM,
-      clientId: KC_CLIENT
-    })
+// Let Typescript know we are using the 'native' promise type
+const instance = window.Keycloak<'native'>({
+  url: KC_AUTH_URL,
+  realm: KC_REALM,
+  clientId: KC_CLIENT
+})
 
-    return instance
-  } catch (err) {
-    throw err
-  }
-}
+export default instance
