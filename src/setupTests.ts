@@ -19,3 +19,6 @@ if (window.document) {
   })
 }
 /* eslint-enable */
+
+// mock global variable Keycloak in window
+window.Keycloak = jest.fn()

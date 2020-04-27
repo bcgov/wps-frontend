@@ -59,10 +59,10 @@ it('renders error message when fetching stations failed', async () => {
 
   const { getByText, queryByText, store } = renderWithRedux(<PercentileCalculatorPage />)
 
-  expect(queryByText(/404/i)).not.toBeInTheDocument()
+  expect(queryByText(/Error occurred/i)).not.toBeInTheDocument()
   expect(selectStationsReducer(store.getState()).error).toBeNull()
 
-  await waitForElement(() => getByText(/404/i))
+  await waitForElement(() => getByText(/Error occurred/i))
 
   expect(selectStationsReducer(store.getState()).error).toBeTruthy()
 })
