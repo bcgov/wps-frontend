@@ -29,7 +29,7 @@ interface Props {
   maxNumOfSelect?: number
 }
 
-export const WeatherStationDropdown = (props: Props) => {
+export const WxStationDropdown = (props: Props) => {
   const classes = useStyles()
   const { stations, error } = useSelector(selectStationsReducer)
   const isError = Boolean(error)

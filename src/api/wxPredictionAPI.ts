@@ -1,7 +1,7 @@
 import axios from 'api/axios'
 import { Station } from 'api/stationAPI'
 
-interface WeatherValue {
+interface WxValue {
   datetime: string
   temperature: number
   dew_point: number
@@ -26,22 +26,20 @@ interface WeatherValue {
   wind_direction_850m: number
 }
 
-export interface WeatherPrediction {
+export interface WxPrediction {
   station: Station
-  predicted_values: WeatherValue[]
+  predicted_values: WxValue[]
 }
 
-interface WeatherPredictionResponse {
-  predictions: WeatherPrediction[]
+interface WxPredictionResponse {
+  predictions: WxPrediction[]
 }
 
-export async function getWeatherPrediction(
-  stationCodes: number[]
-): Promise<WeatherPrediction[]> {
+export async function getWxPrediction(stationCodes: number[]): Promise<WxPrediction[]> {
   const url = '/predictions/'
 
   try {
-    const { data } = await axios.post<WeatherPredictionResponse>(url, {
+    const { data } = await axios.post<WxPredictionResponse>(url, {
       stations: stationCodes
     })
     return data.predictions

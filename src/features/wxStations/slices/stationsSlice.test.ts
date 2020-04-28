@@ -1,7 +1,7 @@
 import reducer, {
   stationsInitialState,
   getStationsSuccess
-} from 'features/weatherStations/slices/stationsSlice'
+} from 'features/wxStations/slices/stationsSlice'
 
 describe('Stations Slice', () => {
   it('Should return initial state on first run', () => {

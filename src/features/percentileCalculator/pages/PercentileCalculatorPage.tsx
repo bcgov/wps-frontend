@@ -5,8 +5,8 @@ import { Station } from 'api/stationAPI'
 import { PageHeader } from 'components/PageHeader'
 import { PageTitle } from 'components/PageTitle'
 import { Container } from 'components/Container'
-import { fetchWeatherStations } from 'features/weatherStations/slices/stationsSlice'
-import { WeatherStationDropdown } from 'features/weatherStations/components/WeatherStationDropdown'
+import { fetchWeatherStations } from 'features/wxStations/slices/stationsSlice'
+import { WxStationDropdown } from 'features/wxStations/components/WxStationDropdown'
 import { PercentileTextfield } from 'features/percentileCalculator/components/PercentileTextfield'
 import {
   fetchPercentiles,
@@ -59,7 +59,7 @@ export const PercentileCalculatorPage = () => {
       <PageHeader title="Predictive Services Unit" />
       <PageTitle title="Percentile Calculator" />
       <Container>
-        <WeatherStationDropdown
+        <WxStationDropdown
           stations={selectedStations}
           onStationsChange={onStationsChange}
         />
