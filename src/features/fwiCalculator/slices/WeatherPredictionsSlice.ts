@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+
 import { WeatherPrediction, getWeatherPrediction } from 'api/weatherPredictionAPI'
 import { AppThunk } from 'app/store'
-import { Station } from 'api/stationAPI'
 
 interface State {
   isLoading: boolean
@@ -45,11 +45,11 @@ export const {
 export default weatherPredictions.reducer
 
 export const fetchWeatherPredictions = (
-  stations: Station[]
+  stationCodes: number[]
 ): AppThunk => async dispatch => {
   try {
     dispatch(getWeatherPredictionStart())
-    const weatherPredictions = await getWeatherPrediction(stations)
+    const weatherPredictions = await getWeatherPrediction(stationCodes)
     dispatch(getWeatherPredictionSuccess(weatherPredictions))
   } catch (err) {
     dispatch(getWeatherPredictionFailed(err))

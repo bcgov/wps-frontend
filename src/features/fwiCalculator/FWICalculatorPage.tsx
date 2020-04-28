@@ -30,7 +30,8 @@ export const FWICalculatorPage = () => {
     setStations(s)
   }
   const onSubmitClick = () => {
-    dispatch(fetchWeatherPredictions(selectedStations))
+    const stationCodes = selectedStations.map(s => s.code)
+    dispatch(fetchWeatherPredictions(stationCodes))
   }
 
   if (error) {

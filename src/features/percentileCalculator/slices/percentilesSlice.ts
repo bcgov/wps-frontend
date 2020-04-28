@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+
 import { getPercentiles, PercentilesResponse, YearRange } from 'api/percentileAPI'
 import { AppThunk } from 'app/store'
 
@@ -49,13 +50,13 @@ export const {
 export default percentiles.reducer
 
 export const fetchPercentiles = (
-  stations: number[],
+  stationCodes: number[],
   percentile: number,
   yearRange: YearRange
 ): AppThunk => async dispatch => {
   try {
     dispatch(getPercentilesStart())
-    const result = await getPercentiles(stations, percentile, yearRange)
+    const result = await getPercentiles(stationCodes, percentile, yearRange)
     dispatch(getPercentilesSuccess(result))
   } catch (err) {
     dispatch(getPercentilesFailed(err))

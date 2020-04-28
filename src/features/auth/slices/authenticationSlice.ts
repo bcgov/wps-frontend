@@ -3,13 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AppThunk } from 'app/store'
 import kcInstance, { kcInitOption } from 'features/auth/keycloak'
 
-interface AuthState {
+interface State {
   authenticating: boolean
   isAuthenticated: boolean
   error: string | null
 }
 
-export const authInitialState: AuthState = {
+export const initialState: State = {
   authenticating: false,
   isAuthenticated: false,
   error: null
@@ -17,21 +17,21 @@ export const authInitialState: AuthState = {
 
 const auth = createSlice({
   name: 'authentication',
-  initialState: authInitialState,
+  initialState,
   reducers: {
-    authenticationStart(state: AuthState) {
+    authenticationStart(state: State) {
       state.authenticating = true
     },
-    authenticationFinished(state: AuthState, action: PayloadAction<boolean>) {
+    authenticationFinished(state: State, action: PayloadAction<boolean>) {
       state.authenticating = false
       state.isAuthenticated = action.payload
     },
-    authenticationError(state: AuthState, action: PayloadAction<string>) {
+    authenticationError(state: State, action: PayloadAction<string>) {
       state.authenticating = false
       state.isAuthenticated = false
       state.error = action.payload
     },
-    resetAuthentication(state: AuthState) {
+    resetAuthentication(state: State) {
       state.isAuthenticated = false
     }
   }

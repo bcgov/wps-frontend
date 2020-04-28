@@ -1,5 +1,5 @@
 import axios from 'api/axios'
-import { Station } from './stationAPI'
+import { Station } from 'api/stationAPI'
 
 interface WeatherValue {
   datetime: string
@@ -36,13 +36,13 @@ interface WeatherPredictionResponse {
 }
 
 export async function getWeatherPrediction(
-  stations: Station[]
+  stationCodes: number[]
 ): Promise<WeatherPrediction[]> {
   const url = '/predictions/'
 
   try {
     const { data } = await axios.post<WeatherPredictionResponse>(url, {
-      stations: stations.map(s => s.code)
+      stations: stationCodes
     })
     return data.predictions
   } catch (err) {
