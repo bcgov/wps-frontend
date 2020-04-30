@@ -9,7 +9,7 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 
-import { selectWxPredictionReducer } from 'app/rootReducer'
+import { selectForecastsReducer } from 'app/rootReducer'
 import { ErrorMessage } from 'components/ErrorMessage'
 
 const useStyles = makeStyles({
@@ -19,37 +19,36 @@ const useStyles = makeStyles({
   display: {
     marginTop: 15
   },
-  prediction: {
+  forecast: {
     marginBottom: 20
   },
   table: {
     minWidth: 650
   },
   station: {
-    paddingTop: 12,
+    paddingTop: 16,
     paddingLeft: 16,
     paddingBottom: 8,
-    fontSize: '1rem',
-    fontStyle: 'italic'
+    fontSize: '1rem'
   }
 })
 
-export const WxPredictionsDisplay = () => {
+export const DailyForecastsDisplay = () => {
   const classes = useStyles()
-  const { error, wxPredictions } = useSelector(selectWxPredictionReducer)
+  const { error, forecasts } = useSelector(selectForecastsReducer)
 
   if (error) {
     return <ErrorMessage context="while fetching weather forecast data" marginTop={5} />
   }
 
-  if (wxPredictions.length === 0) {
+  if (forecasts.length === 0) {
     return null
   }
 
   return (
     <div className={classes.display}>
-      {wxPredictions.map(({ station, predicted_values }) => (
-        <Paper className={classes.prediction} key={station.code}>
+      {forecasts.map(({ station, values }) => (
+        <Paper className={classes.forecast} key={station.code}>
           <div className={classes.station}>
             Weather Station: {`${station.name} (${station.code})`}
           </div>
@@ -58,22 +57,22 @@ export const WxPredictionsDisplay = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="left">Date</TableCell>
-                  <TableCell align="center">Temperature (°C)</TableCell>
-                  <TableCell align="center">RH</TableCell>
-                  <TableCell align="center">Wind Direction</TableCell>
-                  <TableCell align="center">Wind Speed (km/h)</TableCell>
-                  <TableCell align="center">Precipitation</TableCell>
+                  <TableCell align="left">Temperature (°C)</TableCell>
+                  <TableCell align="left">RH</TableCell>
+                  <TableCell align="left">Wind Direction</TableCell>
+                  <TableCell align="left">Wind Speed (km/h)</TableCell>
+                  <TableCell align="left">Precipitation</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {predicted_values.map(value => (
+                {values.map(value => (
                   <TableRow key={value.datetime}>
                     <TableCell align="left">{value.datetime}</TableCell>
-                    <TableCell align="center">{value.temperature}</TableCell>
-                    <TableCell align="center">{value.relative_humidity}</TableCell>
-                    <TableCell align="center">{value.wind_direction}</TableCell>
-                    <TableCell align="center">{value.wind_speed}</TableCell>
-                    <TableCell align="center">{value.total_precipitation}</TableCell>
+                    <TableCell align="left">{value.temperature}</TableCell>
+                    <TableCell align="left">{value.relative_humidity}</TableCell>
+                    <TableCell align="left">{value.wind_direction}</TableCell>
+                    <TableCell align="left">{value.wind_speed}</TableCell>
+                    <TableCell align="left">{value.total_precipitation}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

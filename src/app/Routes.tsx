@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
-import { FWICalculatorPage } from 'features/fwiCalculator/FWICalculatorPage'
+import { DailyForecastsPage } from 'features/dailyForecasts/DailyForecastsPage'
 import { PercentileCalculatorPageWithDisclaimer } from 'features/percentileCalculator/pages/PercentileCalculatorPageWithDisclaimer'
 import { HIDE_DISCLAIMER } from 'utils/constants'
 
@@ -19,8 +19,8 @@ export const Routes = () => {
           <PercentileCalculatorPageWithDisclaimer showDisclaimer={shouldShowDisclaimer} />
         </Route>
 
-        <Route path="/fwi-calculator/">
-          <FWICalculatorPage />
+        <Route path="/fire-weather/">
+          <DailyForecastsPage />
         </Route>
 
         <Route>

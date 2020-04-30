@@ -41,7 +41,7 @@ export const {
 
 export default stations.reducer
 
-export const fetchWeatherStations = (): AppThunk => async dispatch => {
+export const fetchWxStations = (): AppThunk => async dispatch => {
   try {
     dispatch(getStationsStart())
     const stations = await getStations()

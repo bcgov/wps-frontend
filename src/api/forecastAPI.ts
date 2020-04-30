@@ -26,23 +26,23 @@ interface WxValue {
   wind_direction_850m: number
 }
 
-export interface WxPrediction {
+export interface Forecast {
   station: Station
-  predicted_values: WxValue[]
+  values: WxValue[]
 }
 
-interface WxPredictionResponse {
-  predictions: WxPrediction[]
+interface ForecastsResponse {
+  forecasts: Forecast[]
 }
 
-export async function getWxPrediction(stationCodes: number[]): Promise<WxPrediction[]> {
-  const url = '/predictions/'
+export async function getForecasts(stationCodes: number[]): Promise<Forecast[]> {
+  const url = '/forecasts/'
 
   try {
-    const { data } = await axios.post<WxPredictionResponse>(url, {
+    const { data } = await axios.post<ForecastsResponse>(url, {
       stations: stationCodes
     })
-    return data.predictions
+    return data.forecasts
   } catch (err) {
     throw err.toString()
   }

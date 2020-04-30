@@ -4,18 +4,15 @@ import { Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { Station } from 'api/stationAPI'
-import {
-  selectAuthenticationReducer as selectAuthReducer,
-  selectWxPredictionReducer as selectWxPredReducer
-} from 'app/rootReducer'
+import { selectAuthReducer, selectForecastsReducer } from 'app/rootReducer'
 import { PageHeader } from 'components/PageHeader'
 import { PageTitle } from 'components/PageTitle'
 import { Container } from 'components/Container'
 import { authenticate } from 'features/auth/slices/authenticationSlice'
-import { fetchWeatherStations } from 'features/wxStations/slices/stationsSlice'
-import { WxStationDropdown } from 'features/wxStations/components/WxStationDropdown'
-import { fetchWxPredictions } from 'features/fwiCalculator/slices/WxPredictionsSlice'
-import { WxPredictionsDisplay } from 'features/fwiCalculator/components/WxPredictionsDisplay'
+import { fetchWxStations } from 'features/stations/slices/stationsSlice'
+import { WxStationDropdown } from 'features/stations/components/WxStationDropdown'
+import { fetchForecasts } from 'features/dailyForecasts/slices/ForecastsSlice'
+import { DailyForecastsDisplay } from 'features/dailyForecasts/components/DailyForecastsDisplay'
 
 const useStyles = makeStyles({
   btn: {
@@ -23,18 +20,18 @@ const useStyles = makeStyles({
   }
 })
 
-export const FWICalculatorPage = () => {
+export const DailyForecastsPage = () => {
   const dispatch = useDispatch()
   const classes = useStyles()
 
   const [selectedStations, setStations] = useState<Station[]>([])
 
   const { isAuthenticated, authenticating, error } = useSelector(selectAuthReducer)
-  const { isLoading: wxDataLoading } = useSelector(selectWxPredReducer)
+  const { isLoading: wxDataLoading } = useSelector(selectForecastsReducer)
 
   useEffect(() => {
     dispatch(authenticate())
-    dispatch(fetchWeatherStations())
+    dispatch(fetchWxStations())
   }, [dispatch])
 
   const onStationsChange = (s: Station[]) => {
@@ -42,7 +39,7 @@ export const FWICalculatorPage = () => {
   }
   const onSubmitClick = () => {
     const stationCodes = selectedStations.map(s => s.code)
-    dispatch(fetchWxPredictions(stationCodes))
+    dispatch(fetchForecasts(stationCodes))
   }
 
   if (error) {
@@ -77,7 +74,7 @@ export const FWICalculatorPage = () => {
         >
           Get Weather Data
         </Button>
-        <WxPredictionsDisplay />
+        <DailyForecastsDisplay />
       </Container>
     </div>
   )

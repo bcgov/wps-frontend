@@ -5,8 +5,8 @@ import { Station } from 'api/stationAPI'
 import { PageHeader } from 'components/PageHeader'
 import { PageTitle } from 'components/PageTitle'
 import { Container } from 'components/Container'
-import { fetchWeatherStations } from 'features/wxStations/slices/stationsSlice'
-import { WxStationDropdown } from 'features/wxStations/components/WxStationDropdown'
+import { fetchWxStations } from 'features/stations/slices/stationsSlice'
+import { WxStationDropdown } from 'features/stations/components/WxStationDropdown'
 import { PercentileTextfield } from 'features/percentileCalculator/components/PercentileTextfield'
 import {
   fetchPercentiles,
@@ -26,7 +26,7 @@ export const PercentileCalculatorPage = () => {
   const [timeRange, setTimeRange] = useState<number>(defaultTimeRange)
 
   useEffect(() => {
-    dispatch(fetchWeatherStations())
+    dispatch(fetchWxStations())
   }, [dispatch])
 
   const onStationsChange = (s: Station[]) => {
