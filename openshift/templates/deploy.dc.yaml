@@ -3,16 +3,16 @@ kind: Template
 metadata:
   name: ${NAME}
   annotations:
-    openshift.io/display-name: "wps-web" 
-    description: "Wildfire Predictive Services - Web Client"  
-    openshift.io/long-description: "Wildfire Predictive Services - Web Client" 
-    tags: "wps,wps-web"
-    iconClass: icon-js 
-    openshift.io/provider-display-name: "Government of British Columbia" 
-    openshift.io/documentation-url: "https://github.com/bcgov/wps-web" 
-    openshift.io/support-url: "https://github.com/bcgov/wps-web"
+    openshift.io/display-name: 'wps-web'
+    description: 'Wildfire Predictive Services - Web Client'
+    openshift.io/long-description: 'Wildfire Predictive Services - Web Client'
+    tags: 'wps,wps-web'
+    iconClass: icon-js
+    openshift.io/provider-display-name: 'Government of British Columbia'
+    openshift.io/documentation-url: 'https://github.com/bcgov/wps-web'
+    openshift.io/support-url: 'https://github.com/bcgov/wps-web'
 labels:
-  app.kubernetes.io/part-of: "${NAME}"
+  app.kubernetes.io/part-of: '${NAME}'
 parameters:
   - name: NAME
     description: Module name
@@ -38,7 +38,17 @@ parameters:
     value: 2Gi
   - name: WPS_WEB_GLOBAL_CONFIG
     value: wps-web-global
+  - name: API_BASE_URL
+    value: https://wps-api-prod.pathfinder.gov.bc.ca
 objects:
+  - apiVersion: v1
+    kind: ConfigMap
+    data:
+      env.api-base-url: '${API_BASE_URL}'
+    metadata:
+      labels:
+        app: ${NAME}-${SUFFIX}
+      name: ${NAME}-${SUFFIX}
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
@@ -66,7 +76,7 @@ objects:
                 - name: REACT_APP_API_BASE_URL
                   valueFrom:
                     configMapKeyRef:
-                      name: ${WPS_WEB_GLOBAL_CONFIG}
+                      name: ${NAME}-${SUFFIX}
                       key: env.api-base-url
                 - name: REACT_APP_FIDER_LINK
                   valueFrom:
