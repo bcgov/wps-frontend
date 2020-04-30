@@ -20,6 +20,9 @@ const useStyles = makeStyles({
   wrapper: {
     display: 'flex',
     alignItems: 'flex-start'
+  },
+  viewMapLabel: {
+    fontSize: 14
   }
 })
 
@@ -69,7 +72,7 @@ export const WeatherStationsDropdown = (props: Props) => {
             onClick={onMapIconClick}
           >
             <MapIcon />
-            View Map
+            <span className={classes.viewMapLabel}>View Map</span>
           </IconButton>
         </Tooltip>
       </div>
