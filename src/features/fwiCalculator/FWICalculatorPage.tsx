@@ -4,7 +4,10 @@ import { Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { Station } from 'api/stationAPI'
-import { selectAuthenticationReducer } from 'app/rootReducer'
+import {
+  selectAuthenticationReducer as selectAuthReducer,
+  selectWxPredictionReducer as selectWxPredReducer
+} from 'app/rootReducer'
 import { PageHeader } from 'components/PageHeader'
 import { PageTitle } from 'components/PageTitle'
 import { Container } from 'components/Container'
@@ -17,9 +20,6 @@ import { WxPredictionsDisplay } from 'features/fwiCalculator/components/WxPredic
 const useStyles = makeStyles({
   btn: {
     marginTop: 10
-  },
-  display: {
-    marginTop: 10
   }
 })
 
@@ -29,9 +29,8 @@ export const FWICalculatorPage = () => {
 
   const [selectedStations, setStations] = useState<Station[]>([])
 
-  const { isAuthenticated, authenticating, error } = useSelector(
-    selectAuthenticationReducer
-  )
+  const { isAuthenticated, authenticating, error } = useSelector(selectAuthReducer)
+  const { isLoading: wxDataLoading } = useSelector(selectWxPredReducer)
 
   useEffect(() => {
     dispatch(authenticate())
@@ -58,10 +57,12 @@ export const FWICalculatorPage = () => {
     return <div>You are not authenticated!</div>
   }
 
+  const isBtnDisabled = wxDataLoading || selectedStations.length === 0
+
   return (
     <div data-testid="fwi-calculator-page">
       <PageHeader title="Predictive Services Unit" />
-      <PageTitle title="Fire Weather Index Calculator" />
+      <PageTitle title="Daily Weather Forecast" />
       <Container>
         <WxStationDropdown
           stations={selectedStations}
@@ -69,15 +70,14 @@ export const FWICalculatorPage = () => {
         />
         <Button
           className={classes.btn}
-          variant="contained"
           onClick={onSubmitClick}
-          disabled={selectedStations.length === 0}
+          disabled={isBtnDisabled}
+          variant="contained"
+          color="primary"
         >
-          Get GDPS Model
+          Get Weather Data
         </Button>
-        <div className={classes.display}>
-          <WxPredictionsDisplay />
-        </div>
+        <WxPredictionsDisplay />
       </Container>
     </div>
   )
