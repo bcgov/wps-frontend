@@ -30,7 +30,5 @@ jobs:
         with:
           message: >-
             This pull request has been merged! <br>
-            ACTION: Please ensure the
-            [Post-merge Rollout](https://github.com/bcgov/wps-web/actions?query=workflow%3A%22Pipeline+-+Merge%22)
-            completes successfully.
+            ACTION: Please ensure any post-merge steps have been taken.
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
