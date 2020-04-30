@@ -69,6 +69,7 @@ export const WeatherStationsDropdown = (props: Props) => {
             onClick={onMapIconClick}
           >
             <MapIcon />
+            View Map
           </IconButton>
         </Tooltip>
       </div>
