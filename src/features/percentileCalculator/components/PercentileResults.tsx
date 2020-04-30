@@ -46,7 +46,7 @@ export const PercentileResults = () => {
     <div data-testid="percentile-result-tables" className={classes.root}>
       <GridContainer className={classes.gridContainer}>
         {isMoreThanOneResult && (
-          <GridItem lg={12}>
+          <GridItem lg={12} md={12}>
             <PercentileMeanResultTable meanValues={result.mean_values} />
           </GridItem>
         )}
