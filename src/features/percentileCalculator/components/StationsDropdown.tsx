@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { TextField, Button } from '@material-ui/core'
+import { TextField, Link } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import LaunchIcon from '@material-ui/icons/Launch'
 
@@ -18,12 +18,11 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'flex-start'
   },
-  viewMapLabel: {
-    fontSize: 14
+  mapLink: {
+    marginBottom: 8
   },
-  mapButton: {
-    display: 'flex',
-    marginBottom: 10
+  mapLabel: {
+    display: 'flex'
   }
 })
 
@@ -36,23 +35,22 @@ export const WeatherStationsDropdown = (props: Props) => {
   const classes = useStyles()
   const { stations, error } = useSelector(selectStationsReducer)
 
-  const onMapIconClick = () => {
-    window.open(WEATHER_STATION_MAP_LINK, '_blank')
-  }
-
   return (
     <>
       <div className={classes.wrapper}>
-        <Button
-          color="primary"
-          aria-label="directions"
-          onClick={onMapIconClick}
-          className={classes.mapButton}
-          data-testid="launch-map-button"
+        <Link
+          className={classes.mapLink}
+          data-testid="launch-map-link"
+          href={WEATHER_STATION_MAP_LINK}
+          target="_blank"
+          rel="noopener"
+          variant="body2"
         >
-          <span className={classes.viewMapLabel}>Navigate to Weather Stations Map</span>
-          <LaunchIcon />
-        </Button>
+          <span className={classes.mapLabel}>
+            Navigate to Weather Stations Map
+            <LaunchIcon fontSize="small" />
+          </span>
+        </Link>
       </div>
       <div className={classes.wrapper}>
         <Autocomplete
@@ -72,7 +70,7 @@ export const WeatherStationsDropdown = (props: Props) => {
               variant="outlined"
               fullWidth
               size="small"
-              helperText="Can select up to 3 weather stations."
+              helperText="Select up to 3 weather stations."
             />
           )}
         />
