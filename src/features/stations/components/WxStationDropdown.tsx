@@ -24,6 +24,7 @@ const useStyles = makeStyles({
 })
 
 interface Props {
+  className?: string
   stations: Station[]
   onStationsChange: (stations: Station[]) => void
   maxNumOfSelect?: number
@@ -39,11 +40,11 @@ export const WxStationDropdown = (props: Props) => {
   }
 
   return (
-    <>
+    <div className={props.className}>
       <div className={classes.wrapper}>
         <Autocomplete
-          data-testid="weather-station-dropdown"
           className={classes.root}
+          data-testid="weather-station-dropdown"
           multiple
           options={stations}
           getOptionLabel={option => `${option.name} (${option.code})`}
@@ -79,6 +80,6 @@ export const WxStationDropdown = (props: Props) => {
         </Tooltip>
       </div>
       {error && <ErrorMessage context="while fetching weather stations" />}
-    </>
+    </div>
   )
 }

@@ -8,15 +8,13 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
 
 import { selectForecastsReducer } from 'app/rootReducer'
 import { ErrorMessage } from 'components/ErrorMessage'
 import { FORECAST_VALUES_DECIMAL } from 'utils/constants'
 
 const useStyles = makeStyles({
-  loading: {
-    marginTop: 15
-  },
   display: {
     marginTop: 15
   },
@@ -27,12 +25,10 @@ const useStyles = makeStyles({
     minWidth: 650
   },
   station: {
-    paddingTop: 16,
-    paddingLeft: 16,
-    fontSize: '1rem'
+    paddingTop: 8,
+    paddingLeft: 16
   },
   units: {
-    textAlign: 'right',
     paddingRight: 16,
     paddingBottom: 4,
     fontStyle: 'italic'
@@ -55,10 +51,17 @@ export const DailyForecastsDisplay = () => {
     <div className={classes.display} data-testid="daily-forecast-displays">
       {forecasts.map(({ station, values }) => (
         <Paper className={classes.forecast} key={station.code}>
-          <div className={classes.station}>
+          <Typography className={classes.station} variant="subtitle1" component="div">
             Weather Station: {`${station.name} (${station.code})`}
-          </div>
-          <div className={classes.units}>Temp: °C, Wind Spd: km/h, Precip: mm/cm</div>
+          </Typography>
+          <Typography
+            className={classes.units}
+            variant="subtitle2"
+            align="right"
+            component="div"
+          >
+            Temp: °C, Wind Spd: km/h, Precip: mm/cm
+          </Typography>
           <TableContainer>
             <Table className={classes.table} size="small" aria-label="weather data table">
               <TableHead>
