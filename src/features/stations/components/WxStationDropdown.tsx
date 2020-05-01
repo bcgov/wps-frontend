@@ -79,7 +79,7 @@ export const WxStationDropdown = (props: Props) => {
           </IconButton>
         </Tooltip>
       </div>
-      {error && <ErrorMessage context="while fetching weather stations" />}
+      {error && <ErrorMessage error={error} context="while fetching weather stations" />}
     </div>
   )
 }

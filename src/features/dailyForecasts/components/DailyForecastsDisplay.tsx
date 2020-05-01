@@ -40,7 +40,13 @@ export const DailyForecastsDisplay = () => {
   const { error, forecasts } = useSelector(selectForecastsReducer)
 
   if (error) {
-    return <ErrorMessage context="while fetching weather forecast data" marginTop={5} />
+    return (
+      <ErrorMessage
+        error={error}
+        context="while fetching weather forecast data"
+        marginTop={5}
+      />
+    )
   }
 
   if (forecasts.length === 0) {

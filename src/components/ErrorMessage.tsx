@@ -9,6 +9,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface Props {
+  error: string
   context?: string
   marginTop?: number
 }
