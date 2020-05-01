@@ -1,9 +1,9 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { TextField, Tooltip, IconButton } from '@material-ui/core'
+import { TextField, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import MapIcon from '@material-ui/icons/Map'
+import LaunchIcon from '@material-ui/icons/Launch'
 
 import { Station } from 'api/stationAPI'
 import { selectStationsReducer } from 'app/rootReducer'
@@ -14,15 +14,16 @@ const useStyles = makeStyles({
   root: {
     width: '100%'
   },
-  mapIcon: {
-    padding: 10
-  },
   wrapper: {
     display: 'flex',
     alignItems: 'flex-start'
   },
   viewMapLabel: {
     fontSize: 14
+  },
+  mapButton: {
+    display: 'flex',
+    marginBottom: 10
   }
 })
 
@@ -41,6 +42,18 @@ export const WeatherStationsDropdown = (props: Props) => {
 
   return (
     <>
+      <div className={classes.wrapper}>
+        <Button
+          color="primary"
+          aria-label="directions"
+          onClick={onMapIconClick}
+          className={classes.mapButton}
+          data-testid="launch-map-button"
+        >
+          <span className={classes.viewMapLabel}>Navigate to Weather Stations Map</span>
+          <LaunchIcon />
+        </Button>
+      </div>
       <div className={classes.wrapper}>
         <Autocomplete
           data-testid="weather-station-dropdown"
@@ -63,18 +76,6 @@ export const WeatherStationsDropdown = (props: Props) => {
             />
           )}
         />
-        <Tooltip title="Navigate to Weather Stations Map">
-          <IconButton
-            data-testid="map-icon"
-            className={classes.mapIcon}
-            color="primary"
-            aria-label="directions"
-            onClick={onMapIconClick}
-          >
-            <MapIcon />
-            <span className={classes.viewMapLabel}>View Map</span>
-          </IconButton>
-        </Tooltip>
       </div>
       {error && <ErrorMessage message={error} when="while fetching weather stations" />}
     </>

@@ -31,9 +31,9 @@ it('renders FWI calculator page', async () => {
   expect(getByTestId('percentile-textfield')).toBeInTheDocument()
 
   // Map icon tests
-  expect(getByTestId('map-icon')).toBeInTheDocument()
+  expect(getByTestId('launch-map-button')).toBeInTheDocument()
   window.open = jest.fn()
-  fireEvent.click(getByTestId('map-icon'))
+  fireEvent.click(getByTestId('launch-map-button'))
   expect(window.open).toBeCalledWith(WEATHER_STATION_MAP_LINK, '_blank')
 })
 
