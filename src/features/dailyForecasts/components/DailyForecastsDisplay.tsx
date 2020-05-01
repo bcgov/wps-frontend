@@ -11,6 +11,7 @@ import Paper from '@material-ui/core/Paper'
 
 import { selectForecastsReducer } from 'app/rootReducer'
 import { ErrorMessage } from 'components/ErrorMessage'
+import { FORECAST_VALUES_DECIMAL } from 'utils/constants'
 
 const useStyles = makeStyles({
   loading: {
@@ -28,8 +29,13 @@ const useStyles = makeStyles({
   station: {
     paddingTop: 16,
     paddingLeft: 16,
-    paddingBottom: 8,
     fontSize: '1rem'
+  },
+  units: {
+    textAlign: 'right',
+    paddingRight: 16,
+    paddingBottom: 4,
+    fontStyle: 'italic'
   }
 })
 
@@ -46,33 +52,44 @@ export const DailyForecastsDisplay = () => {
   }
 
   return (
-    <div className={classes.display}>
+    <div className={classes.display} data-testid="daily-forecast-displays">
       {forecasts.map(({ station, values }) => (
         <Paper className={classes.forecast} key={station.code}>
           <div className={classes.station}>
             Weather Station: {`${station.name} (${station.code})`}
           </div>
+          <div className={classes.units}>Temp: °C, Wind Spd: km/h, Precip: mm/cm</div>
           <TableContainer>
             <Table className={classes.table} size="small" aria-label="weather data table">
               <TableHead>
                 <TableRow>
                   <TableCell align="left">Date</TableCell>
-                  <TableCell align="left">Temperature (°C)</TableCell>
+                  <TableCell align="left">Temp</TableCell>
                   <TableCell align="left">RH</TableCell>
-                  <TableCell align="left">Wind Direction</TableCell>
-                  <TableCell align="left">Wind Speed (km/h)</TableCell>
-                  <TableCell align="left">Precipitation</TableCell>
+                  <TableCell align="left">Wind Dir</TableCell>
+                  <TableCell align="left">Wind Spd</TableCell>
+                  <TableCell align="left">Precip</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {values.map(value => (
                   <TableRow key={value.datetime}>
-                    <TableCell align="left">{value.datetime}</TableCell>
-                    <TableCell align="left">{value.temperature}</TableCell>
-                    <TableCell align="left">{value.relative_humidity}</TableCell>
-                    <TableCell align="left">{value.wind_direction}</TableCell>
-                    <TableCell align="left">{value.wind_speed}</TableCell>
-                    <TableCell align="left">{value.total_precipitation}</TableCell>
+                    <TableCell align="left">{value.datetime.slice(0, 10)}</TableCell>
+                    <TableCell align="left">
+                      {value.temperature.toFixed(FORECAST_VALUES_DECIMAL)}
+                    </TableCell>
+                    <TableCell align="left">
+                      {value.relative_humidity.toFixed(FORECAST_VALUES_DECIMAL)}
+                    </TableCell>
+                    <TableCell align="left">
+                      {value.wind_direction.toFixed(FORECAST_VALUES_DECIMAL)}
+                    </TableCell>
+                    <TableCell align="left">
+                      {value.wind_speed.toFixed(FORECAST_VALUES_DECIMAL)}
+                    </TableCell>
+                    <TableCell align="left">
+                      {value.total_precipitation.toFixed(FORECAST_VALUES_DECIMAL)}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

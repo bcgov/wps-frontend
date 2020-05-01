@@ -5,15 +5,14 @@ import { waitForElement, cleanup, fireEvent } from '@testing-library/react'
 import axios from 'api/axios'
 import { selectStationsReducer } from 'app/rootReducer'
 import { renderWithRedux } from 'utils/testUtils'
-import { WEATHER_STATION_MAP_LINK, FWI_VALUES_DECIMAL_POINT } from 'utils/constants'
+import { WEATHER_STATION_MAP_LINK, FWI_VALUES_DECIMAL } from 'utils/constants'
 import { PercentileCalculatorPage } from 'features/percentileCalculator/pages/PercentileCalculatorPage'
-
-const mockAxios = new MockAdapter(axios)
-
 import {
   mockStations,
   mockPercentilesResponse
 } from 'features/percentileCalculator/pages/PercentileCalculatorPage.mock'
+
+const mockAxios = new MockAdapter(axios)
 
 afterEach(() => {
   mockAxios.reset()
@@ -79,7 +78,7 @@ it('renders time range slider with selecting the range', async () => {
   expect(timeRangeSliderInput.getAttribute('value')).toEqual('20')
 })
 
-it('renders percentiles result when clicking on the calculate button', async () => {
+it('renders percentiles result in response to user inputs', async () => {
   mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
   mockAxios.onPost('/percentiles/').replyOnce(200, mockPercentilesResponse)
 
@@ -117,13 +116,13 @@ it('renders percentiles result when clicking on the calculate button', async () 
   // Check if mean values are rendered
   expect(store.getState().percentiles.result).toEqual(mockPercentilesResponse)
   getByText(
-    mockPercentilesResponse.mean_values.ffmc.toFixed(FWI_VALUES_DECIMAL_POINT).toString()
+    mockPercentilesResponse.mean_values.ffmc.toFixed(FWI_VALUES_DECIMAL).toString()
   )
   getByText(
-    mockPercentilesResponse.mean_values.bui.toFixed(FWI_VALUES_DECIMAL_POINT).toString()
+    mockPercentilesResponse.mean_values.bui.toFixed(FWI_VALUES_DECIMAL).toString()
   )
   getByText(
-    mockPercentilesResponse.mean_values.isi.toFixed(FWI_VALUES_DECIMAL_POINT).toString()
+    mockPercentilesResponse.mean_values.isi.toFixed(FWI_VALUES_DECIMAL).toString()
   )
 
   // Check if the documentation is rendered

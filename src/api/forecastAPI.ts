@@ -4,11 +4,11 @@ import { Station } from 'api/stationAPI'
 interface WxValue {
   datetime: string
   temperature: number
-  dew_point: number
   relative_humidity: number
-  wind_speed: number
   wind_direction: number
+  wind_speed: number
   total_precipitation: number
+  dew_point: number
   accumulated_rain: number
   accumulated_snow: number
   accumulated_freezing_rain: number
@@ -31,7 +31,7 @@ export interface Forecast {
   values: WxValue[]
 }
 
-interface ForecastsResponse {
+export interface ForecastsResponse {
   forecasts: Forecast[]
 }
 

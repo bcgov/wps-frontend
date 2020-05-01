@@ -57,7 +57,7 @@ export const DailyForecastsPage = () => {
   const isBtnDisabled = wxDataLoading || selectedStations.length === 0
 
   return (
-    <div data-testid="fwi-calculator-page">
+    <div data-testid="daily-forecasts-page">
       <PageHeader title="Predictive Services Unit" />
       <PageTitle title="Daily Weather Forecast" />
       <Container>
@@ -67,12 +67,13 @@ export const DailyForecastsPage = () => {
         />
         <Button
           className={classes.btn}
+          data-testid="get-forecast-wx-button"
           onClick={onSubmitClick}
           disabled={isBtnDisabled}
           variant="contained"
           color="primary"
         >
-          Get Weather Data
+          Get Forecast Wx Data
         </Button>
         <DailyForecastsDisplay />
       </Container>
