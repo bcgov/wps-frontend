@@ -90,9 +90,7 @@ export const DailyForecastsDisplay = () => {
                     <TableCell align="left">
                       {value.relative_humidity.toFixed(FORECAST_VALUES_DECIMAL)}
                     </TableCell>
-                    <TableCell align="left">
-                      {value.wind_direction.toFixed(FORECAST_VALUES_DECIMAL)}
-                    </TableCell>
+                    <TableCell align="left">{Math.round(value.wind_direction)}</TableCell>
                     <TableCell align="left">
                       {value.wind_speed.toFixed(FORECAST_VALUES_DECIMAL)}
                     </TableCell>

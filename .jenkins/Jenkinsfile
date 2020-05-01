@@ -14,8 +14,8 @@ pipeline {
         disableResume()
     }
     stages {
-        // stage('Startup') {
-        //     agent { label 'build' }
+        stage('Startup') {
+            agent { label 'Setup' }
         //     steps {
         //         script {
         //             def filesInThisCommitAsString = sh(
@@ -30,12 +30,11 @@ pipeline {
         //                 error("No changes detected in the path ('^.jenkins/')")
         //             }
         //         }
-        //         echo "Aborting all running jobs ..."
-        //         script {
-        //             abortAllPreviousBuildInProgress(currentBuild)
-        //         }
-        //     }
-        // }
+            echo "Aborting all running jobs ..."
+            script {
+                abortAllPreviousBuildInProgress(currentBuild)
+            }
+        }
         // stage('Build') {
         //     agent { label 'build' }
         //     steps {

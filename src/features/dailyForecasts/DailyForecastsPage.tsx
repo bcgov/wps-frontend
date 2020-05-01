@@ -71,7 +71,7 @@ export const DailyForecastsPage = () => {
           variant="contained"
           color="primary"
         >
-          Get Forecast Wx Data
+          Get Wx Forecast Data
         </Button>
         <DailyForecastsDisplay />
       </Container>
