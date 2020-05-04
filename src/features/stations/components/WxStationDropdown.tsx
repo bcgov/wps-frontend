@@ -1,9 +1,9 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { TextField, Tooltip, IconButton } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import MapIcon from '@material-ui/icons/Map'
+import { TextField, Link } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import LaunchIcon from '@material-ui/icons/Launch'
 
 import { Station } from 'api/stationAPI'
 import { selectStations } from 'app/rootReducer'
@@ -14,12 +14,15 @@ const useStyles = makeStyles({
   root: {
     width: '100%'
   },
-  mapIcon: {
-    padding: 10
-  },
   wrapper: {
     display: 'flex',
     alignItems: 'flex-start'
+  },
+  mapLink: {
+    marginBottom: 8
+  },
+  mapLabel: {
+    display: 'flex'
   }
 })
 
@@ -41,6 +44,21 @@ export const WxStationDropdown = (props: Props) => {
 
   return (
     <div className={props.className}>
+      <div className={classes.wrapper}>
+        <Link
+          className={classes.mapLink}
+          data-testid="launch-map-link"
+          href={WEATHER_STATION_MAP_LINK}
+          target="_blank"
+          rel="noopener"
+          variant="body2"
+        >
+          <span className={classes.mapLabel}>
+            Navigate to Weather Stations Map
+            <LaunchIcon fontSize="small" />
+          </span>
+        </Link>
+      </div>
       <div className={classes.wrapper}>
         <Autocomplete
           className={classes.root}
@@ -67,17 +85,6 @@ export const WxStationDropdown = (props: Props) => {
             />
           )}
         />
-        <Tooltip title="Navigate to Weather Stations Map">
-          <IconButton
-            data-testid="map-icon"
-            className={classes.mapIcon}
-            color="primary"
-            aria-label="directions"
-            onClick={onMapIconClick}
-          >
-            <MapIcon />
-          </IconButton>
-        </Tooltip>
       </div>
       {error && <ErrorMessage error={error} context="while fetching weather stations" />}
     </div>
