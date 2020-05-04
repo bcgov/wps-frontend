@@ -38,9 +38,6 @@ export const WxStationDropdown = (props: Props) => {
   const { stations, error } = useSelector(selectStations)
   const isError = Boolean(error)
   const maxNumOfSelect = props.maxNumOfSelect || 3
-  const onMapIconClick = () => {
-    window.open(WEATHER_STATION_MAP_LINK, '_blank')
-  }
 
   return (
     <div className={props.className}>

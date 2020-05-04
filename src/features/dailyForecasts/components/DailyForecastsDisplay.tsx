@@ -65,7 +65,7 @@ export const DailyForecastsDisplay = () => {
             align="right"
             component="div"
           >
-            Temp: °C, Wind Spd: km/h, Precip: mm/cm
+            GDPS (GEM-GLB), Temp: °C, Wind Spd: km/h, Precip: mm/cm
           </Typography>
           <TableContainer>
             <Table className={classes.table} size="small" aria-label="weather data table">
