@@ -68,10 +68,10 @@ it('renders daily forecast values in response to user inputs', async () => {
   // Send the request
   fireEvent.click(getByTestId('get-forecast-wx-button'))
 
-  // Wait until the calculation is fetched
+  // Wait until the forecasts are fetched
   await waitForElement(() => getByTestId('daily-forecast-displays'))
 
-  // Check if the correct request body has been included
+  // Validate the correct request body
   expect(mockAxios.history.post.length).toBe(1)
   expect(mockAxios.history.post[0].data).toBe(
     JSON.stringify({

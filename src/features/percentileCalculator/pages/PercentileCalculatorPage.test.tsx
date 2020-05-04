@@ -104,7 +104,7 @@ it('renders percentiles result in response to user inputs', async () => {
   // Wait until the calculation is fetched
   await waitForElement(() => getByTestId('percentile-result-tables'))
 
-  // Check if the correct request body has been included
+  // Validate the correct request body
   expect(mockAxios.history.post.length).toBe(1)
   expect(mockAxios.history.post[0].data).toBe(
     JSON.stringify({
