@@ -2,6 +2,7 @@ import React from 'react'
 import MockAdapter from 'axios-mock-adapter'
 import { waitForElement, cleanup, fireEvent } from '@testing-library/react'
 
+import { selectStations } from 'app/rootReducer'
 import axios from 'api/axios'
 import { renderWithRedux } from 'utils/testUtils'
 import { DailyForecastsPage } from 'features/dailyForecasts/DailyForecastsPage'
@@ -9,7 +10,6 @@ import {
   mockStations,
   mockForecastsResponse
 } from 'features/dailyForecasts/DailyForecastsPage.mock'
-import { selectStationsReducer } from 'app/rootReducer'
 
 const mockAxios = new MockAdapter(axios)
 
@@ -33,7 +33,7 @@ it('renders weather stations dropdown with data', async () => {
   mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
 
   const { getByText, getByTestId, store } = renderWithRedux(<DailyForecastsPage />)
-  expect(selectStationsReducer(store.getState()).stations).toEqual([])
+  expect(selectStations(store.getState()).stations).toEqual([])
 
   // wait for authentication
   await waitForElement(() => getByText(/Predictive Services Unit/i))
@@ -46,7 +46,7 @@ it('renders weather stations dropdown with data', async () => {
   ])
 
   fireEvent.click(station1)
-  expect(selectStationsReducer(store.getState()).stations).toEqual(mockStations)
+  expect(selectStations(store.getState()).stations).toEqual(mockStations)
 })
 
 it('renders daily forecast values in response to user inputs', async () => {

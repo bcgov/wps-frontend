@@ -6,7 +6,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import MapIcon from '@material-ui/icons/Map'
 
 import { Station } from 'api/stationAPI'
-import { selectStationsReducer } from 'app/rootReducer'
+import { selectStations } from 'app/rootReducer'
 import { WEATHER_STATION_MAP_LINK } from 'utils/constants'
 import { ErrorMessage } from 'components/ErrorMessage'
 
@@ -32,7 +32,7 @@ interface Props {
 
 export const WxStationDropdown = (props: Props) => {
   const classes = useStyles()
-  const { stations, error } = useSelector(selectStationsReducer)
+  const { stations, error } = useSelector(selectStations)
   const isError = Boolean(error)
   const maxNumOfSelect = props.maxNumOfSelect || 3
   const onMapIconClick = () => {

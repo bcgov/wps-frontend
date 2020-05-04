@@ -17,7 +17,7 @@ export type RootState = ReturnType<typeof rootReducer>
 
 export default rootReducer
 
-export const selectStationsReducer = (state: RootState) => state.stations
-export const selectPercentilesReducer = (state: RootState) => state.percentiles
-export const selectAuthReducer = (state: RootState) => state.authentication
-export const selectForecastsReducer = (state: RootState) => state.forecasts
+export const selectStations = (state: RootState) => state.stations
+export const selectPercentiles = (state: RootState) => state.percentiles
+export const selectAuthentication = (state: RootState) => state.authentication
+export const selectForecasts = (state: RootState) => state.forecasts

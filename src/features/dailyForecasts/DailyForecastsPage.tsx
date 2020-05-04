@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { Station } from 'api/stationAPI'
-import { selectAuthReducer, selectForecastsReducer } from 'app/rootReducer'
+import { selectAuthentication, selectForecasts } from 'app/rootReducer'
 import { PageHeader, PageTitle, Container, Button } from 'components'
 import { authenticate } from 'features/auth/slices/authenticationSlice'
 import { fetchWxStations } from 'features/stations/slices/stationsSlice'
@@ -23,8 +23,8 @@ export const DailyForecastsPage = () => {
 
   const [selectedStations, setStations] = useState<Station[]>([])
 
-  const { isAuthenticated, authenticating, error } = useSelector(selectAuthReducer)
-  const { isLoading: wxDataLoading } = useSelector(selectForecastsReducer)
+  const { isAuthenticated, authenticating, error } = useSelector(selectAuthentication)
+  const { isLoading: wxDataLoading } = useSelector(selectForecasts)
 
   useEffect(() => {
     dispatch(authenticate())

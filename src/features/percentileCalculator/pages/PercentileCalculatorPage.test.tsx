@@ -3,7 +3,7 @@ import MockAdapter from 'axios-mock-adapter'
 import { waitForElement, cleanup, fireEvent } from '@testing-library/react'
 
 import axios from 'api/axios'
-import { selectStationsReducer } from 'app/rootReducer'
+import { selectStations } from 'app/rootReducer'
 import { renderWithRedux } from 'utils/testUtils'
 import { WEATHER_STATION_MAP_LINK, FWI_VALUES_DECIMAL } from 'utils/constants'
 import { PercentileCalculatorPage } from 'features/percentileCalculator/pages/PercentileCalculatorPage'
@@ -24,7 +24,7 @@ it('renders FWI calculator page', async () => {
 
   // Check if all the components are rendered
   expect(getByText(/Percentile Calculator/i)).toBeInTheDocument()
-  expect(selectStationsReducer(store.getState()).stations).toEqual([])
+  expect(selectStations(store.getState()).stations).toEqual([])
   expect(getByTestId('weather-station-dropdown')).toBeInTheDocument()
   expect(getByTestId('time-range-slider')).toBeInTheDocument()
   expect(getByTestId('percentile-textfield')).toBeInTheDocument()
@@ -41,7 +41,7 @@ it('renders weather stations dropdown with data', async () => {
 
   const { getByText, getByTestId, store } = renderWithRedux(<PercentileCalculatorPage />)
 
-  expect(selectStationsReducer(store.getState()).stations).toEqual([])
+  expect(selectStations(store.getState()).stations).toEqual([])
   fireEvent.click(getByTestId('weather-station-dropdown'))
 
   const [station1] = await waitForElement(() => [
@@ -50,7 +50,7 @@ it('renders weather stations dropdown with data', async () => {
   ])
 
   fireEvent.click(station1)
-  expect(selectStationsReducer(store.getState()).stations).toEqual(mockStations)
+  expect(selectStations(store.getState()).stations).toEqual(mockStations)
 })
 
 it('renders error message when fetching stations failed', async () => {
@@ -59,11 +59,11 @@ it('renders error message when fetching stations failed', async () => {
   const { getByText, queryByText, store } = renderWithRedux(<PercentileCalculatorPage />)
 
   expect(queryByText(/Error occurred/i)).not.toBeInTheDocument()
-  expect(selectStationsReducer(store.getState()).error).toBeNull()
+  expect(selectStations(store.getState()).error).toBeNull()
 
   await waitForElement(() => getByText(/Error occurred/i))
 
-  expect(selectStationsReducer(store.getState()).error).toBeTruthy()
+  expect(selectStations(store.getState()).error).toBeTruthy()
 })
 
 it('renders time range slider with selecting the range', async () => {

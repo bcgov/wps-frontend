@@ -5,12 +5,11 @@ import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
-import { selectForecastsReducer } from 'app/rootReducer'
+import { selectForecasts } from 'app/rootReducer'
 import { ErrorMessage } from 'components/ErrorMessage'
 import { FORECAST_VALUES_DECIMAL } from 'utils/constants'
 
@@ -37,7 +36,7 @@ const useStyles = makeStyles({
 
 export const DailyForecastsDisplay = () => {
   const classes = useStyles()
-  const { error, forecasts } = useSelector(selectForecastsReducer)
+  const { error, forecasts } = useSelector(selectForecasts)
 
   if (error) {
     return (
@@ -70,35 +69,55 @@ export const DailyForecastsDisplay = () => {
           </Typography>
           <TableContainer>
             <Table className={classes.table} size="small" aria-label="weather data table">
-              <TableHead>
+              <TableBody>
                 <TableRow>
                   <TableCell align="left">Date</TableCell>
-                  <TableCell align="left">Temp</TableCell>
-                  <TableCell align="left">RH</TableCell>
-                  <TableCell align="left">Wind Dir</TableCell>
-                  <TableCell align="left">Wind Spd</TableCell>
-                  <TableCell align="left">Precip</TableCell>
+                  {values.map(v => (
+                    <TableCell key={v.datetime} align="left">
+                      {v.datetime.slice(0, 10)}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {values.map(value => (
-                  <TableRow key={value.datetime}>
-                    <TableCell align="left">{value.datetime.slice(0, 10)}</TableCell>
-                    <TableCell align="left">
-                      {value.temperature.toFixed(FORECAST_VALUES_DECIMAL)}
+                <TableRow>
+                  <TableCell align="left">Temp</TableCell>
+                  {values.map(v => (
+                    <TableCell key={v.datetime} align="left">
+                      {v.temperature.toFixed(FORECAST_VALUES_DECIMAL)}
                     </TableCell>
-                    <TableCell align="left">
-                      {value.relative_humidity.toFixed(FORECAST_VALUES_DECIMAL)}
+                  ))}
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left">RH</TableCell>
+                  {values.map(v => (
+                    <TableCell key={v.datetime} align="left">
+                      {v.relative_humidity.toFixed(FORECAST_VALUES_DECIMAL)}
                     </TableCell>
-                    <TableCell align="left">{Math.round(value.wind_direction)}</TableCell>
-                    <TableCell align="left">
-                      {value.wind_speed.toFixed(FORECAST_VALUES_DECIMAL)}
+                  ))}
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left">Wind Dir</TableCell>
+                  {values.map(v => (
+                    <TableCell key={v.datetime} align="left">
+                      {Math.round(v.wind_direction)}
                     </TableCell>
-                    <TableCell align="left">
-                      {value.total_precipitation.toFixed(FORECAST_VALUES_DECIMAL)}
+                  ))}
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left">Wind Spd</TableCell>
+                  {values.map(v => (
+                    <TableCell key={v.datetime} align="left">
+                      {v.wind_speed.toFixed(FORECAST_VALUES_DECIMAL)}
                     </TableCell>
-                  </TableRow>
-                ))}
+                  ))}
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left">Precip</TableCell>
+                  {values.map(v => (
+                    <TableCell key={v.datetime} align="left">
+                      {v.total_precipitation.toFixed(FORECAST_VALUES_DECIMAL)}
+                    </TableCell>
+                  ))}
+                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>

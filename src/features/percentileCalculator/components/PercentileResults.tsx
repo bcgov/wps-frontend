@@ -2,7 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 
-import { selectPercentilesReducer } from 'app/rootReducer'
+import { selectPercentiles } from 'app/rootReducer'
 import { PercentileMeanResultTable } from 'features/percentileCalculator/components/PercentileMeanResultTable'
 import { PercentileStationResultTable } from 'features/percentileCalculator/components/PercentileStationResultTable'
 import { ErrorMessage } from 'components/ErrorMessage'
@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 
 export const PercentileResults = () => {
   const classes = useStyles()
-  const { result, error } = useSelector(selectPercentilesReducer)
+  const { result, error } = useSelector(selectPercentiles)
 
   if (error) {
     return (
