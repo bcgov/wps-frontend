@@ -1,4 +1,5 @@
 import React from 'react'
+import clsx from 'clsx'
 import { Button as B, ButtonProps, CircularProgress } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -14,21 +15,18 @@ const useStyles = makeStyles(theme => ({
   },
   spinner: {
     color: theme.palette.primary.light,
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12
+    position: 'absolute'
   }
 }))
 
-export const Button = ({ loading, ...rest }: Props) => {
+export const Button = ({ loading, ...buttonProps }: Props) => {
   const classes = useStyles()
+  const button = clsx(classes.root, buttonProps.className)
 
   return (
-    <span className={classes.root}>
-      <B {...rest} />
+    <B className={button} {...buttonProps}>
+      {buttonProps.children}
       {loading && <CircularProgress size={24} className={classes.spinner} />}
-    </span>
+    </B>
   )
 }
