@@ -21,10 +21,10 @@ const useStyles = makeStyles(theme => ({
 
 export const Button = ({ loading, ...buttonProps }: Props) => {
   const classes = useStyles()
-  const button = clsx(classes.root, buttonProps.className)
+  const buttonClassName = clsx(classes.root, buttonProps.className)
 
   return (
-    <B className={button} {...buttonProps}>
+    <B className={buttonClassName} {...buttonProps}>
       {buttonProps.children}
       {loading && <CircularProgress size={24} className={classes.spinner} />}
     </B>

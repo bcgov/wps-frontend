@@ -24,7 +24,7 @@ export const DailyForecastsPage = () => {
   const [selectedStations, setStations] = useState<Station[]>([])
 
   const { isAuthenticated, authenticating, error } = useSelector(selectAuthentication)
-  const { isLoading: wxDataLoading } = useSelector(selectForecasts)
+  const { loading: wxDataLoading } = useSelector(selectForecasts)
 
   useEffect(() => {
     dispatch(authenticate())

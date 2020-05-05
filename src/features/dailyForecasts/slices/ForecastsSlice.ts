@@ -4,13 +4,13 @@ import { Forecast, getForecasts } from 'api/forecastAPI'
 import { AppThunk } from 'app/store'
 
 interface State {
-  isLoading: boolean
+  loading: boolean
   error: string | null
   forecasts: Forecast[]
 }
 
 const initialState: State = {
-  isLoading: false,
+  loading: false,
   error: null,
   forecasts: []
 }
@@ -20,14 +20,14 @@ const forecasts = createSlice({
   initialState,
   reducers: {
     getForecastsStart(state: State) {
-      state.isLoading = true
+      state.loading = true
     },
     getForecastsFailed(state: State, action: PayloadAction<string>) {
-      state.isLoading = false
+      state.loading = false
       state.error = action.payload
     },
     getForecastsSuccess(state: State, action: PayloadAction<Forecast[]>) {
-      state.isLoading = false
+      state.loading = false
       state.forecasts = action.payload
     }
   }

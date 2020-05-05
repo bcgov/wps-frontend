@@ -4,13 +4,13 @@ import { getPercentiles, PercentilesResponse, YearRange } from 'api/percentileAP
 import { AppThunk } from 'app/store'
 
 interface PercentilesState {
-  isLoading: boolean
+  loading: boolean
   error: string | null
   result: PercentilesResponse | null
 }
 
 export const percentileInitialState: PercentilesState = {
-  isLoading: false,
+  loading: false,
   error: null,
   result: null
 }
@@ -20,18 +20,18 @@ const percentiles = createSlice({
   initialState: percentileInitialState,
   reducers: {
     getPercentilesStart(state: PercentilesState) {
-      state.isLoading = true
+      state.loading = true
     },
     getPercentilesSuccess(
       state: PercentilesState,
       action: PayloadAction<PercentilesResponse>
     ) {
       state.result = action.payload
-      state.isLoading = false
+      state.loading = false
       state.error = null
     },
     getPercentilesFailed(state: PercentilesState, action: PayloadAction<string>) {
-      state.isLoading = false
+      state.loading = false
       state.error = action.payload
     },
     resetPercentilesResult(state: PercentilesState) {
