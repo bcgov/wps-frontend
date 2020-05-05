@@ -38,17 +38,9 @@ parameters:
     value: 2Gi
   - name: WPS_WEB_GLOBAL_CONFIG
     value: wps-web-global
-  - name: API_BASE_URL
+  - name: WPS_API_BASE_URL
     value: https://wps-api-prod.pathfinder.gov.bc.ca
 objects:
-  - apiVersion: v1
-    kind: ConfigMap
-    data:
-      env.api-base-url: '${API_BASE_URL}'
-    metadata:
-      labels:
-        app: ${NAME}-${SUFFIX}
-      name: ${NAME}-${SUFFIX}
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
@@ -74,10 +66,7 @@ objects:
               name: ${NAME}
               env:
                 - name: REACT_APP_API_BASE_URL
-                  valueFrom:
-                    configMapKeyRef:
-                      name: ${NAME}-${SUFFIX}
-                      key: env.api-base-url
+                  value: ${WPS_API_BASE_URL}
                 - name: REACT_APP_FIDER_LINK
                   valueFrom:
                     configMapKeyRef:
