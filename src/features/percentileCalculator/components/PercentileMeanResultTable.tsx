@@ -10,7 +10,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 
 import { MeanValues } from 'api/percentileAPI'
-import { FWI_VALUES_DECIMAL_POINT } from 'utils/constants'
+import { FWI_VALUES_DECIMAL } from 'utils/constants'
 
 interface Props {
   meanValues: MeanValues
