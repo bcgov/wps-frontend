@@ -19,7 +19,7 @@ interface Props {
 const useStyles = makeStyles(theme => ({
   tableHeader: {
     backgroundColor: theme.palette.primary.light,
-    color: theme.palette.primary.contrastText,
+    color: theme.palette.primary.contrastText
   }
 }))
 
