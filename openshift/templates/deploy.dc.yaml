@@ -102,7 +102,7 @@ objects:
                   path: '/'
                   port: 3000
                   scheme: HTTP
-                initialDelaySeconds: 15
+                initialDelaySeconds: 30
                 timeoutSeconds: 1
               livenessProbe:
                 successThreshold: 1
@@ -111,7 +111,7 @@ objects:
                   path: '/'
                   port: 3000
                   scheme: HTTP
-                initialDelaySeconds: 15
+                initialDelaySeconds: 30
                 periodSeconds: 360
                 timeoutSeconds: 1
 
