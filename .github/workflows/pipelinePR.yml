@@ -2,6 +2,7 @@
 #
 # Lint, Unit Test, Build, Deploy and Cleanup
 #
+name: Pipeline - PR
 
 on:
   pull_request:

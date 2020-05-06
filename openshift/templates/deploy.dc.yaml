@@ -99,7 +99,7 @@ objects:
                   memory: ${MEMORY_REQUEST}
               readinessProbe:
                 httpGet:
-                  path: '${NAME}-${SUFFIX}.pathfinder.gov.bc.ca/'
+                  path: '/'
                   port: 3000
                   scheme: HTTP
                 initialDelaySeconds: 15
@@ -108,7 +108,7 @@ objects:
                 successThreshold: 1
                 failureThreshold: 3
                 httpGet:
-                  path: '${NAME}-${SUFFIX}.pathfinder.gov.bc.ca/'
+                  path: '/'
                   port: 3000
                   scheme: HTTP
                 initialDelaySeconds: 15
