@@ -2,7 +2,7 @@
 #
 # Lint, Unit Test, Build, Deploy and Cleanup
 #
-name: Pipeline - PR
+name: Pipeline
 
 on:
   pull_request:
@@ -27,7 +27,7 @@ jobs:
       - run: npm run test:ci
 
   build-and-deploy:
-    name: Build & Deploy from PR
+    name: Build & Deploy to Dev
     runs-on: ubuntu-latest
     steps:
       - name: Variables
