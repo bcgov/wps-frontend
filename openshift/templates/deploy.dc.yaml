@@ -38,8 +38,6 @@ parameters:
     value: 2Gi
   - name: WPS_WEB_GLOBAL_CONFIG
     value: wps-web-global
-  - name: WPS_WEB_ROUTE
-    value: ${NAME}-${SUFFIX}.pathfinder.gov.bc.ca
   - name: WPS_API_BASE_URL
     value: https://wps-api-prod.pathfinder.gov.bc.ca
 objects:
@@ -101,7 +99,7 @@ objects:
                   memory: ${MEMORY_REQUEST}
               readinessProbe:
                 httpGet:
-                  path: '${WPS_WEB_ROUTE}/'
+                  path: '${NAME}-${SUFFIX}.pathfinder.gov.bc.ca/'
                   port: 3000
                   scheme: HTTP
                 initialDelaySeconds: 15
@@ -110,7 +108,7 @@ objects:
                 successThreshold: 1
                 failureThreshold: 3
                 httpGet:
-                  path: '${WPS_WEB_ROUTE}/'
+                  path: '${NAME}-${SUFFIX}.pathfinder.gov.bc.ca/'
                   port: 3000
                   scheme: HTTP
                 initialDelaySeconds: 15
@@ -138,7 +136,7 @@ objects:
         app: ${NAME}-${SUFFIX}
       name: ${NAME}-${SUFFIX}
     spec:
-      host: ${WPS_WEB_ROUTE}
+      host: ${NAME}-${SUFFIX}.pathfinder.gov.bc.ca
       port:
         targetPort: 3000-tcp
       to:
