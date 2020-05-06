@@ -35,7 +35,7 @@ OC_APPLY="oc -n ${PROJ_TARGET} apply -f -"
 [ "${APPLY}" ] || OC_APPLY="${OC_APPLY} --dry-run"
 
 # Deploy and follow the progress
-# 
+#
 OC_DEPLOY="oc -n ${PROJ_TARGET} rollout latest dc/${NAME_OBJ}"
 OC_LOG="oc -n ${PROJ_TARGET} logs -f dc/${NAME_OBJ}"
 if [ ! "${APPLY}" ]; then
@@ -48,6 +48,7 @@ fi
 eval "${OC_PROCESS}"
 eval "${OC_PROCESS} | ${OC_APPLY}"
 eval "${OC_DEPLOY}"
+sleep 1 # Prevent timeout
 eval "${OC_LOG}"
 
 # Provide oc command instruction

@@ -38,6 +38,8 @@ parameters:
     value: 2Gi
   - name: WPS_WEB_GLOBAL_CONFIG
     value: wps-web-global
+  - name: WPS_WEB_ROUTE
+    value: ${NAME}-${SUFFIX}.pathfinder.gov.bc.ca
   - name: WPS_API_BASE_URL
     value: https://wps-api-prod.pathfinder.gov.bc.ca
 objects:
@@ -89,6 +91,7 @@ objects:
                       key: env.keycloak-client
               ports:
                 - containerPort: 3000
+                  protocol: TCP
               resources:
                 limits:
                   cpu: ${CPU_LIMIT}
@@ -98,16 +101,18 @@ objects:
                   memory: ${MEMORY_REQUEST}
               readinessProbe:
                 httpGet:
-                  path: /
+                  path: '${WPS_WEB_ROUTE}/'
                   port: 3000
+                  scheme: HTTP
                 initialDelaySeconds: 15
                 timeoutSeconds: 1
               livenessProbe:
                 successThreshold: 1
                 failureThreshold: 3
                 httpGet:
-                  path: /
+                  path: '${WPS_WEB_ROUTE}/'
                   port: 3000
+                  scheme: HTTP
                 initialDelaySeconds: 15
                 periodSeconds: 360
                 timeoutSeconds: 1
@@ -133,7 +138,7 @@ objects:
         app: ${NAME}-${SUFFIX}
       name: ${NAME}-${SUFFIX}
     spec:
-      host: ${NAME}-${SUFFIX}.pathfinder.gov.bc.ca
+      host: ${WPS_WEB_ROUTE}
       port:
         targetPort: 3000-tcp
       to:
