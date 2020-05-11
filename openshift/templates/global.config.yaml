@@ -1,0 +1,17 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: wps-web-global
+objects:
+- kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: wps-web-global
+    labels:
+      app.kubernetes.io/part-of: wps-web
+  data:
+    env.api-base-url: 'https://wps-api-prod.pathfinder.gov.bc.ca'
+    env.fider-url: 'https://psufider.pathfinder.gov.bc.ca/'
+    env.keycloak-auth-url: 'https://sso-dev.pathfinder.gov.bc.ca/auth'
+    env.keycloak-client: wps-web
+    env.keycloak-realm: 
