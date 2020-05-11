@@ -44,6 +44,16 @@ It correctly bundles React in production mode and optimizes the build for the be
 2. Run `docker-compose build` and then `docker-compose up`
 3. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+## Config
+
+| Key | Description |
++ ----+-------------|
+| env.api-base-url | URL of the application's API |
+| env.fider-url | URL to the Fider instance for the application |
+| env.keycloak-auth-url | URL to the Government of BC Keycloak instance used by the application for user authentication |
+| env.keycloak-client | The name of the application client as registered in the Keycloak instance |
+| env.keycloak-realm | The name of the Keycloak realm used by the application |
+
 ## License
 
 This project is licensed under the [Apache License, Version 2.0](https://github.com/bcgov/wps-web/blob/master/LICENSE).
