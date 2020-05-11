@@ -47,7 +47,7 @@ It correctly bundles React in production mode and optimizes the build for the be
 ## Config
 
 | Key | Description |
-+ ----+-------------|
+| ----|-------------|
 | env.api-base-url | URL of the application's API |
 | env.fider-url | URL to the Fider instance for the application |
 | env.keycloak-auth-url | URL to the Government of BC Keycloak instance used by the application for user authentication |
