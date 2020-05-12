@@ -2,6 +2,10 @@ kind: Template
 apiVersion: v1
 metadata:
   name: wps-web-global
+parameters:
+  - name: REACT_APP_KEYCLOAK_REALM
+    description: Keycloak realm name used by the application
+    required: true
 objects:
 - kind: ConfigMap
   apiVersion: v1
@@ -14,4 +18,4 @@ objects:
     env.fider-url: 'https://psufider.pathfinder.gov.bc.ca/'
     env.keycloak-auth-url: 'https://sso-dev.pathfinder.gov.bc.ca/auth'
     env.keycloak-client: wps-web
-    env.keycloak-realm: 
+    env.keycloak-realm: ${REACT_APP_KEYCLOAK_REALM}

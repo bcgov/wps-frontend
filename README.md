@@ -46,13 +46,9 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 ## Config
 
-| Key | Description |
-| ----|-------------|
-| env.api-base-url | URL of the application's API |
-| env.fider-url | URL to the Fider instance for the application |
-| env.keycloak-auth-url | URL to the Government of BC Keycloak instance used by the application for user authentication |
-| env.keycloak-client | The name of the application client as registered in the Keycloak instance |
-| env.keycloak-realm | The name of the Keycloak realm used by the application |
+In `openshift/templates/global.config.yaml` there is a template for a global ConfigMap. This template can be applied to the Openshift project from the command line. For example, to apply the global.config template and pass a value for the REACT_APP_KEYCLOAK_REALM parameter, run 
+
+`oc -n <openshift-project-name> process -f openshift/templates/global.config.yaml -p REACT_APP_KEYCLOAK_REALM=<realm-name>`
 
 ## License
 
