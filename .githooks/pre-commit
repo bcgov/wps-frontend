@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Based on: https://itnext.io/using-git-hooks-to-enforce-branch-naming-policy-ffd81fa01e5e
 LC_ALL=C
 
 local_branch="$(git rev-parse --abbrev-ref HEAD)"
