@@ -72,7 +72,8 @@ it('renders daily forecast values in response to user inputs', async () => {
   await waitForElement(() => getByTestId('daily-forecast-displays'))
 
   // Validate the correct request body
-  expect(mockAxios.history.post.length).toBe(1)
+  // There should have been two requests, one for forecasts and one for hourlies.
+  expect(mockAxios.history.post.length).toBe(2)
   expect(mockAxios.history.post[0].data).toBe(
     JSON.stringify({
       stations: [1]
