@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+import axios from 'api/axios'
 import { AppThunk } from 'app/store'
+import { selectToken } from 'app/rootReducer'
 import kcInstance, { kcInitOption } from 'features/auth/keycloak'
 
 interface State {
@@ -87,4 +89,16 @@ export const authenticate = (): AppThunk => dispatch => {
         dispatch(authenticate())
       })
   }
+}
+
+export const setAxiosRequestInterceptors = (): AppThunk => (_, getState) => {
+  // Use axios interceptors to intercept any requests and add authorization headers.
+  axios.interceptors.request.use(config => {
+    const token = selectToken(getState())
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+
+    return config
+  })
 }
