@@ -17,6 +17,7 @@ const useStyles = makeStyles({
   }
 })
 
+// TODO: Separate authentication part from this later
 export const DailyForecastsPage = () => {
   const dispatch = useDispatch()
   const classes = useStyles()

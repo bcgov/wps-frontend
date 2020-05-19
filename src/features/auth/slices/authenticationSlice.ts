@@ -6,12 +6,16 @@ import kcInstance, { kcInitOption } from 'features/auth/keycloak'
 interface State {
   authenticating: boolean
   isAuthenticated: boolean
+  tokenRefreshed: boolean
+  token: string | undefined
   error: string | null
 }
 
 export const initialState: State = {
   authenticating: false,
   isAuthenticated: false,
+  tokenRefreshed: false,
+  token: undefined,
   error: null
 }
 
@@ -19,42 +23,68 @@ const auth = createSlice({
   name: 'authentication',
   initialState,
   reducers: {
-    authenticationStart(state: State) {
+    authenticateStart(state: State) {
       state.authenticating = true
     },
-    authenticationFinished(state: State, action: PayloadAction<boolean>) {
+    authenticateFinished(
+      state: State,
+      action: PayloadAction<{
+        isAuthenticated: boolean
+        token: string | undefined
+      }>
+    ) {
       state.authenticating = false
-      state.isAuthenticated = action.payload
+      state.isAuthenticated = action.payload.isAuthenticated
+      state.token = action.payload.token
     },
-    authenticationError(state: State, action: PayloadAction<string>) {
+    authenticateError(state: State, action: PayloadAction<string>) {
       state.authenticating = false
       state.isAuthenticated = false
       state.error = action.payload
     },
-    resetAuthentication(state: State) {
-      state.isAuthenticated = false
+    refreshTokenFinished(
+      state: State,
+      action: PayloadAction<{
+        tokenRefreshed: boolean
+        token: string | undefined
+      }>
+    ) {
+      state.token = action.payload.token
+      state.tokenRefreshed = action.payload.tokenRefreshed
     }
   }
 })
 
 export const {
-  authenticationStart,
-  authenticationFinished,
-  authenticationError,
-  resetAuthentication
+  authenticateStart,
+  authenticateFinished,
+  authenticateError,
+  refreshTokenFinished
 } = auth.actions
 
 export default auth.reducer
 
 export const authenticate = (): AppThunk => dispatch => {
-  dispatch(authenticationStart())
+  dispatch(authenticateStart())
   kcInstance
     .init(kcInitOption)
     .then(isAuthenticated => {
-      dispatch(authenticationFinished(isAuthenticated))
+      dispatch(authenticateFinished({ isAuthenticated, token: kcInstance.token }))
     })
     .catch(err => {
       console.error(err)
-      dispatch(authenticationError('Failed to authenticate.'))
+      dispatch(authenticateError('Failed to authenticate.'))
     })
+  // Set a callback that will be triggered when the access token is expired
+  kcInstance.onTokenExpired = () => {
+    kcInstance
+      .updateToken(0)
+      .then(tokenRefreshed => {
+        dispatch(refreshTokenFinished({ tokenRefreshed, token: kcInstance.token }))
+      })
+      .catch(() => {
+        // Restart the flow
+        dispatch(authenticate())
+      })
+  }
 }
