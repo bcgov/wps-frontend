@@ -5,7 +5,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Station } from 'api/stationAPI'
 import { selectAuthentication, selectForecasts, selectHourlies } from 'app/rootReducer'
 import { PageHeader, PageTitle, Container, Button } from 'components'
-import { authenticate } from 'features/auth/slices/authenticationSlice'
+import {
+  authenticate,
+  setAxiosRequestInterceptors
+} from 'features/auth/slices/authenticationSlice'
 import { fetchWxStations } from 'features/stations/slices/stationsSlice'
 import { WxStationDropdown } from 'features/stations/components/WxStationDropdown'
 import { fetchForecasts } from 'features/dailyForecasts/slices/ForecastsSlice'
@@ -19,6 +22,7 @@ const useStyles = makeStyles({
   }
 })
 
+// TODO: Separate authentication part from this later
 export const DailyForecastsPage = () => {
   const dispatch = useDispatch()
   const classes = useStyles()
@@ -31,6 +35,7 @@ export const DailyForecastsPage = () => {
 
   useEffect(() => {
     dispatch(authenticate())
+    dispatch(setAxiosRequestInterceptors())
     dispatch(fetchWxStations())
   }, [dispatch])
 
