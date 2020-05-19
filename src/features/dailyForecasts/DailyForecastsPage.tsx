@@ -3,13 +3,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { Station } from 'api/stationAPI'
-import { selectAuthentication, selectForecasts } from 'app/rootReducer'
+import { selectAuthentication, selectForecasts, selectHourlies } from 'app/rootReducer'
 import { PageHeader, PageTitle, Container, Button } from 'components'
 import { authenticate } from 'features/auth/slices/authenticationSlice'
 import { fetchWxStations } from 'features/stations/slices/stationsSlice'
 import { WxStationDropdown } from 'features/stations/components/WxStationDropdown'
 import { fetchForecasts } from 'features/dailyForecasts/slices/ForecastsSlice'
+import { fetchHistoricalReadings } from 'features/hourlies/slices/HourliesSlice'
 import { DailyForecastsDisplay } from 'features/dailyForecasts/components/DailyForecastsDisplay'
+import { HourlyReadingsDisplay } from 'features/hourlies/components/HourlyReadingsDisplay'
 
 const useStyles = makeStyles({
   stationDropdown: {
@@ -25,6 +27,7 @@ export const DailyForecastsPage = () => {
 
   const { isAuthenticated, authenticating, error } = useSelector(selectAuthentication)
   const { loading: wxDataLoading } = useSelector(selectForecasts)
+  const { loading: hourlyDataLoading } = useSelector(selectHourlies)
 
   useEffect(() => {
     dispatch(authenticate())
@@ -37,6 +40,7 @@ export const DailyForecastsPage = () => {
   const onSubmitClick = () => {
     const stationCodes = selectedStations.map(s => s.code)
     dispatch(fetchForecasts(stationCodes))
+    dispatch(fetchHistoricalReadings(stationCodes))
   }
 
   if (error) {
@@ -51,7 +55,8 @@ export const DailyForecastsPage = () => {
     return <div>You are not authenticated!</div>
   }
 
-  const isBtnDisabled = wxDataLoading || selectedStations.length === 0
+  const isBtnDisabled =
+    wxDataLoading || selectedStations.length === 0 || hourlyDataLoading
 
   return (
     <div data-testid="daily-forecasts-page">
@@ -74,6 +79,7 @@ export const DailyForecastsPage = () => {
           Get Wx Forecast Data
         </Button>
         <DailyForecastsDisplay />
+        <HourlyReadingsDisplay />
       </Container>
     </div>
   )
