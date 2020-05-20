@@ -24,7 +24,7 @@ export interface HourliesResponse {
 }
 
 export async function getHourlies(stationCodes: number[]): Promise<HourlyReadings[]> {
-  const url = '/hourlies'
+  const url = '/hourlies/'
 
   try {
     const { data } = await axios.post<HourliesResponse>(url, {
