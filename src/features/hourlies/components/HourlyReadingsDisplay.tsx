@@ -9,6 +9,8 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
+import Moment from 'react-moment'
+import 'moment-timezone'
 
 import { selectHourlies } from 'app/rootReducer'
 import { ErrorMessage } from 'components/ErrorMessage'
@@ -56,10 +58,14 @@ export const HourlyReadingsDisplay = () => {
             <Table className={classes.table} size="small" aria-label="weather data table">
               <TableBody>
                 <TableRow>
-                  <TableCell align="left">Date</TableCell>
+                  <TableCell align="left">Date (PDT)</TableCell>
                   {values.map(v => (
                     <TableCell key={v.datetime} align="left">
-                      {v.datetime}
+                      <Moment
+                        date={v.datetime}
+                        tz="America/Vancouver"
+                        format="YYYY-MM-DD HH:mm:ss"
+                      />
                     </TableCell>
                   ))}
                 </TableRow>
