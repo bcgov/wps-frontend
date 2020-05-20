@@ -48,7 +48,7 @@ export const HourlyReadingsDisplay = () => {
   }
 
   return (
-    <div>
+    <div data-testid="hourly-readings-displays">
       {hourlies.map(({ station, values }) => (
         <Paper className={classes.hourlies} key={station.code}>
           <Typography className={classes.station} variant="subtitle1" component="div">
