@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography'
 
 import { selectForecasts } from 'app/rootReducer'
 import { ErrorMessage } from 'components/ErrorMessage'
-import { FORECAST_VALUES_DECIMAL } from 'utils/constants'
+import { FORECAST_VALUES_DECIMAL, RH_VALUES_DECIMAL } from 'utils/constants'
 
 const useStyles = makeStyles({
   display: {
@@ -90,7 +90,7 @@ export const DailyForecastsDisplay = () => {
                   <TableCell align="left">RH</TableCell>
                   {values.map(v => (
                     <TableCell key={v.datetime} align="left">
-                      {v.relative_humidity.toFixed(0)}
+                      {v.relative_humidity.toFixed(RH_VALUES_DECIMAL)}
                     </TableCell>
                   ))}
                 </TableRow>

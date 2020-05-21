@@ -10,6 +10,7 @@ export const WEATHER_STATION_MAP_LINK =
   'https://governmentofbc.maps.arcgis.com/apps/webappviewer/index.html?id=c36baf74b74a46978cf517579a9ee332'
 
 export const FWI_VALUES_DECIMAL = 2
+export const RH_VALUES_DECIMAL = 0
 
 export const FORECAST_VALUES_DECIMAL = 1
 export const HOURLY_VALUES_DECIMAL = 1

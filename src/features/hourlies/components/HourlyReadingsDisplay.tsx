@@ -13,7 +13,7 @@ import moment from 'moment'
 
 import { selectHourlies } from 'app/rootReducer'
 import { ErrorMessage } from 'components/ErrorMessage'
-import { HOURLY_VALUES_DECIMAL, PDT_UTC_OFFSET } from 'utils/constants'
+import { HOURLY_VALUES_DECIMAL, RH_VALUES_DECIMAL, PDT_UTC_OFFSET } from 'utils/constants'
 
 const useStyles = makeStyles({
   table: {
@@ -78,7 +78,7 @@ export const HourlyReadingsDisplay = () => {
                   <TableCell>Relative Humidity</TableCell>
                   {values.map(v => (
                     <TableCell key={v.datetime} align="left">
-                      {v.relative_humidity.toFixed(0)}
+                      {v.relative_humidity.toFixed(RH_VALUES_DECIMAL)}
                     </TableCell>
                   ))}
                 </TableRow>
