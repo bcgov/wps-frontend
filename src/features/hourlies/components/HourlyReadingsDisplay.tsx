@@ -13,7 +13,7 @@ import moment from 'moment'
 
 import { selectHourlies } from 'app/rootReducer'
 import { ErrorMessage } from 'components/ErrorMessage'
-import { HOURLY_VALUES_DECIMAL, GMT_OFFSET } from 'utils/constants'
+import { HOURLY_VALUES_DECIMAL, PDT_UTC_OFFSET } from 'utils/constants'
 
 const useStyles = makeStyles({
   table: {
@@ -61,7 +61,7 @@ export const HourlyReadingsDisplay = () => {
                   {values.map(v => (
                     <TableCell key={v.datetime} align="left">
                       {moment(v.datetime)
-                        .utcOffset(GMT_OFFSET)
+                        .utcOffset(PDT_UTC_OFFSET)
                         .format('YYYY-MM-DD HH:mm')}
                     </TableCell>
                   ))}
