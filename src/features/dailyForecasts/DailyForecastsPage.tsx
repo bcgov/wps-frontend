@@ -81,7 +81,7 @@ export const DailyForecastsPage = () => {
           variant="contained"
           color="primary"
         >
-          Get Wx Forecast Data
+          Get Historic Readings and Forecasted Global Model Data
         </Button>
         <DailyForecastsDisplay />
         <HourlyReadingsDisplay />
