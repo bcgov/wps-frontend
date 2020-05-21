@@ -1,11 +1,6 @@
 import React from 'react'
 import MockAdapter from 'axios-mock-adapter'
-import {
-  waitForElement,
-  cleanup,
-  fireEvent,
-  waitForElementToBeRemoved
-} from '@testing-library/react'
+import { waitForElement, cleanup, fireEvent } from '@testing-library/react'
 
 import { selectStations } from 'app/rootReducer'
 import axios from 'api/axios'
