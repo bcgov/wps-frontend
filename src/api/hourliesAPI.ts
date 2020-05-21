@@ -9,9 +9,9 @@ interface HourlyReading {
   wind_direction: number
   barometric_pressure: number
   precipitation: number
-  ffmc: number
-  isi: number
-  fwi: number
+  ffmc?: number
+  isi?: number
+  fwi?: number
 }
 
 export interface HourlyReadings {

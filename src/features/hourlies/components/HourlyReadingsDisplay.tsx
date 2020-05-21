@@ -9,12 +9,11 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
-import Moment from 'react-moment'
-import 'moment-timezone'
+import moment from 'moment'
 
 import { selectHourlies } from 'app/rootReducer'
 import { ErrorMessage } from 'components/ErrorMessage'
-import { HOURLY_VALUES_DECIMAL } from 'utils/constants'
+import { HOURLY_VALUES_DECIMAL, GMT_OFFSET } from 'utils/constants'
 
 const useStyles = makeStyles({
   table: {
@@ -61,11 +60,9 @@ export const HourlyReadingsDisplay = () => {
                   <TableCell align="left">Date (PDT)</TableCell>
                   {values.map(v => (
                     <TableCell key={v.datetime} align="left">
-                      <Moment
-                        date={v.datetime}
-                        tz="America/Vancouver"
-                        format="YYYY-MM-DD HH:mm:ss"
-                      />
+                      {moment(v.datetime)
+                        .utcOffset(GMT_OFFSET)
+                        .format('YYYY-MM-DD HH:mm')}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -121,7 +118,7 @@ export const HourlyReadingsDisplay = () => {
                   <TableCell>FFMC</TableCell>
                   {values.map(v => (
                     <TableCell key={v.datetime} align="left">
-                      {v.ffmc ? v.ffmc.toFixed(HOURLY_VALUES_DECIMAL) : null}
+                      {v.ffmc?.toFixed(HOURLY_VALUES_DECIMAL)}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -129,7 +126,7 @@ export const HourlyReadingsDisplay = () => {
                   <TableCell>ISI</TableCell>
                   {values.map(v => (
                     <TableCell key={v.datetime} align="left">
-                      {v.isi ? v.isi.toFixed(HOURLY_VALUES_DECIMAL) : null}
+                      {v.isi?.toFixed(HOURLY_VALUES_DECIMAL)}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -137,7 +134,7 @@ export const HourlyReadingsDisplay = () => {
                   <TableCell>FWI</TableCell>
                   {values.map(v => (
                     <TableCell key={v.datetime} align="left">
-                      {v.fwi ? v.fwi.toFixed(HOURLY_VALUES_DECIMAL) : null}
+                      {v.fwi?.toFixed(HOURLY_VALUES_DECIMAL)}
                     </TableCell>
                   ))}
                 </TableRow>

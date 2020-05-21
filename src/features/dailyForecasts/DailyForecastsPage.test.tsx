@@ -1,6 +1,11 @@
 import React from 'react'
 import MockAdapter from 'axios-mock-adapter'
-import { waitForElement, cleanup, fireEvent } from '@testing-library/react'
+import {
+  waitForElement,
+  cleanup,
+  fireEvent,
+  waitForElementToBeRemoved
+} from '@testing-library/react'
 
 import { selectStations } from 'app/rootReducer'
 import axios from 'api/axios'
@@ -78,14 +83,12 @@ it('renders daily forecast and hourly values in response to user inputs', async 
   // Validate the correct request body
   // There should have been two requests, one for forecasts and one for hourlies.
   expect(mockAxios.history.post.length).toBe(2)
-  expect(mockAxios.history.post[0].data).toBe(
-    JSON.stringify({
-      stations: [1]
-    })
-  )
-  expect(mockAxios.history.post[0].data).toBe(
-    JSON.stringify({
-      stations: [1]
-    })
-  )
+  // Each of those request should ask for a station
+  mockAxios.history.post.forEach(post => {
+    expect(post.data).toBe(
+      JSON.stringify({
+        stations: [1]
+      })
+    )
+  })
 })

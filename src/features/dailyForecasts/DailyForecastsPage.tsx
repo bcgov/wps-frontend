@@ -30,8 +30,9 @@ export const DailyForecastsPage = () => {
   const [selectedStations, setStations] = useState<Station[]>([])
 
   const { isAuthenticated, authenticating, error } = useSelector(selectAuthentication)
-  const { loading: wxDataLoading } = useSelector(selectForecasts)
+  const { loading: forecastDataLoading } = useSelector(selectForecasts)
   const { loading: hourlyDataLoading } = useSelector(selectHourlies)
+  const wxDataLoading = forecastDataLoading || hourlyDataLoading
 
   useEffect(() => {
     dispatch(authenticate())
@@ -60,8 +61,7 @@ export const DailyForecastsPage = () => {
     return <div>You are not authenticated!</div>
   }
 
-  const isBtnDisabled =
-    wxDataLoading || selectedStations.length === 0 || hourlyDataLoading
+  const isBtnDisabled = wxDataLoading || selectedStations.length === 0
 
   return (
     <div data-testid="daily-forecasts-page">
