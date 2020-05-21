@@ -57,7 +57,7 @@ export const DailyForecastsDisplay = () => {
       {forecasts.map(({ station, values }) => (
         <Paper className={classes.forecast} key={station.code}>
           <Typography className={classes.station} variant="subtitle1" component="div">
-            Weather Station: {`${station.name} (${station.code})`}
+            Model noon values for weather station: {`${station.name} (${station.code})`}
           </Typography>
           <Typography
             className={classes.units}
@@ -90,7 +90,7 @@ export const DailyForecastsDisplay = () => {
                   <TableCell align="left">RH</TableCell>
                   {values.map(v => (
                     <TableCell key={v.datetime} align="left">
-                      {v.relative_humidity.toFixed(FORECAST_VALUES_DECIMAL)}
+                      {v.relative_humidity.toFixed(0)}
                     </TableCell>
                   ))}
                 </TableRow>

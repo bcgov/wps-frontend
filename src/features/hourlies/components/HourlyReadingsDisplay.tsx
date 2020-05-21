@@ -78,7 +78,7 @@ export const HourlyReadingsDisplay = () => {
                   <TableCell>Relative Humidity</TableCell>
                   {values.map(v => (
                     <TableCell key={v.datetime} align="left">
-                      {v.relative_humidity.toFixed(HOURLY_VALUES_DECIMAL)}
+                      {v.relative_humidity.toFixed(0)}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -94,15 +94,7 @@ export const HourlyReadingsDisplay = () => {
                   <TableCell>Wind Direction</TableCell>
                   {values.map(v => (
                     <TableCell key={v.datetime} align="left">
-                      {v.wind_direction.toFixed(HOURLY_VALUES_DECIMAL)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-                <TableRow>
-                  <TableCell>Barometric Pressure</TableCell>
-                  {values.map(v => (
-                    <TableCell key={v.datetime} align="left">
-                      {v.barometric_pressure.toFixed(HOURLY_VALUES_DECIMAL)}
+                      {v.wind_direction.toFixed(0)}
                     </TableCell>
                   ))}
                 </TableRow>
