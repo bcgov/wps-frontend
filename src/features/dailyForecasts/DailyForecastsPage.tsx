@@ -15,6 +15,7 @@ import { fetchForecasts } from 'features/dailyForecasts/slices/ForecastsSlice'
 import { fetchHistoricalReadings } from 'features/hourlies/slices/HourliesSlice'
 import { DailyForecastsDisplay } from 'features/dailyForecasts/components/DailyForecastsDisplay'
 import { HourlyReadingsDisplay } from 'features/hourlies/components/HourlyReadingsDisplay'
+import { WxValuesGraph } from './components/WxValuesGraph'
 
 const useStyles = makeStyles({
   stationDropdown: {
@@ -85,6 +86,7 @@ export const DailyForecastsPage = () => {
         </Button>
         <DailyForecastsDisplay />
         <HourlyReadingsDisplay />
+        <WxValuesGraph />
       </Container>
     </div>
   )

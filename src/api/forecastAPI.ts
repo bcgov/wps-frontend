@@ -1,7 +1,7 @@
 import axios from 'api/axios'
 import { Station } from 'api/stationAPI'
 
-interface WxValue {
+export interface WxValue {
   datetime: string
   temperature: number
   relative_humidity: number
