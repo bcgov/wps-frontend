@@ -1,5 +1,5 @@
 import { ForecastsResponse } from 'api/forecastAPI'
-import { HourliesResponse } from 'api/hourliesAPI'
+import { ActualWxResponse } from 'api/actualsAPI'
 import { RecursivePartial } from 'types/utilTypes'
 
 export const mockStations = [
@@ -25,7 +25,7 @@ export const mockForecastsResponse: RecursivePartial<ForecastsResponse> = {
   ]
 }
 
-export const mockHourliesResponse: RecursivePartial<HourliesResponse> = {
+export const mockActualsResponse: RecursivePartial<ActualWxResponse> = {
   hourlies: [
     {
       station: mockStations[0],

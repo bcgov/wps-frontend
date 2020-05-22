@@ -11,11 +11,11 @@ import {
 } from 'recharts'
 
 import { selectForecasts } from 'app/rootReducer'
-import { WxValue } from 'api/forecastAPI'
+import { ForecastWxValue } from 'api/forecastAPI'
 
-export const WxValuesGraph = () => {
+export const ForecastWxValuesGraph = () => {
   const { error, forecasts } = useSelector(selectForecasts)
-  let values: WxValue[] = []
+  let values: ForecastWxValue[] = []
   forecasts.map(f => {
     values = [...values, ...f.values]
   })

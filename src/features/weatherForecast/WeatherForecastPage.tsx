@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { Station } from 'api/stationAPI'
-import { selectAuthentication, selectForecasts, selectHourlies } from 'app/rootReducer'
+import { selectAuthentication, selectForecasts, selectActuals } from 'app/rootReducer'
 import { PageHeader, PageTitle, Container, Button } from 'components'
 import {
   authenticate,
@@ -11,11 +11,9 @@ import {
 } from 'features/auth/slices/authenticationSlice'
 import { fetchWxStations } from 'features/stations/slices/stationsSlice'
 import { WxStationDropdown } from 'features/stations/components/WxStationDropdown'
-import { fetchForecasts } from 'features/dailyForecasts/slices/ForecastsSlice'
-import { fetchHistoricalReadings } from 'features/hourlies/slices/HourliesSlice'
-import { DailyForecastsDisplay } from 'features/dailyForecasts/components/DailyForecastsDisplay'
-import { HourlyReadingsDisplay } from 'features/hourlies/components/HourlyReadingsDisplay'
-import { WxValuesGraph } from './components/WxValuesGraph'
+import { fetchForecasts } from 'features/weatherForecast/slices/ForecastsSlice'
+import { fetchActuals } from 'features/weatherForecast/slices/ActualsSlice'
+import { WxDataDisplays } from './components/WxDataDisplays'
 
 const useStyles = makeStyles({
   stationDropdown: {
@@ -24,31 +22,19 @@ const useStyles = makeStyles({
 })
 
 // TODO: Separate authentication part from this later
-export const DailyForecastsPage = () => {
-  const dispatch = useDispatch()
+export const WeatherForecastPage = () => {
   const classes = useStyles()
-
+  const dispatch = useDispatch()
   const [selectedStations, setStations] = useState<Station[]>([])
-
   const { isAuthenticated, authenticating, error } = useSelector(selectAuthentication)
-  const { loading: forecastDataLoading } = useSelector(selectForecasts)
-  const { loading: hourlyDataLoading } = useSelector(selectHourlies)
-  const wxDataLoading = forecastDataLoading || hourlyDataLoading
+  const { loading: loadingForecasts } = useSelector(selectForecasts)
+  const { loading: loadingActuals } = useSelector(selectActuals)
 
   useEffect(() => {
     dispatch(authenticate())
     dispatch(setAxiosRequestInterceptors())
     dispatch(fetchWxStations())
   }, [dispatch])
-
-  const onStationsChange = (s: Station[]) => {
-    setStations(s)
-  }
-  const onSubmitClick = () => {
-    const stationCodes = selectedStations.map(s => s.code)
-    dispatch(fetchForecasts(stationCodes))
-    dispatch(fetchHistoricalReadings(stationCodes))
-  }
 
   if (error) {
     return <div>{error}</div>
@@ -62,6 +48,16 @@ export const DailyForecastsPage = () => {
     return <div>You are not authenticated!</div>
   }
 
+  const onStationsChange = (s: Station[]) => {
+    setStations(s)
+  }
+  const onSubmitClick = () => {
+    const stationCodes = selectedStations.map(s => s.code)
+    dispatch(fetchForecasts(stationCodes))
+    dispatch(fetchActuals(stationCodes))
+  }
+
+  const wxDataLoading = loadingForecasts || loadingActuals
   const isBtnDisabled = wxDataLoading || selectedStations.length === 0
 
   return (
@@ -75,7 +71,7 @@ export const DailyForecastsPage = () => {
           onStationsChange={onStationsChange}
         />
         <Button
-          data-testid="get-forecast-wx-button"
+          data-testid="get-wx-data-button"
           onClick={onSubmitClick}
           disabled={isBtnDisabled}
           loading={wxDataLoading}
@@ -84,9 +80,7 @@ export const DailyForecastsPage = () => {
         >
           Get Historic Readings and Forecasted Global Model Data
         </Button>
-        <DailyForecastsDisplay />
-        <HourlyReadingsDisplay />
-        <WxValuesGraph />
+        <WxDataDisplays stations={selectedStations} />
       </Container>
     </div>
   )

@@ -1,17 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { Forecast, getForecasts } from 'api/forecastAPI'
+import { Forecast, getForecasts, ForecastWxValue } from 'api/forecastAPI'
 import { AppThunk } from 'app/store'
 
 interface State {
   loading: boolean
   error: string | null
+  forecastsByStation: Record<number, ForecastWxValue[] | undefined>
   forecasts: Forecast[]
 }
 
 const initialState: State = {
   loading: false,
   error: null,
+  forecastsByStation: {},
   forecasts: []
 }
 
@@ -28,7 +30,13 @@ const forecasts = createSlice({
     },
     getForecastsSuccess(state: State, action: PayloadAction<Forecast[]>) {
       state.loading = false
+      state.error = null
       state.forecasts = action.payload
+      action.payload.forEach(forecast => {
+        if (forecast.station) {
+          state.forecastsByStation[forecast.station.code] = forecast.values
+        }
+      })
     }
   }
 })

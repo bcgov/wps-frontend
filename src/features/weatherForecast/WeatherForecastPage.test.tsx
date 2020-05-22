@@ -5,12 +5,12 @@ import { waitForElement, cleanup, fireEvent } from '@testing-library/react'
 import { selectStations } from 'app/rootReducer'
 import axios from 'api/axios'
 import { renderWithRedux } from 'utils/testUtils'
-import { DailyForecastsPage } from 'features/dailyForecasts/DailyForecastsPage'
+import { WeatherForecastPage } from 'features/weatherForecast/WeatherForecastPage'
 import {
   mockStations,
   mockForecastsResponse,
-  mockHourliesResponse
-} from 'features/dailyForecasts/DailyForecastsPage.mock'
+  mockActualsResponse
+} from 'features/weatherForecast/WeatherForecastPage.mock'
 
 const mockAxios = new MockAdapter(axios)
 
@@ -20,7 +20,7 @@ afterEach(() => {
 })
 
 it('renders daily forecast page', async () => {
-  const { getByText, getByTestId } = renderWithRedux(<DailyForecastsPage />)
+  const { getByText, getByTestId } = renderWithRedux(<WeatherForecastPage />)
   // before authenticated
   expect(getByText(/Signing in/i)).toBeInTheDocument()
 
@@ -33,7 +33,7 @@ it('renders daily forecast page', async () => {
 it('renders weather stations dropdown with data', async () => {
   mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
 
-  const { getByText, getByTestId, store } = renderWithRedux(<DailyForecastsPage />)
+  const { getByText, getByTestId, store } = renderWithRedux(<WeatherForecastPage />)
   expect(selectStations(store.getState()).stations).toEqual([])
 
   // wait for authentication
@@ -53,9 +53,9 @@ it('renders weather stations dropdown with data', async () => {
 it('renders daily forecast and hourly values in response to user inputs', async () => {
   mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
   mockAxios.onPost('/forecasts/').replyOnce(200, mockForecastsResponse)
-  mockAxios.onPost('/hourlies/').replyOnce(200, mockHourliesResponse)
+  mockAxios.onPost('/hourlies/').replyOnce(200, mockActualsResponse)
 
-  const { getByText, getByTestId } = renderWithRedux(<DailyForecastsPage />)
+  const { getByText, getByTestId } = renderWithRedux(<WeatherForecastPage />)
 
   // wait for authentication
   await waitForElement(() => getByText(/Predictive Services Unit/i))
@@ -68,7 +68,7 @@ it('renders daily forecast and hourly values in response to user inputs', async 
   fireEvent.click(station1)
 
   // Send the request
-  fireEvent.click(getByTestId('get-forecast-wx-button'))
+  fireEvent.click(getByTestId('get-wx-data-button'))
 
   // Wait until the forecasts are fetched
   await waitForElement(() => getByTestId('daily-forecast-displays'))
