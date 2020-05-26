@@ -13,7 +13,7 @@ import { fetchWxStations } from 'features/stations/slices/stationsSlice'
 import { WxStationDropdown } from 'features/stations/components/WxStationDropdown'
 import { fetchForecasts } from 'features/weatherForecast/slices/ForecastsSlice'
 import { fetchActuals } from 'features/weatherForecast/slices/ActualsSlice'
-import { WxDataDisplays } from './components/WxDataDisplays'
+import { WxDataDisplays } from 'features/weatherForecast/components/WxDataDisplays'
 
 const useStyles = makeStyles({
   stationDropdown: {
@@ -60,7 +60,7 @@ export const WeatherForecastPage = () => {
   }
 
   const wxDataLoading = loadingForecasts || loadingActuals
-  const isBtnDisabled = wxDataLoading || selectedStations.length === 0
+  const isBtnDisabled = selectedStations.length === 0
 
   return (
     <div data-testid="daily-forecasts-page">
