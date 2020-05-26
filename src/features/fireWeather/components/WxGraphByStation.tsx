@@ -10,10 +10,10 @@ import {
 } from 'recharts'
 
 import { datetimeInPDT, isNoonInPST } from 'utils/date'
-import { ForecastWxValue } from 'api/forecastAPI'
+import { ModelValue } from 'api/modelAPI'
 
 interface Props {
-  values: ForecastWxValue[] | undefined
+  values: ModelValue[] | undefined
 }
 
 const formatXAxis = (dt: string) => {

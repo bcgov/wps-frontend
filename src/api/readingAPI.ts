@@ -1,7 +1,7 @@
 import { Station } from 'api/stationAPI'
 import axios from 'api/axios'
 
-export interface ActualWxValue {
+export interface ReadingValue {
   datetime: string
   temperature: number
   relative_humidity: number
@@ -14,20 +14,20 @@ export interface ActualWxValue {
   fwi?: number
 }
 
-export interface ActualWx {
+export interface Reading {
   station: Station
-  values: ActualWxValue[]
+  values: ReadingValue[]
 }
 
-export interface ActualWxResponse {
-  hourlies: ActualWx[]
+export interface ReadingsResponse {
+  hourlies: Reading[]
 }
 
-export async function getActuals(stationCodes: number[]): Promise<ActualWx[]> {
+export async function getReadings(stationCodes: number[]): Promise<Reading[]> {
   const url = '/hourlies/'
 
   try {
-    const { data } = await axios.post<ActualWxResponse>(url, {
+    const { data } = await axios.post<ReadingsResponse>(url, {
       stations: stationCodes
     })
     return data.hourlies

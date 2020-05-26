@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
-import { WeatherForecastPage } from 'features/weatherForecast/WeatherForecastPage'
+import { FireWeatherPage } from 'features/fireWeather/FireWeatherPage'
 import { PercentileCalculatorPageWithDisclaimer } from 'features/percentileCalculator/pages/PercentileCalculatorPageWithDisclaimer'
 import { HIDE_DISCLAIMER } from 'utils/constants'
 
@@ -20,7 +20,7 @@ export const Routes = () => {
         </Route>
 
         <Route path="/fire-weather/">
-          <WeatherForecastPage />
+          <FireWeatherPage />
         </Route>
 
         <Route>

@@ -3,11 +3,11 @@ import { useSelector } from 'react-redux'
 import { Paper, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { DailyForecastsDisplay } from 'features/weatherForecast/components/DailyForecastsDisplay'
-import { HourlyActualsDisplay } from 'features/weatherForecast/components/HourlyActualsDisplay'
-import { WxGraphByStation } from 'features/weatherForecast/components/WxGraphByStation'
+import { DailyModelsDisplay } from 'features/fireWeather/components/DailyModelsDisplay'
+import { HourlyReadingsDisplay } from 'features/fireWeather/components/HourlyReadingsDisplay'
+import { WxGraphByStation } from 'features/fireWeather/components/WxGraphByStation'
 import { Station } from 'api/stationAPI'
-import { selectActuals, selectForecasts } from 'app/rootReducer'
+import { selectReadings, selectModels } from 'app/rootReducer'
 import { ErrorMessage } from 'components'
 
 const useStyles = makeStyles({
@@ -31,26 +31,26 @@ interface Props {
 
 export const WxDisplaysByStations = ({ stations }: Props) => {
   const classes = useStyles()
-  const { error: errorFetchingActuals, actualsByStation } = useSelector(selectActuals)
+  const { error: errorFetchingReadings, readingsByStation } = useSelector(selectReadings)
   const {
-    error: errorFetchingForecasts,
-    noonForecastsByStation,
-    forecastsByStation
-  } = useSelector(selectForecasts)
+    error: errorFetchingModels,
+    noonModelsByStation,
+    modelsByStation
+  } = useSelector(selectModels)
 
   return (
     <>
-      {errorFetchingForecasts && (
+      {errorFetchingModels && (
         <ErrorMessage
-          error={errorFetchingForecasts}
-          context="while fetching weather forecast data"
+          error={errorFetchingModels}
+          context="while fetching global model data"
           marginTop={5}
         />
       )}
 
-      {errorFetchingActuals && (
+      {errorFetchingReadings && (
         <ErrorMessage
-          error={errorFetchingActuals}
+          error={errorFetchingReadings}
           context="while fetching hourly readings"
           marginTop={5}
         />
@@ -58,10 +58,10 @@ export const WxDisplaysByStations = ({ stations }: Props) => {
 
       <div className={classes.displays}>
         {stations.map(s => {
-          const actualWxValues = actualsByStation[s.code]
-          const forecastWxValues = forecastsByStation[s.code]
-          const noonForecastWxValues = noonForecastsByStation[s.code]
-          const nothingToDisplay = !actualWxValues && !forecastWxValues
+          const ReadingValues = readingsByStation[s.code]
+          const ModelValues = modelsByStation[s.code]
+          const noonModelValues = noonModelsByStation[s.code]
+          const nothingToDisplay = !ReadingValues && !ModelValues
 
           if (nothingToDisplay) {
             return null
@@ -72,9 +72,9 @@ export const WxDisplaysByStations = ({ stations }: Props) => {
               <Typography className={classes.station} variant="subtitle1" component="div">
                 Weather station: {`${s.name} (${s.code})`}
               </Typography>
-              <HourlyActualsDisplay values={actualWxValues} />
-              <DailyForecastsDisplay values={noonForecastWxValues} />
-              <WxGraphByStation values={forecastWxValues} />
+              <HourlyReadingsDisplay values={ReadingValues} />
+              <DailyModelsDisplay values={noonModelValues} />
+              <WxGraphByStation values={ModelValues} />
             </Paper>
           )
         })}

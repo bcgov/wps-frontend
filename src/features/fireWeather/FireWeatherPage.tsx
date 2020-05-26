@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { Station } from 'api/stationAPI'
-import { selectAuthentication, selectForecasts, selectActuals } from 'app/rootReducer'
+import { selectAuthentication, selectModels, selectReadings } from 'app/rootReducer'
 import { PageHeader, PageTitle, Container, Button } from 'components'
 import {
   authenticate,
@@ -11,9 +11,9 @@ import {
 } from 'features/auth/slices/authenticationSlice'
 import { fetchWxStations } from 'features/stations/slices/stationsSlice'
 import { WxStationDropdown } from 'features/stations/components/WxStationDropdown'
-import { fetchForecasts } from 'features/weatherForecast/slices/ForecastsSlice'
-import { fetchActuals } from 'features/weatherForecast/slices/ActualsSlice'
-import { WxDisplaysByStations } from 'features/weatherForecast/components/WxDisplaysByStations'
+import { fetchModels } from 'features/fireWeather/slices/modelsSlice'
+import { fetchReadings } from 'features/fireWeather/slices/readingsSlice'
+import { WxDisplaysByStations } from 'features/fireWeather/components/WxDisplaysByStations'
 
 const useStyles = makeStyles({
   stationDropdown: {
@@ -22,14 +22,14 @@ const useStyles = makeStyles({
 })
 
 // TODO: Separate authentication part from this later
-export const WeatherForecastPage = () => {
+export const FireWeatherPage = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const [selectedStations, setStations] = useState<Station[]>([])
   const [requestedStations, setRequestedStations] = useState<Station[]>([])
   const { isAuthenticated, authenticating, error } = useSelector(selectAuthentication)
-  const { loading: loadingForecasts } = useSelector(selectForecasts)
-  const { loading: loadingActuals } = useSelector(selectActuals)
+  const { loading: loadingModels } = useSelector(selectModels)
+  const { loading: loadingReadings } = useSelector(selectReadings)
 
   useEffect(() => {
     dispatch(authenticate())
@@ -55,17 +55,17 @@ export const WeatherForecastPage = () => {
   const onSubmitClick = () => {
     const stationCodes = selectedStations.map(s => s.code)
     setRequestedStations(selectedStations)
-    dispatch(fetchForecasts(stationCodes))
-    dispatch(fetchActuals(stationCodes))
+    dispatch(fetchModels(stationCodes))
+    dispatch(fetchReadings(stationCodes))
   }
 
-  const wxDataLoading = loadingForecasts || loadingActuals
+  const wxDataLoading = loadingModels || loadingReadings
   const isBtnDisabled = selectedStations.length === 0
 
   return (
-    <div data-testid="daily-forecasts-page">
+    <div data-testid="fire-weather-page">
       <PageHeader title="Predictive Services Unit" />
-      <PageTitle title="Daily Weather Forecast" />
+      <PageTitle title="Daily Weather Model" />
       <Container>
         <WxStationDropdown
           className={classes.stationDropdown}
@@ -80,7 +80,7 @@ export const WeatherForecastPage = () => {
           variant="contained"
           color="primary"
         >
-          Get Historic Readings and Forecasted Global Model Data
+          Get Historic Readings &amp; Global Model Data
         </Button>
         <WxDisplaysByStations stations={requestedStations} />
       </Container>

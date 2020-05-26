@@ -11,7 +11,7 @@ export const WEATHER_STATION_MAP_LINK =
 
 export const FWI_VALUES_DECIMAL = 2
 
-export const FORECAST_VALUES_DECIMAL = 1
+export const MODEL_VALUE_DECIMAL = 1
 export const HOURLY_VALUES_DECIMAL = 1
 
 export const PDT_UTC_OFFSET = -7 // The Pacific Daylight Time offest is -7 hours from UTC.

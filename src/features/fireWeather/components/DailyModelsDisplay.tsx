@@ -1,6 +1,5 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -9,9 +8,8 @@ import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
-import { HOURLY_VALUES_DECIMAL } from 'utils/constants'
-import { ActualWxValue } from 'api/actualsAPI'
-import { datetimeInPDT } from 'utils/date'
+import { MODEL_VALUE_DECIMAL } from 'utils/constants'
+import { ModelValue } from 'api/modelAPI'
 
 const useStyles = makeStyles({
   display: {
@@ -26,38 +24,36 @@ const useStyles = makeStyles({
 })
 
 interface Props {
-  values: ActualWxValue[] | undefined
+  values: ModelValue[] | undefined
 }
 
-export const HourlyActualsDisplay = ({ values }: Props) => {
+export const DailyModelsDisplay = ({ values }: Props) => {
   const classes = useStyles()
 
   if (!values) {
     return null
   }
 
-  // <div data-testid="hourly-readings-displays">
   return (
-    <div className={classes.display}>
-      <Typography className={classes.title} component="div" variant="subtitle2">
-        Past 5 days of hourly readings from station
+    <div className={classes.display} data-testid="daily-models-display">
+      <Typography className={classes.title} variant="subtitle2" component="div">
+        10 days of interpolated global model noon (12pm PST) values
       </Typography>
-
       <Paper elevation={1}>
         <TableContainer>
           <Table className={classes.table} size="small" aria-label="weather data table">
             <TableBody>
               <TableRow>
-                <TableCell>Date (PDT)</TableCell>
+                <TableCell>Date</TableCell>
                 {values.map(v => (
-                  <TableCell key={v.datetime}>{datetimeInPDT(v.datetime)}</TableCell>
+                  <TableCell key={v.datetime}>{v.datetime.slice(0, 10)}</TableCell>
                 ))}
               </TableRow>
               <TableRow>
                 <TableCell>Temp (°C)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {v.temperature.toFixed(HOURLY_VALUES_DECIMAL)}
+                    {v.temperature.toFixed(MODEL_VALUE_DECIMAL)}
                   </TableCell>
                 ))}
               </TableRow>
@@ -79,7 +75,7 @@ export const HourlyActualsDisplay = ({ values }: Props) => {
                 <TableCell>Wind Spd (km/h)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {v.wind_speed.toFixed(HOURLY_VALUES_DECIMAL)}
+                    {v.wind_speed.toFixed(MODEL_VALUE_DECIMAL)}
                   </TableCell>
                 ))}
               </TableRow>
@@ -87,31 +83,7 @@ export const HourlyActualsDisplay = ({ values }: Props) => {
                 <TableCell>Precip (mm/cm)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {v.precipitation.toFixed(HOURLY_VALUES_DECIMAL)}
-                  </TableCell>
-                ))}
-              </TableRow>
-              <TableRow>
-                <TableCell>FFMC</TableCell>
-                {values.map(v => (
-                  <TableCell key={v.datetime}>
-                    {v.ffmc?.toFixed(HOURLY_VALUES_DECIMAL)}
-                  </TableCell>
-                ))}
-              </TableRow>
-              <TableRow>
-                <TableCell>ISI</TableCell>
-                {values.map(v => (
-                  <TableCell key={v.datetime}>
-                    {v.isi?.toFixed(HOURLY_VALUES_DECIMAL)}
-                  </TableCell>
-                ))}
-              </TableRow>
-              <TableRow>
-                <TableCell>FWI</TableCell>
-                {values.map(v => (
-                  <TableCell key={v.datetime}>
-                    {v.fwi?.toFixed(HOURLY_VALUES_DECIMAL)}
+                    {v.total_precipitation.toFixed(MODEL_VALUE_DECIMAL)}
                   </TableCell>
                 ))}
               </TableRow>
