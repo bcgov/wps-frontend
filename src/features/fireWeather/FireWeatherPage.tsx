@@ -5,15 +5,15 @@ import { makeStyles } from '@material-ui/core/styles'
 import { Station } from 'api/stationAPI'
 import { selectAuthentication, selectModels, selectReadings } from 'app/rootReducer'
 import { PageHeader, PageTitle, Container, Button } from 'components'
+import WxStationDropdown from 'features/stations/components/WxStationDropdown'
+import WxDisplaysByStations from 'features/fireWeather/components/WxDisplaysByStations'
 import {
   authenticate,
   setAxiosRequestInterceptors
 } from 'features/auth/slices/authenticationSlice'
 import { fetchWxStations } from 'features/stations/slices/stationsSlice'
-import { WxStationDropdown } from 'features/stations/components/WxStationDropdown'
 import { fetchModels } from 'features/fireWeather/slices/modelsSlice'
 import { fetchReadings } from 'features/fireWeather/slices/readingsSlice'
-import { WxDisplaysByStations } from 'features/fireWeather/components/WxDisplaysByStations'
 
 const useStyles = makeStyles({
   stationDropdown: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 })
 
 // TODO: Separate authentication part from this later
-export const FireWeatherPage = () => {
+const FireWeatherPage = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const [selectedStations, setStations] = useState<Station[]>([])
@@ -87,3 +87,5 @@ export const FireWeatherPage = () => {
     </div>
   )
 }
+
+export default React.memo(FireWeatherPage)

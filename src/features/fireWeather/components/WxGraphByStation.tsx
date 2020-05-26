@@ -24,7 +24,7 @@ const formatTooltipLabel = (dt: string | number) => {
   return datetimeInPDT(dt, 'h:mm a, ddd, MMM Do, YYYY')
 }
 
-export const WxGraphByStation = ({ values }: Props) => {
+const WxGraphByStation = ({ values }: Props) => {
   if (!values || values.length === 0) {
     return null
   }
@@ -75,3 +75,5 @@ export const WxGraphByStation = ({ values }: Props) => {
     </ResponsiveContainer>
   )
 }
+
+export default React.memo(WxGraphByStation)

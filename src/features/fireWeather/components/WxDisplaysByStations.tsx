@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux'
 import { Paper, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { DailyModelsDisplay } from 'features/fireWeather/components/DailyModelsDisplay'
-import { HourlyReadingsDisplay } from 'features/fireWeather/components/HourlyReadingsDisplay'
-import { WxGraphByStation } from 'features/fireWeather/components/WxGraphByStation'
+import DailyModelsDisplay from 'features/fireWeather/components/DailyModelsDisplay'
+import HourlyReadingsDisplay from 'features/fireWeather/components/HourlyReadingsDisplay'
+import WxGraphByStation from 'features/fireWeather/components/WxGraphByStation'
 import { Station } from 'api/stationAPI'
 import { selectReadings, selectModels } from 'app/rootReducer'
 import { ErrorMessage } from 'components'
@@ -29,7 +29,7 @@ interface Props {
   stations: Station[]
 }
 
-export const WxDisplaysByStations = ({ stations }: Props) => {
+const WxDisplaysByStations = ({ stations }: Props) => {
   const classes = useStyles()
   const { error: errorFetchingReadings, readingsByStation } = useSelector(selectReadings)
   const {
@@ -82,3 +82,5 @@ export const WxDisplaysByStations = ({ stations }: Props) => {
     </>
   )
 }
+
+export default React.memo(WxDisplaysByStations)

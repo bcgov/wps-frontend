@@ -5,7 +5,7 @@ import { waitForElement, cleanup, fireEvent } from '@testing-library/react'
 import { selectStations } from 'app/rootReducer'
 import axios from 'api/axios'
 import { renderWithRedux } from 'utils/testUtils'
-import { FireWeatherPage } from 'features/fireWeather/FireWeatherPage'
+import FireWeatherPage from 'features/fireWeather/FireWeatherPage'
 import {
   mockStations,
   mockModelsResponse,

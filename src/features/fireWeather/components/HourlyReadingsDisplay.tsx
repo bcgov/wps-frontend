@@ -29,7 +29,7 @@ interface Props {
   values: ReadingValue[] | undefined
 }
 
-export const HourlyReadingsDisplay = ({ values }: Props) => {
+const HourlyReadingsDisplay = ({ values }: Props) => {
   const classes = useStyles()
 
   if (!values) {
@@ -121,3 +121,5 @@ export const HourlyReadingsDisplay = ({ values }: Props) => {
     </div>
   )
 }
+
+export default React.memo(HourlyReadingsDisplay)

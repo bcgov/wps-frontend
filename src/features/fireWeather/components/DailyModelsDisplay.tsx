@@ -27,7 +27,7 @@ interface Props {
   values: ModelValue[] | undefined
 }
 
-export const DailyModelsDisplay = ({ values }: Props) => {
+const DailyModelsDisplay = ({ values }: Props) => {
   const classes = useStyles()
 
   if (!values) {
@@ -94,3 +94,5 @@ export const DailyModelsDisplay = ({ values }: Props) => {
     </div>
   )
 }
+
+export default React.memo(DailyModelsDisplay)
