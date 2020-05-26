@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import { DailyForecastsDisplay } from 'features/weatherForecast/components/DailyForecastsDisplay'
 import { HourlyActualsDisplay } from 'features/weatherForecast/components/HourlyActualsDisplay'
+import { WxGraphByStation } from 'features/weatherForecast/components/WxGraphByStation'
 import { Station } from 'api/stationAPI'
 import { selectActuals, selectForecasts } from 'app/rootReducer'
 import { ErrorMessage } from 'components'
@@ -28,12 +29,14 @@ interface Props {
   stations: Station[]
 }
 
-export const WxDataDisplays = ({ stations }: Props) => {
+export const WxDisplaysByStations = ({ stations }: Props) => {
   const classes = useStyles()
   const { error: errorFetchingActuals, actualsByStation } = useSelector(selectActuals)
-  const { error: errorFetchingForecasts, forecastsByStation } = useSelector(
-    selectForecasts
-  )
+  const {
+    error: errorFetchingForecasts,
+    noonForecastsByStation,
+    forecastsByStation
+  } = useSelector(selectForecasts)
 
   return (
     <>
@@ -57,8 +60,10 @@ export const WxDataDisplays = ({ stations }: Props) => {
         {stations.map(s => {
           const actualWxValues = actualsByStation[s.code]
           const forecastWxValues = forecastsByStation[s.code]
+          const noonForecastWxValues = noonForecastsByStation[s.code]
+          const nothingToDisplay = !actualWxValues && !forecastWxValues
 
-          if (!actualWxValues && !forecastWxValues) {
+          if (nothingToDisplay) {
             return null
           }
 
@@ -68,7 +73,8 @@ export const WxDataDisplays = ({ stations }: Props) => {
                 Weather station: {`${s.name} (${s.code})`}
               </Typography>
               <HourlyActualsDisplay values={actualWxValues} />
-              <DailyForecastsDisplay values={forecastWxValues} />
+              <DailyForecastsDisplay values={noonForecastWxValues} />
+              <WxGraphByStation values={forecastWxValues} />
             </Paper>
           )
         })}

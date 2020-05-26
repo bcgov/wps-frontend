@@ -13,7 +13,7 @@ import { fetchWxStations } from 'features/stations/slices/stationsSlice'
 import { WxStationDropdown } from 'features/stations/components/WxStationDropdown'
 import { fetchForecasts } from 'features/weatherForecast/slices/ForecastsSlice'
 import { fetchActuals } from 'features/weatherForecast/slices/ActualsSlice'
-import { WxDataDisplays } from 'features/weatherForecast/components/WxDataDisplays'
+import { WxDisplaysByStations } from 'features/weatherForecast/components/WxDisplaysByStations'
 
 const useStyles = makeStyles({
   stationDropdown: {
@@ -82,7 +82,7 @@ export const WeatherForecastPage = () => {
         >
           Get Historic Readings and Forecasted Global Model Data
         </Button>
-        <WxDataDisplays stations={requestedStations} />
+        <WxDisplaysByStations stations={requestedStations} />
       </Container>
     </div>
   )

@@ -1,5 +1,4 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import {
   LineChart,
   Line,
@@ -10,24 +9,37 @@ import {
   ResponsiveContainer
 } from 'recharts'
 
-import { selectForecasts } from 'app/rootReducer'
+import { datetimeInPDT, isNoonInPST } from 'utils/date'
 import { ForecastWxValue } from 'api/forecastAPI'
 
-export const ForecastWxValuesGraph = () => {
-  const { error, forecasts } = useSelector(selectForecasts)
-  let values: ForecastWxValue[] = []
-  forecasts.map(f => {
-    values = [...values, ...f.values]
-  })
+interface Props {
+  values: ForecastWxValue[] | undefined
+}
 
-  if (values.length === 0) {
+const formatXAxis = (dt: string) => {
+  return datetimeInPDT(dt, 'hA')
+}
+
+const formatTooltipLabel = (dt: string | number) => {
+  return datetimeInPDT(dt, 'h:mm a, ddd, MMM Do, YYYY')
+}
+
+export const WxGraphByStation = ({ values }: Props) => {
+  if (!values || values.length === 0) {
     return null
   }
+
+  const xAxisTicks = values.map(v => v.datetime).filter(dt => isNoonInPST(dt))
 
   return (
     <ResponsiveContainer width="100%" minHeight={300}>
       <LineChart data={values} margin={{ top: 10, right: 20, bottom: 5, left: 0 }}>
-        <XAxis allowDataOverflow dataKey="datetime" />
+        <XAxis
+          allowDataOverflow
+          dataKey="datetime"
+          ticks={xAxisTicks}
+          tickFormatter={formatXAxis}
+        />
         <YAxis
           yAxisId="left"
           allowDataOverflow
@@ -45,7 +57,7 @@ export const ForecastWxValuesGraph = () => {
         <Line
           yAxisId="left"
           type="natural"
-          name="Temp"
+          name="Temperature"
           dataKey="temperature"
           stroke="#8884d8"
         />
@@ -58,7 +70,7 @@ export const ForecastWxValuesGraph = () => {
         />
         <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
 
-        <Tooltip />
+        <Tooltip labelFormatter={formatTooltipLabel} />
       </LineChart>
     </ResponsiveContainer>
   )

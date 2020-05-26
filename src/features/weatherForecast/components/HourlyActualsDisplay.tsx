@@ -8,10 +8,10 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
-import moment from 'moment'
 
-import { HOURLY_VALUES_DECIMAL, PDT_UTC_OFFSET } from 'utils/constants'
+import { HOURLY_VALUES_DECIMAL } from 'utils/constants'
 import { ActualWxValue } from 'api/actualsAPI'
+import { datetimeInPDT } from 'utils/date'
 
 const useStyles = makeStyles({
   display: {
@@ -50,11 +50,7 @@ export const HourlyActualsDisplay = ({ values }: Props) => {
               <TableRow>
                 <TableCell>Date (PDT)</TableCell>
                 {values.map(v => (
-                  <TableCell key={v.datetime}>
-                    {moment(v.datetime)
-                      .utcOffset(PDT_UTC_OFFSET)
-                      .format('YYYY-MM-DD HH:mm')}
-                  </TableCell>
+                  <TableCell key={v.datetime}>{datetimeInPDT(v.datetime)}</TableCell>
                 ))}
               </TableRow>
               <TableRow>

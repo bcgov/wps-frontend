@@ -2,11 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { Forecast, getForecasts, ForecastWxValue } from 'api/forecastAPI'
 import { AppThunk } from 'app/store'
+import { isNoonInPST } from 'utils/date'
 
 interface State {
   loading: boolean
   error: string | null
   forecastsByStation: Record<number, ForecastWxValue[] | undefined>
+  noonForecastsByStation: Record<number, ForecastWxValue[] | undefined>
   forecasts: Forecast[]
 }
 
@@ -14,6 +16,7 @@ const initialState: State = {
   loading: false,
   error: null,
   forecastsByStation: {},
+  noonForecastsByStation: {},
   forecasts: []
 }
 
@@ -34,7 +37,11 @@ const forecasts = createSlice({
       state.forecasts = action.payload
       action.payload.forEach(forecast => {
         if (forecast.station) {
-          state.forecastsByStation[forecast.station.code] = forecast.values
+          const code = forecast.station.code
+          state.forecastsByStation[code] = forecast.values
+          state.noonForecastsByStation[code] = forecast.values.filter(v =>
+            isNoonInPST(v.datetime)
+          )
         }
       })
     }
