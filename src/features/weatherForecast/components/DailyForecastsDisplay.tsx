@@ -18,9 +18,8 @@ const useStyles = makeStyles({
   table: {
     minWidth: 650
   },
-  top: {
-    paddingBottom: 4,
-    fontStyle: 'italic'
+  title: {
+    paddingBottom: 4
   }
 })
 
@@ -38,8 +37,8 @@ export const DailyForecastsDisplay = ({ values }: Props) => {
 
   return (
     <div className={classes.display}>
-      <Typography className={classes.top} variant="subtitle2" component="div">
-        10 days of Global Model Noon (UTC+8) values
+      <Typography className={classes.title} variant="subtitle2" component="div">
+        10 days of interpolated global model noon (12pm PST) values
       </Typography>
       <Paper elevation={1}>
         <TableContainer>

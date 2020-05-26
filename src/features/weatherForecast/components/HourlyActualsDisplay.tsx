@@ -20,9 +20,8 @@ const useStyles = makeStyles({
   table: {
     minWidth: 650
   },
-  top: {
-    paddingBottom: 4,
-    fontStyle: 'italic'
+  title: {
+    paddingBottom: 4
   }
 })
 
@@ -40,7 +39,7 @@ export const HourlyActualsDisplay = ({ values }: Props) => {
   // <div data-testid="hourly-readings-displays">
   return (
     <div className={classes.display}>
-      <Typography className={classes.top} component="div" variant="subtitle2">
+      <Typography className={classes.title} component="div" variant="subtitle2">
         Past 5 days of hourly readings from station
       </Typography>
 

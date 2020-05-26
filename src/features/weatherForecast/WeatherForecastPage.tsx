@@ -26,6 +26,7 @@ export const WeatherForecastPage = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const [selectedStations, setStations] = useState<Station[]>([])
+  const [requestedStations, setRequestedStations] = useState<Station[]>([])
   const { isAuthenticated, authenticating, error } = useSelector(selectAuthentication)
   const { loading: loadingForecasts } = useSelector(selectForecasts)
   const { loading: loadingActuals } = useSelector(selectActuals)
@@ -53,6 +54,7 @@ export const WeatherForecastPage = () => {
   }
   const onSubmitClick = () => {
     const stationCodes = selectedStations.map(s => s.code)
+    setRequestedStations(selectedStations)
     dispatch(fetchForecasts(stationCodes))
     dispatch(fetchActuals(stationCodes))
   }
@@ -80,7 +82,7 @@ export const WeatherForecastPage = () => {
         >
           Get Historic Readings and Forecasted Global Model Data
         </Button>
-        <WxDataDisplays stations={selectedStations} />
+        <WxDataDisplays stations={requestedStations} />
       </Container>
     </div>
   )

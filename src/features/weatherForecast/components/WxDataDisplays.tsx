@@ -10,11 +10,13 @@ import { selectActuals, selectForecasts } from 'app/rootReducer'
 import { ErrorMessage } from 'components'
 
 const useStyles = makeStyles({
+  displays: {
+    marginTop: 16
+  },
   paper: {
     paddingLeft: 16,
     paddingRight: 16,
-    marginTop: 16,
-    marginBottom: 16
+    marginBottom: 20
   },
   station: {
     paddingTop: 8,
@@ -51,7 +53,7 @@ export const WxDataDisplays = ({ stations }: Props) => {
         />
       )}
 
-      <div>
+      <div className={classes.displays}>
         {stations.map(s => {
           const actualWxValues = actualsByStation[s.code]
           const forecastWxValues = forecastsByStation[s.code]
