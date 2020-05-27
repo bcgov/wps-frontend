@@ -37,7 +37,7 @@ const DailyModelsDisplay = ({ values }: Props) => {
   return (
     <div className={classes.display} data-testid="daily-models-display">
       <Typography className={classes.title} variant="subtitle2" component="div">
-        10 days of interpolated global model noon (12pm PST) values
+        10 days of interpolated GDPS noon (12pm PST) values:
       </Typography>
       <Paper elevation={1}>
         <TableContainer>

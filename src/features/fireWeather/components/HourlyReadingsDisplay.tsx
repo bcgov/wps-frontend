@@ -39,7 +39,7 @@ const HourlyReadingsDisplay = ({ values }: Props) => {
   return (
     <div className={classes.display} data-testid="hourly-readings-display">
       <Typography className={classes.title} component="div" variant="subtitle2">
-        Past 5 days of hourly readings from station
+        Past 5 days of hourly readings from station:
       </Typography>
 
       <Paper elevation={1}>

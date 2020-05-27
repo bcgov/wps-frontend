@@ -6,73 +6,121 @@ import {
   XAxis,
   YAxis,
   Tooltip,
+  Legend,
   ResponsiveContainer
 } from 'recharts'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
 
-import { datetimeInPDT, isNoonInPST } from 'utils/date'
+import { datetimeInPDT } from 'utils/date'
 import { ModelValue } from 'api/modelAPI'
+import { MODEL_VALUE_DECIMAL } from 'utils/constants'
+
+const useStyles = makeStyles({
+  graph: {
+    paddingBottom: 16
+  },
+  title: {
+    paddingBottom: 4
+  }
+})
 
 interface Props {
   values: ModelValue[] | undefined
 }
 
 const formatXAxis = (dt: string) => {
-  return datetimeInPDT(dt, 'hA')
+  return datetimeInPDT(dt, 'Do MMM')
 }
 
 const formatTooltipLabel = (dt: string | number) => {
-  return datetimeInPDT(dt, 'h:mm a, ddd, MMM Do, YYYY')
+  return `${datetimeInPDT(dt, 'h:mm a, dddd, MMM Do')}`
+}
+
+const formatTooltipValue = (
+  value: string | number | (string | number)[],
+  name: string
+) => {
+  if (typeof value === 'number') {
+    if (name === 'RH') return Math.round(value)
+
+    return value.toFixed(MODEL_VALUE_DECIMAL)
+  }
+
+  return value
 }
 
 const WxGraphByStation = ({ values }: Props) => {
+  const classes = useStyles()
+
   if (!values || values.length === 0) {
     return null
   }
 
-  const xAxisTicks = values.map(v => v.datetime).filter(dt => isNoonInPST(dt))
+  const arrOfEachDay: string[] = []
+  const map: { [k: string]: boolean } = {}
+  values.forEach(v => {
+    const dt = datetimeInPDT(v.datetime, 'Do MMM')
+    if (!map[dt]) {
+      map[dt] = true
+      arrOfEachDay.push(v.datetime)
+    }
+  })
 
   return (
-    <ResponsiveContainer width="100%" minHeight={300}>
-      <LineChart data={values} margin={{ top: 10, right: 20, bottom: 5, left: 0 }}>
-        <XAxis
-          allowDataOverflow
-          dataKey="datetime"
-          ticks={xAxisTicks}
-          tickFormatter={formatXAxis}
-        />
-        <YAxis
-          yAxisId="left"
-          allowDataOverflow
-          orientation="left"
-          type="number"
-          unit="°C"
-        />
-        <YAxis
-          yAxisId="right"
-          allowDataOverflow
-          orientation="right"
-          type="number"
-          unit="%"
-        />
-        <Line
-          yAxisId="left"
-          type="natural"
-          name="Temperature"
-          dataKey="temperature"
-          stroke="#8884d8"
-        />
-        <Line
-          yAxisId="right"
-          type="natural"
-          name="RH"
-          dataKey="relative_humidity"
-          stroke="#82ca9d"
-        />
-        <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+    <div className={classes.graph} data-testid="weather-graph">
+      <Typography className={classes.title} component="div" variant="subtitle2">
+        GDPS 3 hourly data with interpolated noon values (PDT, UTC-7):
+      </Typography>
 
-        <Tooltip labelFormatter={formatTooltipLabel} />
-      </LineChart>
-    </ResponsiveContainer>
+      <ResponsiveContainer width="100%" minHeight={300}>
+        <LineChart data={values} margin={{ top: 10, right: 20, bottom: 5, left: 0 }}>
+          <XAxis
+            allowDataOverflow
+            dataKey="datetime"
+            ticks={arrOfEachDay}
+            tickFormatter={formatXAxis}
+          />
+          <YAxis
+            yAxisId="left"
+            allowDataOverflow
+            orientation="left"
+            type="number"
+            unit="°"
+            label={{ value: 'Temp (°C)', angle: -90, position: 'insideLeft' }}
+          />
+          <YAxis
+            yAxisId="right"
+            allowDataOverflow
+            orientation="right"
+            type="number"
+            unit="%"
+            label={{
+              value: 'RH',
+              angle: -270,
+              position: 'insideRight'
+            }}
+          />
+          <Line
+            yAxisId="left"
+            type="natural"
+            name="Temp"
+            dataKey="temperature"
+            stroke="#8884d8"
+          />
+          <Line
+            yAxisId="right"
+            type="natural"
+            name="RH"
+            dataKey="relative_humidity"
+            stroke="#82ca9d"
+          />
+          <CartesianGrid stroke="#ccc" strokeDasharray="1 1" />
+          <Tooltip labelFormatter={formatTooltipLabel} formatter={formatTooltipValue} />
+          <Legend />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
   )
 }
 

@@ -20,6 +20,7 @@ const useStyles = makeStyles({
     marginBottom: 20
   },
   station: {
+    fontSize: '1.1rem',
     paddingTop: 8,
     paddingBottom: 8
   }
