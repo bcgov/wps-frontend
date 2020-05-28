@@ -20,7 +20,7 @@ const initialState: State = {
   models: []
 }
 
-const models = createSlice({
+const modelsSlice = createSlice({
   name: 'models',
   initialState,
   reducers: {
@@ -48,9 +48,9 @@ const models = createSlice({
   }
 })
 
-export const { getModelsStart, getModelsFailed, getModelsSuccess } = models.actions
+export const { getModelsStart, getModelsFailed, getModelsSuccess } = modelsSlice.actions
 
-export default models.reducer
+export default modelsSlice.reducer
 
 export const fetchModels = (stationCodes: number[]): AppThunk => async dispatch => {
   try {

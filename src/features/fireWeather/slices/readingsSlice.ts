@@ -17,7 +17,7 @@ const initialState: State = {
   readings: []
 }
 
-const readings = createSlice({
+const readingsSlice = createSlice({
   name: 'readings',
   initialState,
   reducers: {
@@ -45,9 +45,9 @@ export const {
   getReadingsStart,
   getReadingsFailed,
   getReadingsSuccess
-} = readings.actions
+} = readingsSlice.actions
 
-export default readings.reducer
+export default readingsSlice.reducer
 
 export const fetchReadings = (stationCodes: number[]): AppThunk => async dispatch => {
   try {
