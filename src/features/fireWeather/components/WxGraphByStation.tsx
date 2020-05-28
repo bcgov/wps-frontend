@@ -92,7 +92,7 @@ const WxGraphByStation = ({ values }: Props) => {
             orientation="left"
             type="number"
             unit="°"
-            domain={['dataMin - 5', 'dataMax + 5']}
+            domain={['auto', 'auto']}
             allowDataOverflow
             label={{ value: 'Temp (°C)', angle: -90, position: 'insideLeft' }}
           />
@@ -101,7 +101,7 @@ const WxGraphByStation = ({ values }: Props) => {
             orientation="right"
             type="number"
             unit="%"
-            domain={['dataMin - 5', 'dataMax + 5']}
+            domain={[0, 100]}
             allowDataOverflow
             label={{
               value: 'RH',
