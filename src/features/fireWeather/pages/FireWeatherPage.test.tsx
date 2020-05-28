@@ -5,12 +5,12 @@ import { waitForElement, cleanup, fireEvent } from '@testing-library/react'
 import { selectStations } from 'app/rootReducer'
 import axios from 'api/axios'
 import { renderWithRedux } from 'utils/testUtils'
-import FireWeatherPage from 'features/fireWeather/FireWeatherPage'
+import FireWeatherPage from 'features/fireWeather/pages/FireWeatherPage'
 import {
   mockStations,
   mockModelsResponse,
   mockReadingsResponse
-} from 'features/fireWeather/FireWeatherPage.mock'
+} from 'features/fireWeather/pages/FireWeatherPage.mock'
 
 const mockAxios = new MockAdapter(axios)
 
@@ -70,10 +70,10 @@ it('renders daily model and hourly values in response to user inputs', async () 
   // Send the request
   fireEvent.click(getByTestId('get-wx-data-button'))
 
-  // Wait until the models are fetched
+  // Wait until all the displays show up
   await waitForElement(() => getByTestId('daily-models-display'))
-  // Wait until the readings are fetched
   await waitForElement(() => getByTestId('hourly-readings-display'))
+  await waitForElement(() => getByTestId('weather-graph-by-station'))
 
   // Validate the correct request body
   // There should have been two requests, one for models and one for hourly readings.

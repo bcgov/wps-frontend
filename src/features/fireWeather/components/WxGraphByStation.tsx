@@ -25,16 +25,12 @@ const useStyles = makeStyles({
   }
 })
 
-interface Props {
-  values: ModelValue[] | undefined
-}
-
 const formatXAxis = (dt: string) => {
   return datetimeInPDT(dt, 'Do MMM')
 }
 
 const formatTooltipLabel = (dt: string | number) => {
-  return `${datetimeInPDT(dt, 'h:mm a, dddd, MMM Do')}`
+  return datetimeInPDT(dt, 'h:mm a, dddd, MMM Do')
 }
 
 const formatTooltipValue = (
@@ -50,6 +46,24 @@ const formatTooltipValue = (
   return value
 }
 
+const getDateRange = (values: ModelValue[]) => {
+  const days: string[] = []
+  const map: { [k: string]: boolean } = {}
+  values.forEach(v => {
+    const dt = datetimeInPDT(v.datetime, 'Do MMM')
+    if (!map[dt]) {
+      map[dt] = true
+      days.push(v.datetime)
+    }
+  })
+
+  return days
+}
+
+interface Props {
+  values: ModelValue[] | undefined
+}
+
 const WxGraphByStation = ({ values }: Props) => {
   const classes = useStyles()
 
@@ -57,18 +71,10 @@ const WxGraphByStation = ({ values }: Props) => {
     return null
   }
 
-  const arrOfEachDay: string[] = []
-  const map: { [k: string]: boolean } = {}
-  values.forEach(v => {
-    const dt = datetimeInPDT(v.datetime, 'Do MMM')
-    if (!map[dt]) {
-      map[dt] = true
-      arrOfEachDay.push(v.datetime)
-    }
-  })
+  const dateRange = getDateRange(values)
 
   return (
-    <div className={classes.graph} data-testid="weather-graph">
+    <div className={classes.graph} data-testid="weather-graph-by-station">
       <Typography className={classes.title} component="div" variant="subtitle2">
         GDPS 3 hourly data with interpolated noon values (PDT, UTC-7):
       </Typography>
@@ -78,7 +84,7 @@ const WxGraphByStation = ({ values }: Props) => {
           <XAxis
             allowDataOverflow
             dataKey="datetime"
-            ticks={arrOfEachDay}
+            ticks={dateRange}
             tickFormatter={formatXAxis}
           />
           <YAxis
