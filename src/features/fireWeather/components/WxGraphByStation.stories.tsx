@@ -10,7 +10,7 @@ storiesOf('WxGraphByStation', module).add('default', () => {
 const values = [
   {
     datetime: '2020-05-27T00:00:00+00:00',
-    temperature: 11.1,
+    temperature: -0.5,
     dew_point: -5.1,
     relative_humidity: 32,
     wind_speed: 16,

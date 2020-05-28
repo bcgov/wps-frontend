@@ -82,25 +82,27 @@ const WxGraphByStation = ({ values }: Props) => {
       <ResponsiveContainer width="100%" minHeight={300}>
         <LineChart data={values} margin={{ top: 10, right: 20, bottom: 5, left: 0 }}>
           <XAxis
-            allowDataOverflow
             dataKey="datetime"
+            allowDataOverflow
             ticks={dateRange}
             tickFormatter={formatXAxis}
           />
           <YAxis
             yAxisId="left"
-            allowDataOverflow
             orientation="left"
             type="number"
             unit="°"
+            domain={['dataMin - 5', 'dataMax + 5']}
+            allowDataOverflow
             label={{ value: 'Temp (°C)', angle: -90, position: 'insideLeft' }}
           />
           <YAxis
             yAxisId="right"
-            allowDataOverflow
             orientation="right"
             type="number"
             unit="%"
+            domain={['dataMin - 5', 'dataMax + 5']}
+            allowDataOverflow
             label={{
               value: 'RH',
               angle: -270,
