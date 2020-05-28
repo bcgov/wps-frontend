@@ -38,7 +38,7 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "CI=true react-scripts start",
     "build": "react-scripts build",
     "test": "DEBUG_PRINT_LIMIT=5000 react-scripts test",
     "test:ci": "CI=true npm test",
