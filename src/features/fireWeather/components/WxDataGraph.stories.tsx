@@ -3,7 +3,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import moment from 'moment'
 
-import WxGraphByStation from 'features/fireWeather/components/WxDataGraph'
+import WxDataGraph from 'features/fireWeather/components/WxDataGraph'
 
 const getModelValues = () => {
   const modelValues = []
@@ -70,10 +70,10 @@ const getReadingValues = () => {
   return readingValues
 }
 
-storiesOf('WxGraphByStation', module)
+storiesOf('WxDataGraph', module)
   .add('default', () => (
-    <WxGraphByStation modelValues={getModelValues()} readingValues={getReadingValues()} />
+    <WxDataGraph modelValues={getModelValues()} readingValues={getReadingValues()} />
   ))
   .add('only model', () => (
-    <WxGraphByStation modelValues={getModelValues()} readingValues={[]} />
+    <WxDataGraph modelValues={getModelValues()} readingValues={[]} />
   ))
