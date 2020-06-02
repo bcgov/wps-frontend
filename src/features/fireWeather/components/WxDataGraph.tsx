@@ -7,7 +7,8 @@ import {
   YAxis,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
+  ReferenceLine
 } from 'recharts'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
@@ -47,70 +48,48 @@ const formatTooltipValue = (
   return value
 }
 
-const sortByDatetime = (a: WxData, b: WxData) => {
+const sortByDatetime = (a: WxValue, b: WxValue) => {
   const a1 = new Date(a.datetime)
   const b1 = new Date(b.datetime)
+
   return a1 > b1 ? 1 : a1 < b1 ? -1 : 0
 }
 
-const getDateRange = (data: WxData[]) => {
-  const days: string[] = []
+const getDateRangeAndToday = (wxData: WxValue[]) => {
+  const dateRange: string[] = []
   const map: { [k: string]: boolean } = {}
-  data.forEach(v => {
+  const today = datetimeInPDT(new Date().toISOString(), 'Do MMM')
+  let todayDt: string | undefined = undefined
+
+  wxData.forEach(v => {
     const dt = datetimeInPDT(v.datetime, 'Do MMM')
     if (!map[dt]) {
       map[dt] = true
-      days.push(v.datetime)
+      dateRange.push(v.datetime)
+    }
+
+    if (!todayDt && today === dt) {
+      todayDt = v.datetime
     }
   })
 
-  return days
+  return { dateRange, todayDt }
 }
 
-interface WxData {
-  datetime: string
-  temp?: number
-  modelTemp?: number
-  rh?: number
-  modelRh?: number
-}
+type WxValue = ReadingValue | ModelValue
 
 interface Props {
   modelValues: ModelValue[] | undefined
   readingValues: ReadingValue[] | undefined
 }
 
-const WxDataGraph = ({ modelValues, readingValues }: Props) => {
+const WxDataGraph = ({ modelValues = [], readingValues = [] }: Props) => {
   const classes = useStyles()
-  const wxData: WxData[] = []
-
-  if (!modelValues && !readingValues) {
-    return null
-  }
-
-  if (readingValues && readingValues.length > 0) {
-    readingValues.forEach(v => {
-      wxData.push({
-        datetime: v.datetime,
-        temp: v.temperature,
-        rh: v.relative_humidity
-      })
-    })
-  }
-
-  if (modelValues && modelValues.length > 0) {
-    modelValues.forEach(v => {
-      wxData.push({
-        datetime: v.datetime,
-        modelTemp: v.temperature,
-        modelRh: v.relative_humidity
-      })
-    })
-  }
+  const wxData: WxValue[] = [...readingValues, ...modelValues]
 
   wxData.sort(sortByDatetime)
 
-  const dateRange = getDateRange(wxData)
+  const { dateRange, todayDt } = getDateRangeAndToday(wxData)
 
   return (
     <div className={classes.graph} data-testid="weather-graph-by-station">
@@ -120,27 +99,27 @@ const WxDataGraph = ({ modelValues, readingValues }: Props) => {
       </Typography>
 
       <ResponsiveContainer width="100%" minHeight={300}>
-        <LineChart data={wxData} margin={{ top: 10, right: 20, bottom: 5, left: 0 }}>
+        <LineChart margin={{ top: 10, right: 20, bottom: 5, left: 0 }}>
+          <CartesianGrid stroke="#ccc" strokeDasharray="1 1" />
           <XAxis
-            allowDataOverflow
             dataKey="datetime"
+            type="category"
+            allowDuplicatedCategory={false}
             ticks={dateRange}
             tickFormatter={formatXAxis}
           />
           <YAxis
             yAxisId="left"
-            allowDataOverflow
+            dataKey="temperature"
             orientation="left"
-            type="number"
             unit="°"
-            domain={['auto', 'auto']}
+            domain={[-10, 45]}
             label={{ value: 'Temp (°C)', angle: -90, position: 'insideLeft' }}
           />
           <YAxis
             yAxisId="right"
-            allowDataOverflow
+            dataKey="relative_humidity"
             orientation="right"
-            type="number"
             unit="%"
             domain={[0, 100]}
             label={{
@@ -149,43 +128,50 @@ const WxDataGraph = ({ modelValues, readingValues }: Props) => {
               position: 'insideRight'
             }}
           />
+          <Tooltip labelFormatter={formatTooltipLabel} formatter={formatTooltipValue} />
+          <Legend />
+          <ReferenceLine
+            x={todayDt}
+            yAxisId="left"
+            stroke="green"
+            label="Today"
+            strokeDasharray="3 3"
+          />
           <Line
-            connectNulls
             strokeWidth={1.5}
             type="monotone"
             yAxisId="left"
             name="Temp"
-            dataKey="temp"
+            dataKey="temperature"
             stroke="crimson"
+            data={readingValues}
           />
           <Line
-            connectNulls
+            type="monotone"
+            yAxisId="left"
+            name="Model Temp"
+            dataKey="temperature"
+            stroke="indianred"
+            data={modelValues}
+          />
+          <Line
             strokeWidth={1.5}
             type="monotone"
             yAxisId="right"
             name="RH"
-            dataKey="rh"
+            dataKey="relative_humidity"
             stroke="royalblue"
-          />
-          <Line
-            connectNulls
-            type="monotone"
-            yAxisId="left"
-            name="Model Temp"
-            dataKey="modelTemp"
-            stroke="indianred"
+            data={readingValues}
           />
           <Line
             connectNulls
             type="monotone"
             yAxisId="right"
             name="Model RH"
-            dataKey="modelRh"
+            dataKey="relative_humidity"
             stroke="dodgerblue"
+            data={modelValues}
           />
-          <CartesianGrid stroke="#ccc" strokeDasharray="1 1" />
-          <Tooltip labelFormatter={formatTooltipLabel} formatter={formatTooltipValue} />
-          <Legend />
         </LineChart>
       </ResponsiveContainer>
     </div>
