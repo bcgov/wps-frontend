@@ -14,18 +14,9 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { datetimeInPDT } from 'utils/date'
-import { ModelValue } from 'api/modelAPI'
 import { MODEL_VALUE_DECIMAL } from 'utils/constants'
+import { ModelValue } from 'api/modelAPI'
 import { ReadingValue } from 'api/readingAPI'
-
-const useStyles = makeStyles({
-  graph: {
-    paddingBottom: 16
-  },
-  title: {
-    paddingBottom: 4
-  }
-})
 
 const formatXAxis = (dt: string) => {
   return datetimeInPDT(dt, 'Do MMM')
@@ -48,33 +39,52 @@ const formatTooltipValue = (
   return value
 }
 
-const sortByDatetime = (a: WxValue, b: WxValue) => {
-  const a1 = new Date(a.datetime)
-  const b1 = new Date(b.datetime)
+const sortByDatetime = (a: string, b: string) => {
+  const a1 = new Date(a)
+  const b1 = new Date(b)
 
   return a1 > b1 ? 1 : a1 < b1 ? -1 : 0
 }
 
+const getEarlierDt = (a: string, b: string) => {
+  const aDate = new Date(a)
+  const bDate = new Date(b)
+
+  return aDate > bDate ? b : a
+}
+
 const getDateRangeAndToday = (wxData: WxValue[]) => {
-  const dateRange: string[] = []
-  const map: { [k: string]: boolean } = {}
+  const lookup: { [k: string]: string } = {}
   const today = datetimeInPDT(new Date().toISOString(), 'Do MMM')
   let todayDt: string | undefined = undefined
 
-  wxData.forEach(v => {
-    const dt = datetimeInPDT(v.datetime, 'Do MMM')
-    if (!map[dt]) {
-      map[dt] = true
-      dateRange.push(v.datetime)
+  wxData.map(v => {
+    const day = datetimeInPDT(v.datetime, 'Do MMM')
+
+    if (!lookup[day]) {
+      lookup[day] = v.datetime
+    } else {
+      lookup[day] = getEarlierDt(lookup[day], v.datetime)
     }
 
-    if (!todayDt && today === dt) {
-      todayDt = v.datetime
+    if (today === day) {
+      todayDt = lookup[day]
     }
   })
 
+  const dateRange = Object.values(lookup).sort(sortByDatetime)
+
   return { dateRange, todayDt }
 }
+
+const useStyles = makeStyles({
+  graph: {
+    paddingBottom: 16
+  },
+  title: {
+    paddingBottom: 4
+  }
+})
 
 type WxValue = ReadingValue | ModelValue
 
@@ -86,9 +96,6 @@ interface Props {
 const WxDataGraph = ({ modelValues = [], readingValues = [] }: Props) => {
   const classes = useStyles()
   const wxData: WxValue[] = [...readingValues, ...modelValues]
-
-  wxData.sort(sortByDatetime)
-
   const { dateRange, todayDt } = getDateRangeAndToday(wxData)
 
   return (
@@ -135,42 +142,42 @@ const WxDataGraph = ({ modelValues = [], readingValues = [] }: Props) => {
             yAxisId="left"
             stroke="green"
             label="Today"
-            strokeDasharray="3 3"
+            strokeDasharray="4 4"
+            strokeWidth={1.5}
           />
           <Line
-            strokeWidth={1.5}
-            type="monotone"
             yAxisId="left"
             name="Temp"
             dataKey="temperature"
-            stroke="crimson"
             data={readingValues}
+            strokeWidth={1.5}
+            type="monotone"
+            stroke="crimson"
           />
           <Line
-            type="monotone"
             yAxisId="left"
             name="Model Temp"
             dataKey="temperature"
-            stroke="indianred"
             data={modelValues}
+            type="monotone"
+            stroke="indianred"
           />
           <Line
-            strokeWidth={1.5}
-            type="monotone"
             yAxisId="right"
             name="RH"
             dataKey="relative_humidity"
-            stroke="royalblue"
             data={readingValues}
+            strokeWidth={1.5}
+            type="monotone"
+            stroke="royalblue"
           />
           <Line
-            connectNulls
-            type="monotone"
             yAxisId="right"
             name="Model RH"
             dataKey="relative_humidity"
-            stroke="dodgerblue"
             data={modelValues}
+            type="monotone"
+            stroke="dodgerblue"
           />
         </LineChart>
       </ResponsiveContainer>
