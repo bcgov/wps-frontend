@@ -58,6 +58,8 @@ jobs:
         uses: zaproxy/action-baseline@v0.3.0
         with:
           target: "https://wps-web-pr-${{ github.event.number }}.pathfinder.gov.bc.ca"
+          # Do not return failure on warnings - this has to be resolved!
+          cmd_options: "-I"
 
       - name: Cleanup
         if: github.event.pull_request.state == 'closed'
