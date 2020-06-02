@@ -58,7 +58,7 @@ const getDateRangeAndToday = (wxData: WxValue[]) => {
   const today = datetimeInPDT(new Date().toISOString(), 'Do MMM')
   let todayDt: string | undefined = undefined
 
-  wxData.map(v => {
+  wxData.forEach(v => {
     const day = datetimeInPDT(v.datetime, 'Do MMM')
 
     if (!lookup[day]) {
