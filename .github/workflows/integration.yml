@@ -4,7 +4,7 @@ on: [pull_request]
 
 jobs:
   lint-and-test:
-    name: Lint & Unit Test
+    name: Lint, Unit Test, Coverage & SonarQube
     if: github.event.pull_request.state == 'open'
     runs-on: ubuntu-latest
     strategy:
@@ -23,6 +23,7 @@ jobs:
       - run: npm run lint
       - name: Tests with coverage
         run: npm run coverage:ci
+      - name: Fix coverage paths
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
