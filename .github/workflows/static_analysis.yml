@@ -24,7 +24,7 @@ jobs:
       - run: npm ci
       - name: Test coverage
         run: npm run coverage:ci
-      - name: fix code coverage paths
+      - name: Fix code coverage paths
         # Due to the way sonarscanner mounts thing when running in docker, we need to change the coverage file.
         working-directory: ./coverage
         run: |
