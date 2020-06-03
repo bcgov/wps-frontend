@@ -21,7 +21,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run lint
-      # - run: npm run test:ci
       - name: Tests with coverage
         run: npm run coverage:ci
       - name: SonarCloud Scan
