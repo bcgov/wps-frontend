@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - task/test_merge
 
 jobs:
   coverage:
