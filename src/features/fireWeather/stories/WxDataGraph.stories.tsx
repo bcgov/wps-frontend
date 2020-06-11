@@ -74,6 +74,6 @@ storiesOf('WxDataGraph', module)
   .add('default', () => (
     <WxDataGraph modelValues={getModelValues()} readingValues={getReadingValues()} />
   ))
-  .add('only model', () => (
+  .add('model only', () => (
     <WxDataGraph modelValues={getModelValues()} readingValues={[]} />
   ))

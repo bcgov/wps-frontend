@@ -1,3 +1,4 @@
+// top-level declaration for *.pdf
 declare module '*.pdf'
 
 // Utility type that makes all properties, including nested ones, optional
