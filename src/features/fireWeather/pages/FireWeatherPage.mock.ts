@@ -1,6 +1,5 @@
 import { ModelsResponse } from 'api/modelAPI'
 import { ReadingsResponse } from 'api/readingAPI'
-import { RecursivePartial } from 'types/utilTypes'
 
 export const mockStations = [
   { code: 1, name: 'Station 1', lat: 1, long: 1 },
