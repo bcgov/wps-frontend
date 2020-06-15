@@ -20,18 +20,18 @@ export interface YearRange {
 }
 
 export interface StationSummaryResponse {
-  ffmc: number
-  isi: number
-  bui: number
+  ffmc: number | null
+  isi: number | null
+  bui: number | null
   season: Season
   years: number[]
   station: Station
 }
 
 export interface MeanValues {
-  ffmc: number
-  isi: number
-  bui: number
+  ffmc: number | null
+  isi: number | null
+  bui: number | null
 }
 
 export interface PercentilesResponse {

@@ -25,6 +25,14 @@ const useStyles = makeStyles(theme => ({
 
 export const PercentileMeanResultTable = ({ meanValues }: Props) => {
   const classes = useStyles()
+
+  if (!meanValues) {
+    return null
+  }
+
+  const notAvailable = 'Not available'
+  const { ffmc, bui, isi } = meanValues
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
@@ -37,19 +45,19 @@ export const PercentileMeanResultTable = ({ meanValues }: Props) => {
           <TableRow>
             <TableCell>FFMC mean value</TableCell>
             <TableCell align="right">
-              {meanValues.ffmc.toFixed(FWI_VALUES_DECIMAL)}
+              {ffmc ? ffmc.toFixed(FWI_VALUES_DECIMAL) : notAvailable}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>BUI mean value</TableCell>
             <TableCell align="right">
-              {meanValues.bui.toFixed(FWI_VALUES_DECIMAL)}
+              {bui ? bui.toFixed(FWI_VALUES_DECIMAL) : notAvailable}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>ISI mean value</TableCell>
             <TableCell align="right">
-              {meanValues.isi.toFixed(FWI_VALUES_DECIMAL)}
+              {isi ? isi.toFixed(FWI_VALUES_DECIMAL) : notAvailable}
             </TableCell>
           </TableRow>
         </TableBody>

@@ -23,6 +23,7 @@ export const PercentileStationResultTable = ({ stationResponse }: Props) => {
   const seasonRange = `${formatMonthAndDay(start_month, start_day)}\
    ~ ${formatMonthAndDay(end_month, end_day)}`
   const yearRange = years.join(', ')
+  const notAvailable = 'Not available'
 
   return (
     <TableContainer component={Paper}>
@@ -38,15 +39,17 @@ export const PercentileStationResultTable = ({ stationResponse }: Props) => {
         <TableBody>
           <TableRow>
             <TableCell>FFMC</TableCell>
-            <TableCell>{ffmc.toFixed(FWI_VALUES_DECIMAL)}</TableCell>
+            <TableCell>
+              {ffmc ? ffmc.toFixed(FWI_VALUES_DECIMAL) : notAvailable}
+            </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>BUI</TableCell>
-            <TableCell>{bui.toFixed(FWI_VALUES_DECIMAL)}</TableCell>
+            <TableCell>{bui ? bui.toFixed(FWI_VALUES_DECIMAL) : notAvailable}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>ISI</TableCell>
-            <TableCell>{isi.toFixed(FWI_VALUES_DECIMAL)}</TableCell>
+            <TableCell>{isi ? isi.toFixed(FWI_VALUES_DECIMAL) : notAvailable}</TableCell>
           </TableRow>
 
           <TableRow>
