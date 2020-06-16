@@ -50,7 +50,8 @@ export const TimeRangeSlider = (props: Props) => {
         max={MAX_YEARS}
         min={MIN_YEARS}
         onChange={(_, timeRange) => {
-          if (typeof timeRange === 'number' && timeRange !== 0) {
+          if (typeof timeRange === 'number') {
+            if (timeRange === 0) return
             props.onYearRangeChange(timeRange)
           }
         }}
