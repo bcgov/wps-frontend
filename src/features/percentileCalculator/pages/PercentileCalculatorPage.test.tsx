@@ -6,6 +6,7 @@ import axios from 'api/axios'
 import { selectStations } from 'app/rootReducer'
 import { renderWithRedux } from 'utils/testUtils'
 import { WEATHER_STATION_MAP_LINK, FWI_VALUES_DECIMAL } from 'utils/constants'
+import { NOT_AVAILABLE } from 'utils/strings'
 import { PercentileCalculatorPage } from 'features/percentileCalculator/pages/PercentileCalculatorPage'
 import {
   mockStations,
@@ -83,15 +84,16 @@ it('renders percentiles result in response to user inputs', async () => {
   mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
   mockAxios.onPost('/percentiles/').replyOnce(200, mockPercentilesResponse)
 
-  const { getByText, getByTestId, store, queryByTestId } = renderWithRedux(
+  const { store, getByText, getByTestId, queryByTestId, getAllByText } = renderWithRedux(
     <PercentileCalculatorPage />
   )
 
   // Select a weather station
   fireEvent.click(getByTestId('weather-station-dropdown'))
-  const station1 = await waitForElement(() =>
-    getByText(`${mockStations[0].name} (${mockStations[0].code})`)
-  )
+  const [station1] = await waitForElement(() => [
+    getByText(`${mockStations[0].name} (${mockStations[0].code})`),
+    getByText(`${mockStations[1].name} (${mockStations[1].code})`)
+  ])
   fireEvent.click(station1)
 
   // Send the request
@@ -116,22 +118,14 @@ it('renders percentiles result in response to user inputs', async () => {
 
   // Check if mean values are rendered
   expect(store.getState().percentiles.result).toEqual(mockPercentilesResponse)
-  // Make sure mean values show up
-  getByText(
-    (mockPercentilesResponse.mean_values.ffmc as number)
-      .toFixed(FWI_VALUES_DECIMAL)
-      .toString()
-  )
-  getByText(
-    (mockPercentilesResponse.mean_values.bui as number)
-      .toFixed(FWI_VALUES_DECIMAL)
-      .toString()
-  )
-  getByText(
-    (mockPercentilesResponse.mean_values.isi as number)
-      .toFixed(FWI_VALUES_DECIMAL)
-      .toString()
-  )
+  if (mockPercentilesResponse.mean_values) {
+    expect(getByTestId('percentile-mean-result-table'))
+  }
+  const { ffmc, bui, isi } = mockPercentilesResponse.mean_values
+  ffmc && getAllByText(ffmc.toFixed(FWI_VALUES_DECIMAL))
+  bui && getAllByText(bui.toFixed(FWI_VALUES_DECIMAL))
+  isi && getAllByText(isi.toFixed(FWI_VALUES_DECIMAL))
+  getAllByText(NOT_AVAILABLE)
 
   // Check if the documentation is rendered
   expect(getByTestId('percentile-documentation-card')).toBeInTheDocument()

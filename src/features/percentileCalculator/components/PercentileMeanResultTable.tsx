@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import { MeanValues } from 'api/percentileAPI'
 import { FWI_VALUES_DECIMAL } from 'utils/constants'
+import { NOT_AVAILABLE } from 'utils/strings'
 
 interface Props {
   meanValues: MeanValues
@@ -25,16 +26,10 @@ const useStyles = makeStyles(theme => ({
 
 export const PercentileMeanResultTable = ({ meanValues }: Props) => {
   const classes = useStyles()
-
-  if (!meanValues) {
-    return null
-  }
-
-  const notAvailable = 'Not available'
   const { ffmc, bui, isi } = meanValues
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer data-testid="percentile-mean-result-table" component={Paper}>
       <Table aria-label="simple table">
         <TableBody>
           <TableRow>
@@ -45,19 +40,19 @@ export const PercentileMeanResultTable = ({ meanValues }: Props) => {
           <TableRow>
             <TableCell>FFMC mean value</TableCell>
             <TableCell align="right">
-              {ffmc ? ffmc.toFixed(FWI_VALUES_DECIMAL) : notAvailable}
+              {ffmc ? ffmc.toFixed(FWI_VALUES_DECIMAL) : NOT_AVAILABLE}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>BUI mean value</TableCell>
             <TableCell align="right">
-              {bui ? bui.toFixed(FWI_VALUES_DECIMAL) : notAvailable}
+              {bui ? bui.toFixed(FWI_VALUES_DECIMAL) : NOT_AVAILABLE}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>ISI mean value</TableCell>
             <TableCell align="right">
-              {isi ? isi.toFixed(FWI_VALUES_DECIMAL) : notAvailable}
+              {isi ? isi.toFixed(FWI_VALUES_DECIMAL) : NOT_AVAILABLE}
             </TableCell>
           </TableRow>
         </TableBody>
