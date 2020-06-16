@@ -1,17 +1,11 @@
 import axios from 'api/axios'
+import { Station } from 'api/stationAPI'
 
-interface Season {
+export interface FireSeason {
   start_month: number
   start_day: number
   end_month: number
   end_day: number
-}
-
-interface Station {
-  code: number
-  name: string
-  lat: number
-  long: number
 }
 
 export interface YearRange {
@@ -23,7 +17,6 @@ export interface StationSummaryResponse {
   ffmc: number | null
   isi: number | null
   bui: number | null
-  season: Season
   years: number[]
   station: Station
 }

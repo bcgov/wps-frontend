@@ -19,8 +19,8 @@ interface Props {
 }
 
 export const PercentileStationResultTable = ({ stationResponse }: Props) => {
-  const { season, ffmc, bui, isi, years, station } = stationResponse
-  const { start_month, start_day, end_month, end_day } = season
+  const { ffmc, bui, isi, years, station } = stationResponse
+  const { start_month, start_day, end_month, end_day } = station.core_season
   const seasonRange = `${formatMonthAndDay(start_month, start_day)}\
    ~ ${formatMonthAndDay(end_month, end_day)}`
   const yearRange = years.join(', ')
@@ -52,6 +52,10 @@ export const PercentileStationResultTable = ({ stationResponse }: Props) => {
             <TableCell>{isi ? isi.toFixed(FWI_VALUES_DECIMAL) : NOT_AVAILABLE}</TableCell>
           </TableRow>
 
+          <TableRow>
+            <TableCell>Eco-division</TableCell>
+            <TableCell>{station.ecodivision_name}</TableCell>
+          </TableRow>
           <TableRow>
             <TableCell>Core Fire Season</TableCell>
             <TableCell>{seasonRange}</TableCell>

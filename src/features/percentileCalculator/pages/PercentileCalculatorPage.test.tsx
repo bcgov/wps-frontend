@@ -10,7 +10,7 @@ import {
 import axios from 'api/axios'
 import { selectStations } from 'app/rootReducer'
 import { renderWithRedux } from 'utils/testUtils'
-import { WEATHER_STATION_MAP_LINK } from 'utils/constants'
+import { WEATHER_STATION_MAP_LINK, FWI_VALUES_DECIMAL } from 'utils/constants'
 import { NOT_AVAILABLE } from 'utils/strings'
 import { PercentileCalculatorPage } from 'features/percentileCalculator/pages/PercentileCalculatorPage'
 import {
@@ -125,9 +125,18 @@ it('renders percentiles result in response to user inputs', async () => {
   // Check if mean values are rendered
   expect(store.getState().percentiles.result).toEqual(mockPercentilesResponse)
   getByTestId('percentile-mean-result-table')
-  getByTestId('percentile-mean-result-ffmc')
-  getByTestId('percentile-mean-result-bui')
-  getByTestId('percentile-mean-result-isi')
+  const {
+    mean_values: { ffmc, bui, isi }
+  } = mockPercentilesResponse
+  expect(getByTestId('percentile-mean-result-ffmc').textContent).toBe(
+    ffmc?.toFixed(FWI_VALUES_DECIMAL)
+  )
+  expect(getByTestId('percentile-mean-result-bui').textContent).toBe(
+    bui?.toFixed(FWI_VALUES_DECIMAL)
+  )
+  expect(getByTestId('percentile-mean-result-isi').textContent).toBe(
+    isi?.toFixed(FWI_VALUES_DECIMAL)
+  )
 
   // Check if the documentation is rendered
   getByTestId('percentile-documentation-card')

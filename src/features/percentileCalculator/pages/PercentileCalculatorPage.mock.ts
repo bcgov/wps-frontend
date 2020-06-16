@@ -1,8 +1,29 @@
 import { PercentilesResponse } from 'api/percentileAPI'
+import { Station } from 'api/stationAPI'
 
-export const mockStations = [
-  { code: 1, name: 'Station 1', lat: 1, long: 1 },
-  { code: 2, name: 'Station 2', lat: 2, long: 2 }
+const FireSeason = {
+  start_month: 5,
+  start_day: 1,
+  end_month: 8,
+  end_day: 31
+}
+export const mockStations: Station[] = [
+  {
+    code: 1,
+    name: 'Station 1',
+    lat: 1,
+    long: 1,
+    ecodivision_name: 'eco 1',
+    core_season: FireSeason
+  },
+  {
+    code: 2,
+    name: 'Station 2',
+    lat: 2,
+    long: 2,
+    ecodivision_name: 'eco 2',
+    core_season: FireSeason
+  }
 ]
 
 export const mockPercentilesResponse: PercentilesResponse = {
@@ -11,7 +32,6 @@ export const mockPercentilesResponse: PercentilesResponse = {
       ffmc: 94.2121,
       isi: 15.4124,
       bui: 157.2321,
-      season: { start_month: 5, start_day: 1, end_month: 8, end_day: 31 },
       years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
       station: { ...mockStations[0] }
     },
@@ -19,7 +39,6 @@ export const mockPercentilesResponse: PercentilesResponse = {
       ffmc: null,
       isi: null,
       bui: null,
-      season: { start_month: 5, start_day: 1, end_month: 8, end_day: 31 },
       years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
       station: { ...mockStations[1] }
     }
@@ -39,7 +58,6 @@ export const mockNullPercentilesResponse: PercentilesResponse = {
       ffmc: null,
       isi: null,
       bui: null,
-      season: { start_month: 5, start_day: 1, end_month: 8, end_day: 31 },
       years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
       station: { ...mockStations[1] }
     },
@@ -47,7 +65,6 @@ export const mockNullPercentilesResponse: PercentilesResponse = {
       ffmc: null,
       isi: null,
       bui: null,
-      season: { start_month: 5, start_day: 1, end_month: 8, end_day: 31 },
       years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
       station: { ...mockStations[1] }
     }
