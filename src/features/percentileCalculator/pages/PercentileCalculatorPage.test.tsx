@@ -1,16 +1,22 @@
 import React from 'react'
 import MockAdapter from 'axios-mock-adapter'
-import { waitForElement, cleanup, fireEvent } from '@testing-library/react'
+import {
+  waitForElementToBeRemoved,
+  waitForElement,
+  cleanup,
+  fireEvent
+} from '@testing-library/react'
 
 import axios from 'api/axios'
 import { selectStations } from 'app/rootReducer'
 import { renderWithRedux } from 'utils/testUtils'
-import { WEATHER_STATION_MAP_LINK, FWI_VALUES_DECIMAL } from 'utils/constants'
+import { WEATHER_STATION_MAP_LINK } from 'utils/constants'
 import { NOT_AVAILABLE } from 'utils/strings'
 import { PercentileCalculatorPage } from 'features/percentileCalculator/pages/PercentileCalculatorPage'
 import {
   mockStations,
-  mockPercentilesResponse
+  mockPercentilesResponse,
+  mockNullPercentilesResponse
 } from 'features/percentileCalculator/pages/PercentileCalculatorPage.mock'
 
 const mockAxios = new MockAdapter(axios)
@@ -84,17 +90,17 @@ it('renders percentiles result in response to user inputs', async () => {
   mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
   mockAxios.onPost('/percentiles/').replyOnce(200, mockPercentilesResponse)
 
-  const { store, getByText, getByTestId, queryByTestId, getAllByText } = renderWithRedux(
+  const { store, getByText, getByTestId, queryByTestId } = renderWithRedux(
     <PercentileCalculatorPage />
   )
 
   // Select a weather station
   fireEvent.click(getByTestId('weather-station-dropdown'))
-  const [station1] = await waitForElement(() => [
+  const [station0] = await waitForElement(() => [
     getByText(`${mockStations[0].name} (${mockStations[0].code})`),
     getByText(`${mockStations[1].name} (${mockStations[1].code})`)
   ])
-  fireEvent.click(station1)
+  fireEvent.click(station0)
 
   // Send the request
   fireEvent.click(getByTestId('calculate-percentiles-button'))
@@ -118,15 +124,24 @@ it('renders percentiles result in response to user inputs', async () => {
 
   // Check if mean values are rendered
   expect(store.getState().percentiles.result).toEqual(mockPercentilesResponse)
-  if (mockPercentilesResponse.mean_values) {
-    expect(getByTestId('percentile-mean-result-table'))
-  }
-  const { ffmc, bui, isi } = mockPercentilesResponse.mean_values
-  ffmc && getAllByText(ffmc.toFixed(FWI_VALUES_DECIMAL))
-  bui && getAllByText(bui.toFixed(FWI_VALUES_DECIMAL))
-  isi && getAllByText(isi.toFixed(FWI_VALUES_DECIMAL))
-  getAllByText(NOT_AVAILABLE)
+  getByTestId('percentile-mean-result-table')
+  getByTestId('percentile-mean-result-ffmc')
+  getByTestId('percentile-mean-result-bui')
+  getByTestId('percentile-mean-result-isi')
 
   // Check if the documentation is rendered
-  expect(getByTestId('percentile-documentation-card')).toBeInTheDocument()
+  getByTestId('percentile-documentation-card')
+
+  // Test for the case where mean values are null
+  mockAxios.onPost('/percentiles/').replyOnce(200, mockNullPercentilesResponse)
+  fireEvent.click(getByTestId('calculate-percentiles-button'))
+  await waitForElement(() => getByTestId('percentile-result-tables'))
+  expect(getByTestId('percentile-mean-result-ffmc').textContent).toBe(NOT_AVAILABLE)
+  expect(getByTestId('percentile-mean-result-bui').textContent).toBe(NOT_AVAILABLE)
+  expect(getByTestId('percentile-mean-result-isi').textContent).toBe(NOT_AVAILABLE)
+
+  // Test for the case where network error occurs
+  mockAxios.onPost('/percentiles/').replyOnce(404)
+  fireEvent.click(getByTestId('calculate-percentiles-button'))
+  await waitForElementToBeRemoved(() => queryByTestId('percentile-result-tables'))
 })

@@ -39,19 +39,19 @@ export const PercentileMeanResultTable = ({ meanValues }: Props) => {
           </TableRow>
           <TableRow>
             <TableCell>FFMC mean value</TableCell>
-            <TableCell align="right">
+            <TableCell data-testid="percentile-mean-result-ffmc" align="right">
               {ffmc ? ffmc.toFixed(FWI_VALUES_DECIMAL) : NOT_AVAILABLE}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>BUI mean value</TableCell>
-            <TableCell align="right">
+            <TableCell data-testid="percentile-mean-result-bui" align="right">
               {bui ? bui.toFixed(FWI_VALUES_DECIMAL) : NOT_AVAILABLE}
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>ISI mean value</TableCell>
-            <TableCell align="right">
+            <TableCell data-testid="percentile-mean-result-isi" align="right">
               {isi ? isi.toFixed(FWI_VALUES_DECIMAL) : NOT_AVAILABLE}
             </TableCell>
           </TableRow>

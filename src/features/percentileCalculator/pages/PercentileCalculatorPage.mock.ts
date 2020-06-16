@@ -32,3 +32,31 @@ export const mockPercentilesResponse: PercentilesResponse = {
   year_range: { start: 2010, end: 2019 },
   percentile: 90
 }
+
+export const mockNullPercentilesResponse: PercentilesResponse = {
+  stations: {
+    [mockStations[0].code]: {
+      ffmc: null,
+      isi: null,
+      bui: null,
+      season: { start_month: 5, start_day: 1, end_month: 8, end_day: 31 },
+      years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
+      station: { ...mockStations[1] }
+    },
+    [mockStations[1].code]: {
+      ffmc: null,
+      isi: null,
+      bui: null,
+      season: { start_month: 5, start_day: 1, end_month: 8, end_day: 31 },
+      years: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019],
+      station: { ...mockStations[1] }
+    }
+  },
+  mean_values: {
+    ffmc: null,
+    isi: null,
+    bui: null
+  },
+  year_range: { start: 2010, end: 2019 },
+  percentile: 90
+}
