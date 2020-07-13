@@ -6,8 +6,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import DailyModelsDisplay from 'features/fireWeather/components/DailyModelsDisplay'
 import HourlyReadingsDisplay from 'features/fireWeather/components/HourlyReadingsDisplay'
 import WxGraphByStation from 'features/fireWeather/components/WxDataGraph'
+import NoonForecastsDisplay from 'features/fireWeather/components/NoonForecastsDisplay'
 import { Station } from 'api/stationAPI'
-import { selectReadings, selectModels } from 'app/rootReducer'
+import { selectReadings, selectModels, selectForecasts } from 'app/rootReducer'
 
 const useStyles = makeStyles({
   displays: {
@@ -36,8 +37,12 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
   const { loading: loadingModels, noonModelsByStation, modelsByStation } = useSelector(
     selectModels
   )
+  // const { loading: loadingForecasts, noonForecastsByStation } = useSelector(
+  //   selectForecasts
+  // )
 
-  const wxDataLoading = loadingModels || loadingReadings
+  const wxDataLoading = loadingModels || loadingReadings 
+  // || loadingForecasts
 
   return (
     <div className={classes.displays}>
@@ -46,6 +51,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const readingValues = readingsByStation[s.code]
           const modelValues = modelsByStation[s.code]
           const noonModelValues = noonModelsByStation[s.code]
+          // const noonForecastValues = noonForecastsByStation[s.code]
           const nothingToDisplay = !readingValues && !modelValues
 
           if (nothingToDisplay) {
@@ -59,6 +65,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
               </Typography>
               <HourlyReadingsDisplay values={readingValues} />
               <DailyModelsDisplay values={noonModelValues} />
+              {/* <NoonForecastsDisplay values={noonForecastValues} /> */}
               <WxGraphByStation modelValues={modelValues} readingValues={readingValues} />
             </Paper>
           )
