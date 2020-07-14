@@ -17,6 +17,7 @@ import { datetimeInPDT } from 'utils/date'
 import { MODEL_VALUE_DECIMAL } from 'utils/constants'
 import { ModelValue } from 'api/modelAPI'
 import { ReadingValue } from 'api/readingAPI'
+import { NoonForecastValue } from 'api/forecastAPI'
 import WxDataToggles from 'features/fireWeather/components/WxDataToggles'
 
 const formatXAxis = (dt: string) => {
@@ -87,19 +88,26 @@ const useStyles = makeStyles({
   }
 })
 
-type WxValue = ReadingValue | ModelValue
+type WxValue = ReadingValue | ModelValue | NoonForecastValue
 
 interface Props {
   modelValues: ModelValue[] | undefined
   readingValues: ReadingValue[] | undefined
+  forecastValues: NoonForecastValue[] | undefined
 }
 
-const WxDataGraph = ({ modelValues = [], readingValues = [] }: Props) => {
+const WxDataGraph = ({
+  modelValues = [],
+  readingValues = [],
+  forecastValues = []
+}: Props) => {
   const classes = useStyles()
   const noModels = modelValues.length === 0
   const noReadings = readingValues.length === 0
+  const noForecasts = forecastValues.length === 0
   const [showReadings, setShowReadings] = useState<boolean>(!noReadings)
   const [showModels, setShowModels] = useState<boolean>(!noModels)
+  const [showForecasts, setShowForecasts] = useState<boolean>(!noForecasts)
 
   let wxData: WxValue[] = []
   if (showReadings) {
@@ -125,6 +133,9 @@ const WxDataGraph = ({ modelValues = [], readingValues = [] }: Props) => {
         noModels={noModels}
         showModels={showModels}
         setShowModels={setShowModels}
+        noForecasts={noForecasts}
+        showForecasts={showForecasts}
+        setShowForecasts={setShowForecasts}
       />
 
       <ResponsiveContainer width="100%" minHeight={300}>

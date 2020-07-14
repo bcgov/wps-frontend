@@ -21,6 +21,9 @@ interface Props {
   noModels: boolean
   showModels: boolean
   setShowModels: (checked: boolean) => void
+  noForecasts: boolean
+  showForecasts: boolean
+  setShowForecasts: (checked: boolean) => void
 }
 
 const WxDataToggles = ({
@@ -29,7 +32,10 @@ const WxDataToggles = ({
   setShowReadings,
   noModels,
   showModels,
-  setShowModels
+  setShowModels,
+  noForecasts,
+  showForecasts,
+  setShowForecasts
 }: Props) => {
   const classes = useStyles()
 
@@ -70,6 +76,25 @@ const WxDataToggles = ({
         label={
           <Typography className={classes.label} variant="body2">
             Weather Model
+          </Typography>
+        }
+      />
+      <FormControlLabel
+        className={classes.formControlLabel}
+        control={
+          <Switch
+            name="showForecasts"
+            checked={showForecasts}
+            disabled={noForecasts}
+            size="small"
+            onChange={(_, checked) => {
+              setShowForecasts(checked)
+            }}
+          />
+        }
+        label={
+          <Typography className={classes.label} variant="body2">
+            Noon Forecasts
           </Typography>
         }
       />

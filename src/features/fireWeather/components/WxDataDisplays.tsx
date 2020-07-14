@@ -37,12 +37,11 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
   const { loading: loadingModels, noonModelsByStation, modelsByStation } = useSelector(
     selectModels
   )
-  // const { loading: loadingForecasts, noonForecastsByStation } = useSelector(
-  //   selectForecasts
-  // )
+  const { loading: loadingForecasts, noonForecastsByStation } = useSelector(
+    selectForecasts
+  )
 
-  const wxDataLoading = loadingModels || loadingReadings 
-  // || loadingForecasts
+  const wxDataLoading = loadingModels || loadingReadings || loadingForecasts
 
   return (
     <div className={classes.displays}>
@@ -51,7 +50,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const readingValues = readingsByStation[s.code]
           const modelValues = modelsByStation[s.code]
           const noonModelValues = noonModelsByStation[s.code]
-          // const noonForecastValues = noonForecastsByStation[s.code]
+          const noonForecastValues = noonForecastsByStation[s.code]
           const nothingToDisplay = !readingValues && !modelValues
 
           if (nothingToDisplay) {
@@ -65,8 +64,12 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
               </Typography>
               <HourlyReadingsDisplay values={readingValues} />
               <DailyModelsDisplay values={noonModelValues} />
-              {/* <NoonForecastsDisplay values={noonForecastValues} /> */}
-              <WxGraphByStation modelValues={modelValues} readingValues={readingValues} />
+              <NoonForecastsDisplay values={noonForecastValues} />
+              <WxGraphByStation
+                modelValues={modelValues}
+                readingValues={readingValues}
+                forecastValues={noonForecastValues}
+              />
             </Paper>
           )
         })}
