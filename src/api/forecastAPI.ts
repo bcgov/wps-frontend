@@ -1,5 +1,4 @@
 import axios from 'api/axios'
-import { Station } from 'api/stationAPI'
 
 export interface NoonForecastValue {
   datetime: string
@@ -8,18 +7,24 @@ export interface NoonForecastValue {
   wind_direction: number
   wind_speed: number
   precipitation: number
-  // NOTE: Database also stores values for gc, ffmc, dmc, dc, isi, bui, fwi,
-  // and danger_rating. Not pulling these in yet because haven't determined how
-  // they'll be used/displayed, but they are available for use.
+  gc: number
+  ffmc: number
+  dmc: number
+  dc: number
+  isi: number
+  bui: number
+  fwi: number
+  danger_rating: number
+  created_at: string
 }
 
 export interface Forecast {
-  station: Station
+  station_code: number
   values: NoonForecastValue[]
 }
 
 export interface ForecastResponse {
-  forecasts: Forecast[]
+  noon_forecasts: Forecast[]
 }
 
 export async function getNoonForecasts(stationCodes: number[]): Promise<Forecast[]> {
@@ -29,7 +34,7 @@ export async function getNoonForecasts(stationCodes: number[]): Promise<Forecast
     const { data } = await axios.post<ForecastResponse>(url, {
       stations: stationCodes
     })
-    return data.forecasts
+    return data.noon_forecasts
   } catch (err) {
     throw err.toString()
   }

@@ -51,7 +51,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const modelValues = modelsByStation[s.code]
           const noonModelValues = noonModelsByStation[s.code]
           const noonForecastValues = noonForecastsByStation[s.code]
-          const nothingToDisplay = !readingValues && !modelValues
+          const nothingToDisplay = !readingValues && !modelValues && !noonForecastValues
 
           if (nothingToDisplay) {
             return null

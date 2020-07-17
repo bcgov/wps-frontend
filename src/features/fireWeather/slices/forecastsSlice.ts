@@ -7,14 +7,14 @@ interface State {
   loading: boolean
   error: string | null
   noonForecastsByStation: Record<number, NoonForecastValue[] | undefined>
-  forecasts: Forecast[]
+  noonForecasts: Record<number, {} | undefined>
 }
 
 const initialState: State = {
   loading: false,
   error: null,
   noonForecastsByStation: {},
-  forecasts: []
+  noonForecasts: []
 }
 
 const forecastsSlice = createSlice({
@@ -31,13 +31,22 @@ const forecastsSlice = createSlice({
     getForecastsSuccess(state: State, action: PayloadAction<Forecast[]>) {
       state.loading = false
       state.error = null
-      state.forecasts = action.payload
       action.payload.forEach(forecast => {
-        if (forecast.station) {
-          const code = forecast.station.code
+        console.log(forecast)
+        if (forecast.station_code) {
+          const code = forecast.station_code
           state.noonForecastsByStation[code] = forecast.values
+          console.log(state.noonForecastsByStation[code])
         }
       })
+      let index = 0
+      for (const key in state.noonForecastsByStation) {
+        state.noonForecasts[index] = {
+          station_code: key,
+          values: state.noonForecastsByStation[key]
+        }
+        index++
+      }
     }
   }
 })
@@ -54,6 +63,7 @@ export const fetchForecasts = (stationCodes: number[]): AppThunk => async dispat
   try {
     dispatch(getForecastsStart())
     const forecasts = await getNoonForecasts(stationCodes)
+    console.log(forecasts)
     dispatch(getForecastsSuccess(forecasts))
   } catch (err) {
     dispatch(getForecastsFailed(err))

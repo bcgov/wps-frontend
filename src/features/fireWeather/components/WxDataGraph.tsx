@@ -116,6 +116,9 @@ const WxDataGraph = ({
   if (showModels) {
     wxData = wxData.concat(modelValues)
   }
+  if (showForecasts) {
+    wxData = wxData.concat(forecastValues)
+  }
 
   const { dateRange, todayDt } = getDateRangeAndToday(wxData)
 
