@@ -1,6 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { Forecast, getNoonForecasts, NoonForecastValue } from 'api/forecastAPI'
+import {
+  Forecast,
+  getNoonForecasts,
+  NoonForecastValue,
+  ForecastHistory,
+  ForecastByDate
+} from 'api/forecastAPI'
 import { AppThunk } from 'app/store'
 
 interface State {
@@ -32,11 +38,17 @@ const forecastsSlice = createSlice({
       state.loading = false
       state.error = null
       action.payload.forEach(forecast => {
-        console.log(forecast)
         if (forecast.station_code) {
           const code = forecast.station_code
-          state.noonForecastsByStation[code] = forecast.values
-          console.log(state.noonForecastsByStation[code])
+          for (const index in forecast.values) {
+            if (state.noonForecastsByStation[code] === undefined) {
+              state.noonForecastsByStation[code] = [forecast.values[index]]
+            } else if (
+              forecast.values[index].datetime !== forecast.values[+index - 1].datetime
+            ) {
+              state.noonForecastsByStation[code]?.push(forecast.values[index])
+            }
+          }
         }
       })
       let index = 0
@@ -63,7 +75,6 @@ export const fetchForecasts = (stationCodes: number[]): AppThunk => async dispat
   try {
     dispatch(getForecastsStart())
     const forecasts = await getNoonForecasts(stationCodes)
-    console.log(forecasts)
     dispatch(getForecastsSuccess(forecasts))
   } catch (err) {
     dispatch(getForecastsFailed(err))

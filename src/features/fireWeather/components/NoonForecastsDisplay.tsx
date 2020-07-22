@@ -7,6 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
+import Popover from '@material-ui/core/Popover'
 
 import { MODEL_VALUE_DECIMAL } from 'utils/constants'
 import { NoonForecastValue } from 'api/forecastAPI'

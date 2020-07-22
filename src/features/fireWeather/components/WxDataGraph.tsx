@@ -8,7 +8,9 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  ReferenceLine
+  ReferenceLine,
+  Scatter,
+  ScatterChart
 } from 'recharts'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
@@ -202,6 +204,15 @@ const WxDataGraph = ({
               stroke="indianred"
             />
           )}
+          {showForecasts && (
+            <Line
+              yAxisId="left"
+              name="Forecast Temp"
+              dataKey="temperature"
+              data={forecastValues}
+              stroke="salmon"
+            />
+          )}
           {showReadings && (
             <Line
               yAxisId="right"
@@ -221,6 +232,15 @@ const WxDataGraph = ({
               data={modelValues}
               type="monotone"
               stroke="dodgerblue"
+            />
+          )}
+          {showForecasts && (
+            <Line
+              yAxisId="right"
+              name="Forecast RH"
+              dataKey="relative_humidity"
+              data={forecastValues}
+              stroke="deepskyblue"
             />
           )}
         </LineChart>
