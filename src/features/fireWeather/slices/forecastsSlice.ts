@@ -1,12 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import {
-  Forecast,
-  getNoonForecasts,
-  NoonForecastValue,
-  ForecastHistory,
-  ForecastByDate
-} from 'api/forecastAPI'
+import { Forecast, getNoonForecasts, NoonForecastValue } from 'api/forecastAPI'
 import { AppThunk } from 'app/store'
 
 interface State {

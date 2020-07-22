@@ -8,9 +8,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  ReferenceLine,
-  Scatter,
-  ScatterChart
+  ReferenceLine
 } from 'recharts'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
