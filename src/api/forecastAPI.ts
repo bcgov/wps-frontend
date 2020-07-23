@@ -27,16 +27,6 @@ export interface ForecastResponse {
   noon_forecasts: Forecast[]
 }
 
-export interface ForecastByDate {
-  date: string
-  forecasts: NoonForecastValue[]
-}
-
-export interface ForecastHistory {
-  current: ForecastByDate[]
-  historical: ForecastByDate[]
-}
-
 export async function getNoonForecasts(stationCodes: number[]): Promise<Forecast[]> {
   const url = '/noon_forecasts/'
 
