@@ -59,7 +59,11 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
               </Typography>
               <HourlyReadingsDisplay values={readingValues} />
               <DailyModelsDisplay values={noonModelValues} />
-              <WxGraphByStation modelValues={modelValues} readingValues={readingValues} />
+              <WxGraphByStation
+                modelValues={modelValues}
+                readingValues={readingValues}
+                historicModels={[]}
+              />
             </Paper>
           )
         })}

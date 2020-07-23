@@ -26,6 +26,16 @@ export interface ModelValue {
   wind_direction_850m: number
 }
 
+export interface HistoricModel {
+  datetime: string
+  tmp_2m_5th: number
+  tmp_2m_median: number
+  tmp_2m_90th: number
+  rh_2m_5th: number
+  rh_2m_median: number
+  rh_2m_90th: number
+}
+
 export interface Model {
   station: Station
   values: ModelValue[]
