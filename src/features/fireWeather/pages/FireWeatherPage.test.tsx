@@ -9,7 +9,8 @@ import FireWeatherPage from 'features/fireWeather/pages/FireWeatherPage'
 import {
   mockStations,
   mockModelsResponse,
-  mockReadingsResponse
+  mockReadingsResponse,
+  mockForecastsResponse
 } from 'features/fireWeather/pages/FireWeatherPage.mock'
 
 const mockAxios = new MockAdapter(axios)
@@ -50,10 +51,11 @@ it('renders weather stations dropdown with data', async () => {
   expect(selectStations(store.getState()).stations).toEqual(mockStations)
 })
 
-it('renders daily model and hourly values in response to user inputs', async () => {
+it('renders daily model, forecast, and hourly values in response to user inputs', async () => {
   mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
   mockAxios.onPost('/models/').replyOnce(200, mockModelsResponse)
   mockAxios.onPost('/hourlies/').replyOnce(200, mockReadingsResponse)
+  mockAxios.onPost('/noon_forecasts/').replyOnce(200, mockForecastsResponse)
 
   const { getByText, getByTestId } = renderWithRedux(<FireWeatherPage />)
 
@@ -73,11 +75,12 @@ it('renders daily model and hourly values in response to user inputs', async () 
   // Wait until all the displays show up
   await waitForElement(() => getByTestId('daily-models-display'))
   await waitForElement(() => getByTestId('hourly-readings-display'))
+  await waitForElement(() => getByTestId('noon-forecasts-display'))
   await waitForElement(() => getByTestId('weather-graph-by-station'))
 
   // Validate the correct request body
-  // There should have been two requests, one for models and one for hourly readings.
-  expect(mockAxios.history.post.length).toBe(2)
+  // There should have been three requests, one for models, one for noon forecasts, and one for hourly readings.
+  expect(mockAxios.history.post.length).toBe(3)
   // Each of those request should ask for a station
   mockAxios.history.post.forEach(post => {
     expect(post.data).toBe(

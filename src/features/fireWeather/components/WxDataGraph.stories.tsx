@@ -70,15 +70,48 @@ const getReadingValues = () => {
   return readingValues
 }
 
+const getForecastValues = () => {
+  const forecastValues = []
+  const days = 2
+  const first = moment()
+    .utc()
+    .set({ hour: 20, minute: 0, second: 0 })
+    .subtract(days, 'days')
+  const last = moment(first).add(days, 'days')
+
+  while (last.diff(first, 'days') >= 0) {
+    forecastValues.push({
+      datetime: moment(first).utc().format(),
+      temperature: Math.random() * 30,
+      relative_humidity: Math.random() * 101,
+      wind_speed: Math.random() * 10,
+      wind_direction: Math.random() * 100,
+      precipitation: Math.random() * 10,
+      gc: null,
+      ffmc: null,
+      dmc: null,
+      dc: null,
+      isi: null,
+      bui: null,
+      fwi: null,
+      danger_rating: 2
+    })
+
+    first.add(1, 'days')
+  }
+  return forecastValues
+}
+
 storiesOf('WxDataGraph', module).add('default', () => {
   const modelValues = getModelValues()
   const readingValues = getReadingValues()
+  const forecastValues = getForecastValues()
 
   return (
     <>
-      <WxDataGraph modelValues={modelValues} readingValues={readingValues} />
+      <WxDataGraph modelValues={modelValues} readingValues={readingValues} forecastValues={forecastValues} />
       <h3>When only model values provided</h3>
-      <WxDataGraph modelValues={modelValues} readingValues={[]} />
+      <WxDataGraph modelValues={modelValues} readingValues={[]} forecastValues={[]} />
     </>
   )
 })

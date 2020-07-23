@@ -37,7 +37,7 @@ const NoonForecastsDisplay = ({ values }: Props) => {
   return (
     <div className={classes.display} data-testid="noon-forecasts-display">
       <Typography className={classes.title} variant="subtitle2" component="div">
-        Forecast noon (12pm PST) values:
+        Forecast noon (12pm PDT) values:
       </Typography>
       <Paper elevation={1}>
         <TableContainer>

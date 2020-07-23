@@ -208,7 +208,9 @@ const WxDataGraph = ({
               name="Forecast Temp"
               dataKey="temperature"
               data={forecastValues}
+              type="monotone"
               stroke="salmon"
+              strokeWidth={1.5}
             />
           )}
           {showReadings && (
@@ -217,7 +219,7 @@ const WxDataGraph = ({
               name="RH"
               dataKey="relative_humidity"
               data={readingValues}
-              strokeWidth={1.5}
+              strokeWidth={2.0}
               type="monotone"
               stroke="royalblue"
             />
@@ -238,7 +240,9 @@ const WxDataGraph = ({
               name="Forecast RH"
               dataKey="relative_humidity"
               data={forecastValues}
+              type="monotone"
               stroke="deepskyblue"
+              strokeWidth={2.0}
             />
           )}
         </LineChart>
