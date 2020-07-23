@@ -15,9 +15,9 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import { datetimeInPDT } from 'utils/date'
 import { MODEL_VALUE_DECIMAL } from 'utils/constants'
-import { ModelValue } from 'api/modelAPI'
+import { ModelValue, HistoricModel } from 'api/modelAPI'
 import { ReadingValue } from 'api/readingAPI'
-import WxDataToggles from 'features/fireWeather/components/WxDataToggles'
+import WxDataGraphToggles from 'features/fireWeather/components/WxDataGraphToggles'
 
 const formatXAxis = (dt: string) => {
   return datetimeInPDT(dt, 'Do MMM')
@@ -92,9 +92,14 @@ type WxValue = ReadingValue | ModelValue
 interface Props {
   modelValues: ModelValue[] | undefined
   readingValues: ReadingValue[] | undefined
+  historicModels: HistoricModel[] | undefined
 }
 
-const WxDataGraph = ({ modelValues = [], readingValues = [] }: Props) => {
+const WxDataGraph = ({
+  modelValues = [],
+  readingValues = [],
+  historicModels = []
+}: Props) => {
   const classes = useStyles()
   const noModels = modelValues.length === 0
   const noReadings = readingValues.length === 0
@@ -118,7 +123,7 @@ const WxDataGraph = ({ modelValues = [], readingValues = [] }: Props) => {
         values (PDT, UTC-7):
       </Typography>
 
-      <WxDataToggles
+      <WxDataGraphToggles
         noReadings={noReadings}
         showReadings={showReadings}
         setShowReadings={setShowReadings}
@@ -207,6 +212,78 @@ const WxDataGraph = ({ modelValues = [], readingValues = [] }: Props) => {
               data={modelValues}
               type="monotone"
               stroke="dodgerblue"
+            />
+          )}
+          {showModels && (
+            <Line
+              yAxisId="left"
+              name="Model Temp 5th"
+              dataKey="tmp_2m_5th"
+              data={historicModels}
+              strokeWidth={0.5}
+              dot={false}
+              type="monotone"
+              stroke="crimson"
+            />
+          )}
+          {showModels && (
+            <Line
+              yAxisId="left"
+              name="Model Temp Median"
+              dataKey="tmp_2m_median"
+              data={historicModels}
+              strokeWidth={0.5}
+              dot={false}
+              type="monotone"
+              stroke="crimson"
+            />
+          )}
+          {showModels && (
+            <Line
+              yAxisId="left"
+              name="Model Temp 90th"
+              dataKey="tmp_2m_90th"
+              data={historicModels}
+              strokeWidth={1}
+              dot={false}
+              type="monotone"
+              stroke="crimson"
+            />
+          )}
+          {showModels && (
+            <Line
+              yAxisId="right"
+              name="Model RH 5th"
+              dataKey="rh_2m_5th"
+              data={historicModels}
+              strokeWidth={0.5}
+              dot={false}
+              type="monotone"
+              stroke="royalblue"
+            />
+          )}
+          {showModels && (
+            <Line
+              yAxisId="right"
+              name="Model RH Median"
+              dataKey="rh_2m_median"
+              data={historicModels}
+              strokeWidth={0.5}
+              dot={false}
+              type="monotone"
+              stroke="royalblue"
+            />
+          )}
+          {showModels && (
+            <Line
+              yAxisId="right"
+              name="Model RH 90th"
+              dataKey="rh_2m_90th"
+              data={historicModels}
+              strokeWidth={1}
+              dot={false}
+              type="monotone"
+              stroke="royalblue"
             />
           )}
         </LineChart>
