@@ -92,10 +92,12 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
 
   // Toggle off readings (actuals) from graph
   fireEvent.click(getByTestId('show-readings-toggle'))
-  expect(queryByTestId('readings-temperature-line')).toBeNull()
-  expect(queryByTestId('readings-rh-line')).toBeNull()
-  expect(queryByTestId('models-temperature-line')).toBeTruthy()
-  expect(queryByTestId('models-rh-line')).toBeTruthy()
-  expect(queryByTestId('forecasts-temperature-line')).toBeTruthy()
-  expect(queryByTestId('forecasts-rh-line')).toBeTruthy()
+  await waitForElement(() => {
+    expect(queryByTestId('readings-temperature-line')).toBeNull()
+    expect(queryByTestId('readings-rh-line')).toBeNull()
+    expect(queryByTestId('models-temperature-line')).toBeTruthy()
+    expect(queryByTestId('models-rh-line')).toBeTruthy()
+    expect(queryByTestId('forecasts-temperature-line')).toBeTruthy()
+    expect(queryByTestId('forecasts-rh-line')).toBeTruthy()
+  })
 })
