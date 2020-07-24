@@ -45,13 +45,13 @@ const forecastsSlice = createSlice({
           }
         }
       })
-      let index = 0
+      let counter = 0
       for (const key in state.noonForecastsByStation) {
-        state.noonForecasts[index] = {
+        state.noonForecasts[counter] = {
           station_code: key,
           values: state.noonForecastsByStation[key]
         }
-        index++
+        counter++
       }
     }
   }
