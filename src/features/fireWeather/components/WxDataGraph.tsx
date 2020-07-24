@@ -190,7 +190,6 @@ const WxDataGraph = ({
               strokeWidth={1.5}
               type="monotone"
               stroke="crimson"
-              data-testid="readings-temperature-line"
             />
           )}
           {showModels && (
@@ -201,7 +200,6 @@ const WxDataGraph = ({
               data={modelValues}
               type="monotone"
               stroke="indianred"
-              data-testid="models-temperature-line"
             />
           )}
           {showForecasts && (
@@ -213,7 +211,6 @@ const WxDataGraph = ({
               type="monotone"
               stroke="salmon"
               strokeWidth={1.5}
-              data-testid="forecasts-temperature-line"
             />
           )}
           {showReadings && (
@@ -225,7 +222,6 @@ const WxDataGraph = ({
               strokeWidth={2.0}
               type="monotone"
               stroke="royalblue"
-              data-testid="readings-rh-line"
             />
           )}
           {showModels && (
@@ -236,7 +232,6 @@ const WxDataGraph = ({
               data={modelValues}
               type="monotone"
               stroke="dodgerblue"
-              data-testid="models-rh-line"
             />
           )}
           {showForecasts && (
@@ -248,7 +243,6 @@ const WxDataGraph = ({
               type="monotone"
               stroke="deepskyblue"
               strokeWidth={2.0}
-              data-testid="forecasts-rh-line"
             />
           )}
         </LineChart>

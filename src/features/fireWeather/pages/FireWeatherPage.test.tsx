@@ -92,10 +92,12 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
 
   // Toggle off readings (actuals) from graph
   fireEvent.click(getByTestId('show-readings-toggle'))
-  expect(queryByTestId('readings-temperature-line')).toBeNull()
-  expect(queryByTestId('readings-rh-line')).toBeNull()
-  await waitForElement(() => getByTestId('models-temperature-line'))
-  await waitForElement(() => getByTestId('models-rh-line'))
-  await waitForElement(() => getByTestId('forecasts-temperature-line'))
-  await waitForElement(() => getByTestId('forecasts-rh-line'))
+  // there's no straightforward way to check for Lines on the graph, so instead
+  // we test for the line's label to be present/absent in the graph Legend
+  expect(getByText('Model Temp')).toBeTruthy()
+  expect(getByText('Forecast Temp')).toBeTruthy()
+  expect(getByText('Model RH')).toBeTruthy()
+  expect(getByText('Forecast RH')).toBeTruthy()
+  expect(getByText('Temp')).toBeFalsy()
+  expect(getByText('RH')).toBeFalsy()
 })
