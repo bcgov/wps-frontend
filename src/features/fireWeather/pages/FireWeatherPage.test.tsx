@@ -57,7 +57,7 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
   mockAxios.onPost('/hourlies/').replyOnce(200, mockReadingsResponse)
   mockAxios.onPost('/noon_forecasts/').replyOnce(200, mockForecastsResponse)
 
-  const { getByText, getByTestId, queryByTestId } = renderWithRedux(<FireWeatherPage />)
+  const { getByText, getByTestId } = renderWithRedux(<FireWeatherPage />)
 
   // wait for authentication
   await waitForElement(() => getByText(/Predictive Services Unit/i))
@@ -90,14 +90,14 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
     )
   })
 
-  // Toggle off readings (actuals) from graph
-  fireEvent.click(getByTestId('show-readings-toggle'))
+  // Toggle off noon forecasts from graph
+  fireEvent.click(getByTestId('show-forecasts-toggle'))
   // there's no straightforward way to check for Lines on the graph, so instead
   // we test for the line's label to be present/absent in the graph Legend
-  expect(getByText('Model Temp')).toBeTruthy()
-  expect(getByText('Forecast Temp')).toBeTruthy()
-  expect(getByText('Model RH')).toBeTruthy()
-  expect(getByText('Forecast RH')).toBeTruthy()
-  expect(getByText('Temp')).toBeFalsy()
-  expect(getByText('RH')).toBeFalsy()
+  expect(getByText(/Model Temp/i)).toBeInTheDocument()
+  expect(getByText(/Forecast Temp/i)).not.toBeInTheDocument()
+  expect(getByText(/Model RH/i)).toBeInTheDocument()
+  expect(getByText(/Forecast RH/i)).not.toBeInTheDocument()
+  expect(getByText(/Temp/i)).toBeInTheDocument()
+  expect(getByText(/RH/i)).toBeInTheDocument()
 })
