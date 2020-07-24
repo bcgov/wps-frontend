@@ -57,7 +57,7 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
   mockAxios.onPost('/hourlies/').replyOnce(200, mockReadingsResponse)
   mockAxios.onPost('/noon_forecasts/').replyOnce(200, mockForecastsResponse)
 
-  const { getByText, getByTestId } = renderWithRedux(<FireWeatherPage />)
+  const { getByText, getByTestId, queryByTestId } = renderWithRedux(<FireWeatherPage />)
 
   // wait for authentication
   await waitForElement(() => getByText(/Predictive Services Unit/i))
@@ -89,4 +89,13 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
       })
     )
   })
+
+  // Toggle off readings (actuals) from graph
+  fireEvent.click(getByTestId('show-readings-toggle'))
+  expect(queryByTestId('readings-temperature-line')).toBeNull()
+  expect(queryByTestId('readings-rh-line')).toBeNull()
+  expect(getByTestId('models-temperature-line')).toBeTruthy()
+  expect(getByTestId('models-rh-line')).toBeTruthy()
+  expect(getByTestId('forecasts-temperature-line')).toBeTruthy()
+  expect(getByTestId('forecasts-rh-line')).toBeTruthy()
 })
