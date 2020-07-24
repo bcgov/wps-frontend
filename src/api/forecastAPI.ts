@@ -6,7 +6,7 @@ export interface NoonForecastValue {
   relative_humidity: number
   wind_direction: number
   wind_speed: number
-  precipitation: number
+  total_precipitation: number
   gc: number
   ffmc: number
   dmc: number

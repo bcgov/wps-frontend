@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
 import { MODEL_VALUE_DECIMAL } from 'utils/constants'
+import { ModelValue } from 'api/modelAPI'
 import { NoonForecastValue } from 'api/forecastAPI'
 
 const useStyles = makeStyles({
@@ -23,21 +24,25 @@ const useStyles = makeStyles({
   }
 })
 
-interface Props {
-  values: NoonForecastValue[] | undefined
+interface TableMetadata {
+  testId: string
+  title: string
 }
 
-const NoonForecastsDisplay = ({ values }: Props) => {
+const DailyWeatherDisplay = (props: {
+  values: (ModelValue | NoonForecastValue)[] | undefined
+  tableMetadata: TableMetadata
+}) => {
   const classes = useStyles()
 
-  if (!values) {
+  if (!props.values) {
     return null
   }
 
   return (
-    <div className={classes.display} data-testid="noon-forecasts-display">
+    <div className={classes.display} data-testid={props.tableMetadata.testId}>
       <Typography className={classes.title} variant="subtitle2" component="div">
-        Forecast noon (12pm PDT) values:
+        {props.tableMetadata.title}
       </Typography>
       <Paper elevation={1}>
         <TableContainer>
@@ -45,13 +50,13 @@ const NoonForecastsDisplay = ({ values }: Props) => {
             <TableBody>
               <TableRow>
                 <TableCell>Date</TableCell>
-                {values.map(v => (
+                {props.values.map(v => (
                   <TableCell key={v.datetime}>{v.datetime.slice(0, 10)}</TableCell>
                 ))}
               </TableRow>
               <TableRow>
                 <TableCell>Temp (°C)</TableCell>
-                {values.map(v => (
+                {props.values.map(v => (
                   <TableCell key={v.datetime}>
                     {v.temperature.toFixed(MODEL_VALUE_DECIMAL)}
                   </TableCell>
@@ -59,7 +64,7 @@ const NoonForecastsDisplay = ({ values }: Props) => {
               </TableRow>
               <TableRow>
                 <TableCell>RH (%)</TableCell>
-                {values.map(v => (
+                {props.values.map(v => (
                   <TableCell key={v.datetime}>
                     {Math.round(v.relative_humidity)}
                   </TableCell>
@@ -67,23 +72,25 @@ const NoonForecastsDisplay = ({ values }: Props) => {
               </TableRow>
               <TableRow>
                 <TableCell>Wind Dir</TableCell>
-                {values.map(v => (
-                  <TableCell key={v.datetime}>{Math.round(v.wind_direction)}</TableCell>
+                {props.values.map(v => (
+                  <TableCell key={v.datetime}>
+                    {v.wind_direction != null && Math.round(v.wind_direction)}
+                  </TableCell>
                 ))}
               </TableRow>
               <TableRow>
                 <TableCell>Wind Spd (km/h)</TableCell>
-                {values.map(v => (
+                {props.values.map(v => (
                   <TableCell key={v.datetime}>
-                    {v.wind_speed.toFixed(MODEL_VALUE_DECIMAL)}
+                    {v.wind_speed?.toFixed(MODEL_VALUE_DECIMAL)}
                   </TableCell>
                 ))}
               </TableRow>
               <TableRow>
                 <TableCell>Precip (mm/cm)</TableCell>
-                {values.map(v => (
+                {props.values.map(v => (
                   <TableCell key={v.datetime}>
-                    {v.precipitation.toFixed(MODEL_VALUE_DECIMAL)}
+                    {v.total_precipitation?.toFixed(MODEL_VALUE_DECIMAL)}
                   </TableCell>
                 ))}
               </TableRow>
@@ -95,4 +102,4 @@ const NoonForecastsDisplay = ({ values }: Props) => {
   )
 }
 
-export default React.memo(NoonForecastsDisplay)
+export default React.memo(DailyWeatherDisplay)

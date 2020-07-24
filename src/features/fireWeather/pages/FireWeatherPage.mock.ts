@@ -58,7 +58,7 @@ export const mockForecastsResponse: RecursivePartial<ForecastResponse> = {
           relative_humidity: 38,
           wind_direction: 290,
           wind_speed: 5.5,
-          precipitation: 0.0,
+          total_precipitation: 0.0,
           gc: undefined,
           ffmc: 87.398,
           dmc: 50.918,

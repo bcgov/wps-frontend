@@ -3,10 +3,9 @@ import { useSelector } from 'react-redux'
 import { Paper, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
-import DailyModelsDisplay from 'features/fireWeather/components/DailyModelsDisplay'
+import DailyWeatherDisplay from 'features/fireWeather/components/DailyWeatherDisplay'
 import HourlyReadingsDisplay from 'features/fireWeather/components/HourlyReadingsDisplay'
 import WxGraphByStation from 'features/fireWeather/components/WxDataGraph'
-import NoonForecastsDisplay from 'features/fireWeather/components/NoonForecastsDisplay'
 import { Station } from 'api/stationAPI'
 import { selectReadings, selectModels, selectForecasts } from 'app/rootReducer'
 
@@ -30,6 +29,11 @@ interface Props {
   requestedStations: Station[]
 }
 
+interface TableMetadata {
+  testId: string
+  title: string
+}
+
 const WxDataDisplays = ({ requestedStations }: Props) => {
   const classes = useStyles()
 
@@ -43,6 +47,16 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
 
   const wxDataLoading = loadingModels || loadingReadings || loadingForecasts
 
+  const modelsTableMetadata: TableMetadata = {
+    testId: 'daily-models-display',
+    title: '10 days of interpolated GDPS noon (12pm PST) values:'
+  }
+
+  const noonForecastsTableMetadata: TableMetadata = {
+    testId: 'noon-forecasts-display',
+    title: 'Forecast noon (12pm PDT) values:'
+  }
+
   return (
     <div className={classes.displays}>
       {!wxDataLoading &&
@@ -52,6 +66,14 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const noonModelValues = noonModelsByStation[s.code]
           const noonForecastValues = noonForecastsByStation[s.code]
           const nothingToDisplay = !readingValues && !modelValues && !noonForecastValues
+          const modelTableProps = {
+            values: noonModelValues,
+            tableMetadata: modelsTableMetadata
+          }
+          const forecastsTableProps = {
+            values: noonForecastValues,
+            tableMetadata: noonForecastsTableMetadata
+          }
 
           if (nothingToDisplay) {
             return null
@@ -63,8 +85,8 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
                 Weather station: {`${s.name} (${s.code})`}
               </Typography>
               <HourlyReadingsDisplay values={readingValues} />
-              <DailyModelsDisplay values={noonModelValues} />
-              <NoonForecastsDisplay values={noonForecastValues} />
+              <DailyWeatherDisplay {...modelTableProps} />
+              <DailyWeatherDisplay {...forecastsTableProps} />
               <WxGraphByStation
                 modelValues={modelValues}
                 readingValues={readingValues}
