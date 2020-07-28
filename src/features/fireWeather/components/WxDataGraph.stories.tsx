@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react'
 import moment from 'moment'
 
 import WxDataGraph from 'features/fireWeather/components/WxDataGraph'
-import NewTempGraph from 'features/fireWeather/components/NewTempGraph'
+import TempRHGraph from 'features/fireWeather/components/TempRHGraph'
 
 const getModelValues = () => {
   const modelValues = []
@@ -41,7 +41,7 @@ const getPastValues = () => {
   const readingValues = []
   const historicModels = []
 
-  const days = 5
+  const days = 3
   const first = moment()
     .utc()
     .set({ hour: 0, minute: 0, second: 0 })
@@ -50,9 +50,10 @@ const getPastValues = () => {
 
   while (last.diff(first, 'days') >= 0) {
     for (let length = 0; length < 24; length++) {
-      const temp = 15 + Math.random() * 5
-      const rh = 40 + Math.random() * 10
+      const temp = 15 + Math.random() * 10
+      const rh = 40 + Math.random() * 15
 
+      // every 3 hour
       if (length % 3 == 0) {
         historicModels.push({
           datetime: moment(first)
@@ -67,7 +68,7 @@ const getPastValues = () => {
           rh_2m_90th: rh - Math.random() * 5
         })
       }
-
+      // every hour
       readingValues.push({
         datetime: moment(first)
           .add(length, 'hours')
@@ -116,8 +117,9 @@ storiesOf('WxDataGraph', module)
       />
     )
   })
-  .add('NewTempGraph', () => {
+  .add('TempRHGraph', () => {
+    const modelValues = getModelValues()
     const { readingValues, historicModels } = getPastValues()
 
-    return <NewTempGraph readingValues={readingValues} historicModels={historicModels} />
+    return <TempRHGraph readingValues={readingValues} historicModels={historicModels} />
   })

@@ -13,18 +13,18 @@ import {
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { datetimeInPDT } from 'utils/date'
+import { formatDateInPDT } from 'utils/date'
 import { MODEL_VALUE_DECIMAL } from 'utils/constants'
 import { ModelValue, HistoricModel } from 'api/modelAPI'
 import { ReadingValue } from 'api/readingAPI'
 import WxDataGraphToggles from 'features/fireWeather/components/WxDataGraphToggles'
 
 const formatXAxis = (dt: string) => {
-  return datetimeInPDT(dt, 'Do MMM')
+  return formatDateInPDT(dt, 'Do MMM')
 }
 
 const formatTooltipLabel = (dt: string | number) => {
-  return datetimeInPDT(dt, 'h:mm a, dddd, MMM Do')
+  return formatDateInPDT(dt, 'h:mm a, dddd, MMM Do')
 }
 
 const formatTooltipValue = (
@@ -56,11 +56,11 @@ const getEarlierDt = (a: string, b: string) => {
 
 const getDateRangeAndToday = (wxData: WxValue[]) => {
   const lookup: { [k: string]: string } = {}
-  const today = datetimeInPDT(new Date().toISOString(), 'Do MMM')
+  const today = formatDateInPDT(new Date().toISOString(), 'Do MMM')
   let todayDt: string | undefined = undefined
 
   wxData.forEach(v => {
-    const day = datetimeInPDT(v.datetime, 'Do MMM')
+    const day = formatDateInPDT(v.datetime, 'Do MMM')
 
     if (!lookup[day]) {
       lookup[day] = v.datetime
