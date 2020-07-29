@@ -12,11 +12,11 @@ const useStyles = makeStyles({
   root: {
     '& .xAxisLabel': {
       textAnchor: 'start',
-      font: '10px sans-serif'
+      font: '9px sans-serif'
     },
     '& .yAxisLabel': {
       textAnchor: 'middle',
-      font: '10px sans-serif'
+      font: '9px sans-serif'
     },
     '& .currLine': {
       strokeWidth: 1,
@@ -35,7 +35,7 @@ const useStyles = makeStyles({
     },
     '& .tooltip': {
       pointerEvents: 'none',
-      font: '8px sans-serif',
+      font: '8.5px sans-serif',
 
       '&--hidden': {
         display: 'none'
@@ -100,9 +100,9 @@ interface WeatherValue {
 type HistoricModel = Omit<_HistoricModel, 'datetime'> & { date: Date }
 
 interface Props {
-  readingValues: ReadingValue[]
-  modelValues: ModelValue[]
-  historicModels: _HistoricModel[]
+  readingValues: ReadingValue[] | undefined
+  modelValues: ModelValue[] | undefined
+  historicModels: _HistoricModel[] | undefined
 }
 
 const TempRHGraph = ({
@@ -342,32 +342,27 @@ const TempRHGraph = ({
         const { y: textY, width: w, height: h } = (text.node() as SVGSVGElement).getBBox()
         const padding = 8
         const xStart = 13
-        if (dir === 'right') {
-          text.attr('transform', `translate(${xStart}, ${textY})`)
-          path.attr(
-            'd',
-            `M ${xStart - padding}, ${textY - 2 * padding}
-             H${xStart + padding + w}
-             v${h + 2 * padding}
-             h-${w + 2 * padding}
-             z
-            `
-          )
-        } else {
-          text.attr('transform', `translate(${-w - xStart}, ${textY})`)
-          path.attr(
-            'd',
-            `M ${-w - xStart - padding}, ${textY - 2 * padding}
-             H${0 - xStart + padding}
-             v${h + 2 * padding}
-             h-${w + 2 * padding}
-             z
-            `
-          )
+        let translateX = xStart
+        let HMove = xStart + padding + w
+        let MX = xStart - padding
+        if (dir === 'left') {
+          translateX = -w - xStart
+          HMove = -xStart + padding
+          MX = -xStart - padding - w
         }
+        text.attr('transform', `translate(${translateX}, ${textY})`)
+        path.attr(
+          'd',
+          `M ${MX}, ${textY - 2 * padding}
+             H${HMove}
+             v${h + 2 * padding}
+             h-${w + 2 * padding}
+             z
+            `
+        )
       }
-      // Draw a rectangular that covers the whole space so that
-      // the listener can react to mouseover anywhere within the graph
+      // Draw a rectangular that covers the whole svg space so that
+      // the listener can react to user's mouseover in anywhere within the graph
       svg
         .append('rect')
         .attr('width', '100%')
@@ -414,7 +409,7 @@ const TempRHGraph = ({
         tooltip.call(createTooltipCallout(), null)
       })
     }
-  }, [_readingValues, _modelValues, _historicModels, svgRef.current])
+  }, [_readingValues, _modelValues, _historicModels])
 
   return (
     <div className={classes.root}>
@@ -427,4 +422,4 @@ const TempRHGraph = ({
   )
 }
 
-export default TempRHGraph
+export default React.memo(TempRHGraph)
