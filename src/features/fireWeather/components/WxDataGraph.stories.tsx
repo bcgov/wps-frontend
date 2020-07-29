@@ -8,7 +8,7 @@ import TempRHGraph from 'features/fireWeather/components/TempRHGraph'
 
 const getModelValues = () => {
   const modelValues = []
-  const days = 1
+  const days = 2
   const first = moment()
     .utc()
     .set({ hour: 0, minute: 0, second: 0 })
@@ -46,7 +46,7 @@ const getPastValues = () => {
     .utc()
     .set({ hour: 0, minute: 0, second: 0 })
     .subtract(days, 'days')
-  const last = moment(first).add(days - 2, 'days')
+  const last = moment(first).add(days, 'days')
 
   while (last.diff(first, 'days') >= 0) {
     for (let length = 0; length < 24; length++) {
@@ -54,7 +54,7 @@ const getPastValues = () => {
       const rh = 40 + Math.random() * 15
 
       // every 3 hour
-      if (length % 3 == 0) {
+      if (length % 3 === 0) {
         historicModels.push({
           datetime: moment(first)
             .add(length, 'hours')
@@ -121,5 +121,11 @@ storiesOf('WxDataGraph', module)
     const modelValues = getModelValues()
     const { readingValues, historicModels } = getPastValues()
 
-    return <TempRHGraph readingValues={readingValues} historicModels={historicModels} />
+    return (
+      <TempRHGraph
+        readingValues={readingValues}
+        modelValues={modelValues}
+        historicModels={historicModels}
+      />
+    )
   })

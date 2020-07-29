@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import DailyModelsDisplay from 'features/fireWeather/components/DailyModelsDisplay'
 import HourlyReadingsDisplay from 'features/fireWeather/components/HourlyReadingsDisplay'
-import WxGraphByStation from 'features/fireWeather/components/WxDataGraph'
+import WxDataGraph from 'features/fireWeather/components/WxDataGraph'
 import { Station } from 'api/stationAPI'
 import { selectReadings, selectModels } from 'app/rootReducer'
 
@@ -59,7 +59,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
               </Typography>
               <HourlyReadingsDisplay values={readingValues} />
               <DailyModelsDisplay values={noonModelValues} />
-              <WxGraphByStation
+              <WxDataGraph
                 modelValues={modelValues}
                 readingValues={readingValues}
                 historicModels={[]}

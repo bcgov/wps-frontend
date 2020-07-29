@@ -1,87 +1,157 @@
 import React, { useRef, useEffect } from 'react'
 import * as d3 from 'd3'
 import { makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
 
-import { HistoricModel as _HistoricModel } from 'api/modelAPI'
-import { ReadingValue as _ReadingValue } from 'api/readingAPI'
+import { HistoricModel as _HistoricModel, ModelValue } from 'api/modelAPI'
+import { ReadingValue } from 'api/readingAPI'
 import { formatDateInPDT } from 'utils/date'
 
 const useStyles = makeStyles({
+  // Give styling through classes for svg elements
   root: {
-    '& .axisLabel': {
+    '& .xAxisLabel': {
+      textAnchor: 'start',
+      font: '10px sans-serif'
+    },
+    '& .yAxisLabel': {
       textAnchor: 'middle',
-      fontSize: '0.6em'
+      font: '10px sans-serif'
+    },
+    '& .currLine': {
+      strokeWidth: 1,
+      stroke: 'green',
+      strokeDasharray: '4,4'
+    },
+    '& .currLabel': {
+      font: '9px sans-serif',
+      fill: 'green'
     },
     '& .tooltipCursor': {
       strokeWidth: 1,
       stroke: 'gray',
-      strokeDasharray: '1, 1',
+      strokeDasharray: '1,1',
       opacity: 0
     },
     '& .tooltip': {
       pointerEvents: 'none',
-      font: '9px sans-serif'
+      font: '8px sans-serif',
+
+      '&--hidden': {
+        display: 'none'
+      }
     },
-    '& .tooltip--hidden': {
-      display: 'none'
-    },
-    '& .tempDot': {
+    '& .readingTempDot': {
       stroke: 'crimson',
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .rhDot': {
+    '& .readingRHDot': {
       stroke: 'royalblue',
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .tempArea': {
-      fill: '#ffcfd8',
+    '& .readingTempArea': {
+      fill: '#ffbac7',
       opacity: 0.5
     },
-    '& .rhArea': {
+    '& .readingRHArea': {
       fill: '#8bb4ff',
       opacity: 0.5
+    },
+    '& .modelTempDot': {
+      stroke: '#fc6f03',
+      fill: 'none',
+      cursor: 'pointer'
+    },
+    '& .modelRHDot': {
+      stroke: '#03a1fc',
+      fill: 'none',
+      cursor: 'pointer'
     }
+  },
+  title: {
+    paddingBottom: 6
   }
 })
 
+const getNearestBasedOnDate = (invertedDate: Date, arr: { date: Date }[]) => {
+  const bisect = d3.bisector((d: { date: Date }) => d.date).left
+  const index = bisect(arr, invertedDate, 1)
+  const a = arr[index - 1]
+  const b = arr[index]
+  // get the nearest value from the user's mouse position
+  const value =
+    b &&
+    invertedDate.valueOf() - a.date.valueOf() > b.date.valueOf() - invertedDate.valueOf()
+      ? b
+      : a
+
+  return value
+}
+
+interface WeatherValue {
+  date: Date
+  temp?: number
+  rh?: number
+  modelTemp?: number
+  modelRH?: number
+}
 type HistoricModel = Omit<_HistoricModel, 'datetime'> & { date: Date }
-type ReadingValue = Omit<_ReadingValue, 'datetime'> & { date: Date }
 
 interface Props {
-  readingValues: _ReadingValue[]
+  readingValues: ReadingValue[]
+  modelValues: ModelValue[]
   historicModels: _HistoricModel[]
 }
 
 const TempRHGraph = ({
   readingValues: _readingValues,
+  modelValues: _modelValues,
   historicModels: _historicModels
 }: Props) => {
   const classes = useStyles()
   const svgRef = useRef(null)
 
   useEffect(() => {
-    if (_readingValues && _historicModels && svgRef.current) {
+    if (_readingValues && _modelValues && _historicModels && svgRef.current) {
       /* Prepare for data */
       const formatDate = d3.timeFormat('%b %d') as (
         value: Date | { valueOf(): number }
       ) => string
-      const eachDay: { [k: string]: Date } = {}
-      const readingValues: ReadingValue[] = _readingValues.map(d => {
+      const eachDayLookup: { [k: string]: Date } = {}
+      // store model and reading values in one hash map
+      const weatherLookup: { [k: string]: WeatherValue } = {}
+      const readingValues = _readingValues.map(d => {
         const date = d3.isoParse(d.datetime) as Date
         const day = formatDate(date)
-
-        if (!eachDay[day]) {
-          eachDay[day] = date
+        if (!eachDayLookup[day]) {
+          eachDayLookup[day] = date
         }
 
-        return {
-          ...d,
-          temperature: Number(d.temperature.toFixed(2)),
-          relative_humidity: Number(d.relative_humidity.toFixed(2)),
-          date
+        const value = {
+          date,
+          temp: Number(d.temperature.toFixed(2)),
+          rh: Math.round(d.relative_humidity)
         }
+        weatherLookup[d.datetime] = value
+        return value
+      })
+      const modelValues = _modelValues.map(d => {
+        const date = d3.isoParse(d.datetime) as Date
+        const day = formatDate(date)
+        if (!eachDayLookup[day]) {
+          eachDayLookup[day] = date
+        }
+
+        const value = {
+          date,
+          modelTemp: Number(d.temperature.toFixed(2)),
+          modelRH: Math.round(d.relative_humidity)
+        }
+        // combine with the existing reading value
+        weatherLookup[d.datetime] = { ...weatherLookup[d.datetime], ...value }
+        return value
       })
       const historicModels: HistoricModel[] = _historicModels.map(d => {
         return {
@@ -91,7 +161,7 @@ const TempRHGraph = ({
       })
 
       /* Set the dimensions and margins of the graph */
-      const margin = { top: 10, right: 40, bottom: 30, left: 40 }
+      const margin = { top: 10, right: 40, bottom: 40, left: 40 }
       const widthValue = 600
       const heightValue = 150
       const width = widthValue - margin.left - margin.right
@@ -105,7 +175,7 @@ const TempRHGraph = ({
       /* Create scales for x and y axis */
       const xScale = d3
         .scaleTime()
-        .domain(d3.extent(readingValues, d => d.date) as [Date, Date])
+        .domain(d3.extent(Object.values(weatherLookup), d => d.date) as [Date, Date])
         .range([0, width])
       const yTempScale = d3
         .scaleLinear()
@@ -117,7 +187,7 @@ const TempRHGraph = ({
         .range([height, 0])
 
       /* Render area and dots for temperature */
-      const tempArea = d3
+      const readingTempArea = d3
         .area<HistoricModel>()
         .curve(d3.curveNatural)
         .x(d => xScale(d.date))
@@ -126,20 +196,29 @@ const TempRHGraph = ({
       svg
         .append('path')
         .datum(historicModels)
-        .attr('class', 'tempArea')
-        .attr('d', tempArea)
+        .attr('class', 'readingTempArea')
+        .attr('d', readingTempArea)
       svg
-        .selectAll('.tempDot')
+        .selectAll('.readingTempDot')
         .data(readingValues)
         .enter()
         .append('circle')
-        .attr('class', 'tempDot')
+        .attr('class', 'readingTempDot')
         .attr('cx', d => xScale(d.date))
-        .attr('cy', d => yTempScale(d.temperature))
+        .attr('cy', d => yTempScale(d.temp))
+        .attr('r', 1.5)
+      svg
+        .selectAll('.modelTempDot')
+        .data(modelValues)
+        .enter()
+        .append('circle')
+        .attr('class', 'modelTempDot')
+        .attr('cx', d => xScale(d.date))
+        .attr('cy', d => yTempScale(d.modelTemp))
         .attr('r', 1.5)
 
       /* Render area and dots for RH */
-      const rhArea = d3
+      const readingRHArea = d3
         .area<HistoricModel>()
         .curve(d3.curveNatural)
         .x(d => xScale(d.date))
@@ -148,17 +227,44 @@ const TempRHGraph = ({
       svg
         .append('path')
         .datum(historicModels)
-        .attr('class', 'rhArea')
-        .attr('d', rhArea)
+        .attr('class', 'readingRHArea')
+        .attr('d', readingRHArea)
       svg
-        .selectAll('.rhDot')
+        .selectAll('.readingRHDot')
         .data(readingValues)
         .enter()
         .append('circle')
-        .attr('class', 'rhDot')
+        .attr('class', 'readingRHDot')
         .attr('cx', d => xScale(d.date))
-        .attr('cy', d => yRHScale(d.relative_humidity))
+        .attr('cy', d => yRHScale(d.rh))
         .attr('r', 1.5)
+      svg
+        .selectAll('.modelRHDot')
+        .data(modelValues)
+        .enter()
+        .append('circle')
+        .attr('class', 'modelRHDot')
+        .attr('cx', d => xScale(d.date))
+        .attr('cy', d => yRHScale(d.modelRH))
+        .attr('r', 1.5)
+
+      /* Render the current time reference line */
+      const scaledCurrTime = xScale(new Date())
+      svg
+        .append('line')
+        .attr('x1', scaledCurrTime)
+        .attr('y1', 0)
+        .attr('x2', scaledCurrTime)
+        .attr('y2', height)
+        .attr('class', 'currLine')
+      svg
+        .append('text')
+        .attr('y', -12)
+        .attr('x', scaledCurrTime)
+        .attr('dy', '1em')
+        .attr('dx', '-1em')
+        .attr('class', 'currLabel')
+        .text('Now')
 
       /* Render the X & Y axis and labels */
       svg // X axis
@@ -168,7 +274,7 @@ const TempRHGraph = ({
           d3
             .axisBottom(xScale)
             .tickFormat(formatDate)
-            .tickValues(Object.values(eachDay))
+            .tickValues(Object.values(eachDayLookup))
         )
         .selectAll('text')
         .attr('y', 0)
@@ -176,10 +282,10 @@ const TempRHGraph = ({
         .attr('dy', '1em')
         .attr('dx', '0.5em')
         .attr('transform', 'rotate(45)')
-        .style('text-anchor', 'start')
+        .attr('class', 'xAxisLabel')
 
       // Y axis
-      svg.append('g').call(d3.axisLeft(yTempScale).tickValues([-10, 5, 20, 45]))
+      svg.append('g').call(d3.axisLeft(yTempScale).tickValues([-10, 5, 20, 35, 45]))
       svg
         .append('g')
         .attr('transform', `translate(${width}, 0)`)
@@ -191,7 +297,7 @@ const TempRHGraph = ({
         .attr('y', 0 - margin.left)
         .attr('x', 0 - height / 2)
         .attr('dy', '1.3em')
-        .attr('class', 'axisLabel')
+        .attr('class', 'yAxisLabel')
         .text('Temp (°C)')
       svg // RH label
         .append('text')
@@ -199,10 +305,11 @@ const TempRHGraph = ({
         .attr('y', 0 - width - margin.left)
         .attr('x', height / 2)
         .attr('dy', '1.3em')
-        .attr('class', 'axisLabel')
+        .attr('class', 'yAxisLabel')
         .text('RH (%)')
 
       /* Render tooltip and attach its listeners https://observablehq.com/@d3/line-chart-with-tooltip */
+      // High order function
       const createTooltipCallout = (dir?: 'right' | 'left') => (
         g: typeof svg,
         value: string
@@ -234,7 +341,7 @@ const TempRHGraph = ({
 
         const { y: textY, width: w, height: h } = (text.node() as SVGSVGElement).getBBox()
         const padding = 8
-        const xStart = 12
+        const xStart = 13
         if (dir === 'right') {
           text.attr('transform', `translate(${xStart}, ${textY})`)
           path.attr(
@@ -275,40 +382,46 @@ const TempRHGraph = ({
         .attr('y2', height)
         .attr('class', 'tooltipCursor')
       const tooltip = svg.append('g')
-
       svg.on('touchmove mousemove', function() {
         const mx = d3.mouse(this)[0]
-        const inverted = xScale.invert(mx)
-        const bisect = d3.bisector((d: { date: Date }) => d.date).left
-        const index = bisect(readingValues, inverted, 1)
-        const a = readingValues[index - 1]
-        const b = readingValues[index]
-        // get the nearest value from the user's mouse position
-        const value =
-          b &&
-          inverted.valueOf() - a.date.valueOf() > b.date.valueOf() - inverted.valueOf()
-            ? b
-            : a
-        const { date, temperature, relative_humidity } = value
-        const formattedDate = formatDateInPDT(date, 'h:mm a, dddd, MMM Do')
-        const scaledDate = xScale(date)
-        tooltipCursor.attr('transform', `translate(${scaledDate}, 0)`).style('opacity', 1)
+        const invertedDate = xScale.invert(mx)
+        const nearest = getNearestBasedOnDate(invertedDate, Object.values(weatherLookup))
+        const nearestX = xScale(nearest.date)
+        const whichDirection = width / 2 > nearestX ? 'right' : 'left'
+        const tooltipText = Object.entries(nearest)
+          .map(([key, value]) => {
+            if (key === 'date') {
+              return formatDateInPDT(value, 'h:mm a, dddd, MMM Do')
+            } else if (key === 'temp') {
+              return `Temp: ${value} (°C)`
+            } else if (key === 'modelTemp') {
+              return `Model Temp: ${value} (°C)`
+            } else if (key === 'rh') {
+              return `RH: ${value} (%)`
+            } else if (key === 'modelRH') {
+              return `Model RH: ${value} (%)`
+            }
+            return `${key}: ${value}`
+          })
+          .join('\n') // new line after each text
         tooltip
-          .attr('transform', `translate(${scaledDate}, ${yTempScale(temperature)})`)
-          .call(
-            createTooltipCallout(width / 2 > scaledDate ? 'right' : 'left'),
-            `${formattedDate} \n Temp: ${temperature} (°C) \n RH: ${relative_humidity} (%)`
-          )
+          .attr('transform', `translate(${nearestX}, ${height / 2})`)
+          .call(createTooltipCallout(whichDirection), tooltipText)
+        tooltipCursor.attr('transform', `translate(${nearestX}, 0)`).style('opacity', 1)
       })
       svg.on('touchend mouseleave', () => {
         tooltipCursor.style('opacity', 0)
         tooltip.call(createTooltipCallout(), null)
       })
     }
-  }, [_readingValues, _historicModels, svgRef.current])
+  }, [_readingValues, _modelValues, _historicModels, svgRef.current])
 
   return (
     <div className={classes.root}>
+      <Typography className={classes.title} component="div" variant="subtitle2">
+        Past 5 days of hourly readings and GDPS 3 hourly model with interpolated noon
+        values (PDT, UTC-7):
+      </Typography>
       <svg ref={svgRef} />
     </div>
   )
