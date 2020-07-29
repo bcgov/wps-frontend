@@ -76,8 +76,8 @@ it('renders daily model and hourly values in response to user inputs', async () 
   await waitForElement(() => getByTestId('weather-graph-by-station'))
 
   // Validate the correct request body
-  // There should have been two requests, one for models and one for hourly readings.
-  expect(mockAxios.history.post.length).toBe(2)
+  // There should have been 3 requests (models, hourly readings, and historic models).
+  expect(mockAxios.history.post.length).toBe(3)
   // Each of those request should ask for a station
   mockAxios.history.post.forEach(post => {
     expect(post.data).toBe(

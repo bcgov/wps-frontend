@@ -26,16 +26,6 @@ export interface ModelValue {
   wind_direction_850m: number
 }
 
-export interface HistoricModel {
-  datetime: string
-  tmp_2m_5th: number
-  tmp_2m_median: number
-  tmp_2m_90th: number
-  rh_2m_5th: number
-  rh_2m_median: number
-  rh_2m_90th: number
-}
-
 export interface Model {
   station: Station
   values: ModelValue[]
@@ -53,6 +43,47 @@ export async function getModels(stationCodes: number[]): Promise<Model[]> {
       stations: stationCodes
     })
     return data.forecasts
+  } catch (err) {
+    throw err.toString()
+  }
+}
+
+export interface HistoricModel {
+  datetime: string
+  tmp_2m_5th: number
+  tmp_2m_median: number
+  tmp_2m_90th: number
+  rh_2m_5th: number
+  rh_2m_median: number
+  rh_2m_90th: number
+}
+
+interface ModelInfo {
+  name: string
+  abbrev: string
+}
+
+export interface HistoricModelSummary {
+  station: Station
+  model: ModelInfo | null
+  values: HistoricModel[]
+}
+
+interface HistoricModelSummariesResponse {
+  summaries: HistoricModelSummary[]
+}
+
+export async function getHistoricModels(
+  stationCodes: number[],
+  model: 'GDPS'
+): Promise<HistoricModelSummary[]> {
+  const url = `/models/${model}/forecasts/summaries/`
+  try {
+    const { data } = await axios.post<HistoricModelSummariesResponse>(url, {
+      stations: stationCodes
+    })
+
+    return data.summaries
   } catch (err) {
     throw err.toString()
   }

@@ -5,9 +5,9 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import DailyModelsDisplay from 'features/fireWeather/components/DailyModelsDisplay'
 import HourlyReadingsDisplay from 'features/fireWeather/components/HourlyReadingsDisplay'
-import WxDataGraph from 'features/fireWeather/components/WxDataGraph'
+import TempRHGraph from 'features/fireWeather/components/TempRHGraph'
 import { Station } from 'api/stationAPI'
-import { selectReadings, selectModels } from 'app/rootReducer'
+import { selectReadings, selectModels, selectHistoricModels } from 'app/rootReducer'
 
 const useStyles = makeStyles({
   displays: {
@@ -36,8 +36,10 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
   const { loading: loadingModels, noonModelsByStation, modelsByStation } = useSelector(
     selectModels
   )
-
-  const wxDataLoading = loadingModels || loadingReadings
+  const { loading: loadingHistoricModels, historicModelsByStation } = useSelector(
+    selectHistoricModels
+  )
+  const wxDataLoading = loadingModels || loadingReadings || loadingHistoricModels
 
   return (
     <div className={classes.displays}>
@@ -46,6 +48,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const readingValues = readingsByStation[s.code]
           const modelValues = modelsByStation[s.code]
           const noonModelValues = noonModelsByStation[s.code]
+          const historicModels = historicModelsByStation[s.code]
           const nothingToDisplay = !readingValues && !modelValues
 
           if (nothingToDisplay) {
@@ -59,10 +62,10 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
               </Typography>
               <HourlyReadingsDisplay values={readingValues} />
               <DailyModelsDisplay values={noonModelValues} />
-              <WxDataGraph
+              <TempRHGraph
                 modelValues={modelValues}
                 readingValues={readingValues}
-                historicModels={[]}
+                historicModels={historicModels}
               />
             </Paper>
           )

@@ -412,7 +412,7 @@ const TempRHGraph = ({
   }, [_readingValues, _modelValues, _historicModels])
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} data-testid="weather-graph-by-station">
       <Typography className={classes.title} component="div" variant="subtitle2">
         Past 5 days of hourly readings and GDPS 3 hourly model with interpolated noon
         values (PDT, UTC-7):
