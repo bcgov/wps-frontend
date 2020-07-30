@@ -90,6 +90,20 @@ const getNearestBasedOnDate = (invertedDate: Date, arr: { date: Date }[]) => {
   return value
 }
 
+const formatDate = d3.timeFormat('%b %d') as (
+  value: Date | { valueOf(): number }
+) => string
+
+const storeEachDayLookup = (lookup: { [k: string]: Date }, datetime: string) => {
+  const date = d3.isoParse(datetime) as Date
+  const day = formatDate(date)
+  if (!lookup[day]) {
+    lookup[day] = new Date(date) //.setHours(0, 0, 0)
+  }
+
+  return date
+}
+
 interface WeatherValue {
   date: Date
   temp?: number
@@ -116,49 +130,50 @@ const TempRHGraph = ({
   useEffect(() => {
     if (_readingValues && _modelValues && _historicModels && svgRef.current) {
       /* Prepare for data */
-      const formatDate = d3.timeFormat('%b %d') as (
-        value: Date | { valueOf(): number }
-      ) => string
       const eachDayLookup: { [k: string]: Date } = {}
-      // store model and reading values in one hash map
+      // Lookup table storing all the wx data with key of each datetime
       const weatherLookup: { [k: string]: WeatherValue } = {}
       const readingValues = _readingValues.map(d => {
-        const date = d3.isoParse(d.datetime) as Date
-        const day = formatDate(date)
-        if (!eachDayLookup[day]) {
-          eachDayLookup[day] = date
-        }
-
-        const value = {
+        const date = storeEachDayLookup(eachDayLookup, d.datetime)
+        const reading = {
           date,
           temp: Number(d.temperature.toFixed(2)),
           rh: Math.round(d.relative_humidity)
         }
-        weatherLookup[d.datetime] = value
-        return value
+        weatherLookup[d.datetime] = reading
+
+        return reading
       })
       const modelValues = _modelValues.map(d => {
-        const date = d3.isoParse(d.datetime) as Date
-        const day = formatDate(date)
-        if (!eachDayLookup[day]) {
-          eachDayLookup[day] = date
-        }
-
-        const value = {
+        const date = storeEachDayLookup(eachDayLookup, d.datetime)
+        const model = {
           date,
           modelTemp: Number(d.temperature.toFixed(2)),
           modelRH: Math.round(d.relative_humidity)
         }
         // combine with the existing reading value
-        weatherLookup[d.datetime] = { ...weatherLookup[d.datetime], ...value }
-        return value
+        weatherLookup[d.datetime] = { ...weatherLookup[d.datetime], ...model }
+
+        return model
       })
       const historicModels: HistoricModel[] = _historicModels.map(d => {
-        return {
-          ...d,
-          date: d3.isoParse(d.datetime) as Date
-        }
+        const date = storeEachDayLookup(eachDayLookup, d.datetime)
+        const hModel = { ...d, date }
+        weatherLookup[d.datetime] = { ...weatherLookup[d.datetime], ...hModel }
+
+        return hModel
       })
+      const weatherValues = Object.values(weatherLookup)
+      const xTickValues = Object.values(eachDayLookup)
+        .sort((a, b) => a.valueOf() - b.valueOf()) // in ascending order
+        .map((day, idx) => {
+          if (idx === 0) {
+            // Return the first day as it is
+            return day
+          }
+          // Return the rest with 0h 0m 0s set
+          return new Date(day).setHours(0, 0, 0)
+        })
 
       /* Set the dimensions and margins of the graph */
       const margin = { top: 10, right: 40, bottom: 40, left: 40 }
@@ -175,7 +190,7 @@ const TempRHGraph = ({
       /* Create scales for x and y axis */
       const xScale = d3
         .scaleTime()
-        .domain(d3.extent(Object.values(weatherLookup), d => d.date) as [Date, Date])
+        .domain(d3.extent(weatherValues, d => d.date) as [Date, Date])
         .range([0, width])
       const yTempScale = d3
         .scaleLinear()
@@ -206,7 +221,7 @@ const TempRHGraph = ({
         .attr('class', 'readingTempDot')
         .attr('cx', d => xScale(d.date))
         .attr('cy', d => yTempScale(d.temp))
-        .attr('r', 1.5)
+        .attr('r', 1)
       svg
         .selectAll('.modelTempDot')
         .data(modelValues)
@@ -215,7 +230,7 @@ const TempRHGraph = ({
         .attr('class', 'modelTempDot')
         .attr('cx', d => xScale(d.date))
         .attr('cy', d => yTempScale(d.modelTemp))
-        .attr('r', 1.5)
+        .attr('r', 1)
 
       /* Render area and dots for RH */
       const readingRHArea = d3
@@ -237,7 +252,7 @@ const TempRHGraph = ({
         .attr('class', 'readingRHDot')
         .attr('cx', d => xScale(d.date))
         .attr('cy', d => yRHScale(d.rh))
-        .attr('r', 1.5)
+        .attr('r', 1)
       svg
         .selectAll('.modelRHDot')
         .data(modelValues)
@@ -246,7 +261,7 @@ const TempRHGraph = ({
         .attr('class', 'modelRHDot')
         .attr('cx', d => xScale(d.date))
         .attr('cy', d => yRHScale(d.modelRH))
-        .attr('r', 1.5)
+        .attr('r', 1)
 
       /* Render the current time reference line */
       const scaledCurrTime = xScale(new Date())
@@ -274,7 +289,7 @@ const TempRHGraph = ({
           d3
             .axisBottom(xScale)
             .tickFormat(formatDate)
-            .tickValues(Object.values(eachDayLookup))
+            .tickValues(xTickValues)
         )
         .selectAll('text')
         .attr('y', 0)
@@ -329,8 +344,8 @@ const TempRHGraph = ({
           .selectAll('text')
           .data([null])
           .join('text')
-          .call(text =>
-            text
+          .call(txt =>
+            txt
               .selectAll('tspan')
               .data((value + '').split(/\n/))
               .join('tspan')
@@ -380,7 +395,7 @@ const TempRHGraph = ({
       svg.on('touchmove mousemove', function() {
         const mx = d3.mouse(this)[0]
         const invertedDate = xScale.invert(mx)
-        const nearest = getNearestBasedOnDate(invertedDate, Object.values(weatherLookup))
+        const nearest = getNearestBasedOnDate(invertedDate, weatherValues)
         const nearestX = xScale(nearest.date)
         const whichDirection = width / 2 > nearestX ? 'right' : 'left'
         const tooltipText = Object.entries(nearest)
@@ -396,11 +411,10 @@ const TempRHGraph = ({
             } else if (key === 'modelRH') {
               return `Model RH: ${value} (%)`
             }
-            return `${key}: ${value}`
           })
           .join('\n') // new line after each text
         tooltip
-          .attr('transform', `translate(${nearestX}, ${height / 2})`)
+          .attr('transform', `translate(${nearestX}, ${height / 3})`)
           .call(createTooltipCallout(whichDirection), tooltipText)
         tooltipCursor.attr('transform', `translate(${nearestX}, 0)`).style('opacity', 1)
       })
