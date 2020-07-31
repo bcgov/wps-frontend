@@ -50,12 +50,12 @@ export async function getModels(stationCodes: number[]): Promise<Model[]> {
 
 export interface HistoricModel {
   datetime: string
-  tmp_2m_5th: number
-  tmp_2m_median: number
-  tmp_2m_90th: number
-  rh_2m_5th: number
-  rh_2m_median: number
-  rh_2m_90th: number
+  tmp_tgl_2_5th: number
+  tmp_tgl_2_median: number
+  tmp_tgl_2_90th: number
+  rh_tgl_2_5th: number
+  rh_tgl_2_median: number
+  rh_tgl_2_90th: number
 }
 
 interface ModelInfo {

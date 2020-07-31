@@ -76,11 +76,12 @@ const useStyles = makeStyles({
 })
 
 const getNearestBasedOnDate = (invertedDate: Date, arr: { date: Date }[]) => {
+  // What is bisect: https://observablehq.com/@d3/d3-bisect
   const bisect = d3.bisector((d: { date: Date }) => d.date).left
   const index = bisect(arr, invertedDate, 1)
   const a = arr[index - 1]
   const b = arr[index]
-  // get the nearest value from the user's mouse position
+  // Get the nearest value from the user's mouse position
   const value =
     b &&
     invertedDate.valueOf() - a.date.valueOf() > b.date.valueOf() - invertedDate.valueOf()
@@ -120,15 +121,15 @@ interface Props {
 }
 
 const TempRHGraph = ({
-  readingValues: _readingValues,
-  modelValues: _modelValues,
-  historicModels: _historicModels
+  readingValues: _readingValues = [],
+  modelValues: _modelValues = [],
+  historicModels: _historicModels = []
 }: Props) => {
   const classes = useStyles()
   const svgRef = useRef(null)
 
   useEffect(() => {
-    if (_readingValues && _modelValues && _historicModels && svgRef.current) {
+    if (svgRef.current) {
       /* Prepare for data */
       const eachDayLookup: { [k: string]: Date } = {}
       // Lookup table storing all the wx data with key of each datetime
@@ -206,8 +207,8 @@ const TempRHGraph = ({
         .area<HistoricModel>()
         .curve(d3.curveNatural)
         .x(d => xScale(d.date))
-        .y0(d => yTempScale(d.tmp_2m_90th))
-        .y1(d => yTempScale(d.tmp_2m_5th))
+        .y0(d => yTempScale(d.tmp_tgl_2_90th))
+        .y1(d => yTempScale(d.tmp_tgl_2_5th))
       svg
         .append('path')
         .datum(historicModels)
@@ -237,8 +238,8 @@ const TempRHGraph = ({
         .area<HistoricModel>()
         .curve(d3.curveNatural)
         .x(d => xScale(d.date))
-        .y0(d => yRHScale(d.rh_2m_90th))
-        .y1(d => yRHScale(d.rh_2m_5th))
+        .y0(d => yRHScale(d.rh_tgl_2_90th))
+        .y1(d => yRHScale(d.rh_tgl_2_5th))
       svg
         .append('path')
         .datum(historicModels)
@@ -411,6 +412,7 @@ const TempRHGraph = ({
             } else if (key === 'modelRH') {
               return `Model RH: ${value} (%)`
             }
+            return ''
           })
           .join('\n') // new line after each text
         tooltip
@@ -436,4 +438,4 @@ const TempRHGraph = ({
   )
 }
 
-export default React.memo(TempRHGraph)
+export default TempRHGraph

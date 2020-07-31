@@ -218,7 +218,7 @@ const WxDataGraph = ({
             <Line
               yAxisId="left"
               name="Model Temp 5th"
-              dataKey="tmp_2m_5th"
+              dataKey="tmp_tgl_2_5th"
               data={historicModels}
               strokeWidth={0.5}
               dot={false}
@@ -230,7 +230,7 @@ const WxDataGraph = ({
             <Line
               yAxisId="left"
               name="Model Temp Median"
-              dataKey="tmp_2m_median"
+              dataKey="tmp_tgl_2_median"
               data={historicModels}
               strokeWidth={0.5}
               dot={false}
@@ -242,7 +242,7 @@ const WxDataGraph = ({
             <Line
               yAxisId="left"
               name="Model Temp 90th"
-              dataKey="tmp_2m_90th"
+              dataKey="tmp_tgl_2_90th"
               data={historicModels}
               strokeWidth={1}
               dot={false}
@@ -254,7 +254,7 @@ const WxDataGraph = ({
             <Line
               yAxisId="right"
               name="Model RH 5th"
-              dataKey="rh_2m_5th"
+              dataKey="rh_tgl_2_5th"
               data={historicModels}
               strokeWidth={0.5}
               dot={false}
@@ -266,7 +266,7 @@ const WxDataGraph = ({
             <Line
               yAxisId="right"
               name="Model RH Median"
-              dataKey="rh_2m_median"
+              dataKey="rh_tgl_2_median"
               data={historicModels}
               strokeWidth={0.5}
               dot={false}
@@ -278,7 +278,7 @@ const WxDataGraph = ({
             <Line
               yAxisId="right"
               name="Model RH 90th"
-              dataKey="rh_2m_90th"
+              dataKey="rh_tgl_2_90th"
               data={historicModels}
               strokeWidth={1}
               dot={false}

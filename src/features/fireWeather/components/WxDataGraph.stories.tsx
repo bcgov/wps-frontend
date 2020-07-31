@@ -60,12 +60,12 @@ const getPastValues = () => {
             .add(length, 'hours')
             .utc()
             .format(),
-          tmp_2m_5th: temp + Math.random() * 5,
-          tmp_2m_median: temp + Math.random() * 2,
-          tmp_2m_90th: temp - Math.random() * 5,
-          rh_2m_5th: rh + Math.random() * 5,
-          rh_2m_median: rh + Math.random() * 2,
-          rh_2m_90th: rh - Math.random() * 5
+          tmp_tgl_2_5th: temp + Math.random() * 5,
+          tmp_tgl_2_median: temp + Math.random() * 2,
+          tmp_tgl_2_90th: temp - Math.random() * 5,
+          rh_tgl_2_5th: rh + Math.random() * 5,
+          rh_tgl_2_median: rh + Math.random() * 2,
+          rh_tgl_2_90th: rh - Math.random() * 5
         })
       }
       // every hour
