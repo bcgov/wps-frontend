@@ -29,7 +29,6 @@ const readingsSlice = createSlice({
       state.error = action.payload
     },
     getReadingsSuccess(state: State, action: PayloadAction<Reading[]>) {
-      state.loading = false
       state.error = null
       state.readings = action.payload
       action.payload.forEach(reading => {
@@ -37,6 +36,7 @@ const readingsSlice = createSlice({
           state.readingsByStation[reading.station.code] = reading.values
         }
       })
+      state.loading = false
     }
   }
 })

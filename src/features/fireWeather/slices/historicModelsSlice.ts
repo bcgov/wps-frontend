@@ -30,7 +30,6 @@ const historicModelsSlice = createSlice({
       state: State,
       action: PayloadAction<HistoricModelSummary[]>
     ) {
-      state.loading = false
       state.error = null
       action.payload.forEach(summary => {
         if (summary.station) {
@@ -38,6 +37,7 @@ const historicModelsSlice = createSlice({
           state.historicModelsByStation[code] = summary.values
         }
       })
+      state.loading = false
     }
   }
 })

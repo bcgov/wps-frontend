@@ -32,7 +32,6 @@ const modelsSlice = createSlice({
       state.error = action.payload
     },
     getModelsSuccess(state: State, action: PayloadAction<Model[]>) {
-      state.loading = false
       state.error = null
       state.models = action.payload
       action.payload.forEach(model => {
@@ -44,6 +43,7 @@ const modelsSlice = createSlice({
           )
         }
       })
+      state.loading = false
     }
   }
 })
