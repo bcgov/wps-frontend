@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import DailyModelsDisplay from 'features/fireWeather/components/DailyModelsDisplay'
 import HourlyReadingsDisplay from 'features/fireWeather/components/HourlyReadingsDisplay'
-import TempRHGraph from 'features/fireWeather/components/TempRHGraph'
+import WxDataGraph from 'features/fireWeather/components/NewWxDataGraph'
 import { Station } from 'api/stationAPI'
 import { selectReadings, selectModels, selectHistoricModels } from 'app/rootReducer'
 
@@ -52,7 +52,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const nothingToDisplay = !readingValues && !modelValues && !historicModels
 
           if (nothingToDisplay) {
-            return null
+            return 'There is no data available.'
           }
 
           return (
@@ -62,7 +62,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
               </Typography>
               <HourlyReadingsDisplay values={readingValues} />
               <DailyModelsDisplay values={noonModelValues} />
-              <TempRHGraph
+              <WxDataGraph
                 modelValues={modelValues}
                 readingValues={readingValues}
                 historicModels={historicModels}

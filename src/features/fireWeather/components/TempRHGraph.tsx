@@ -1,109 +1,11 @@
 import React, { useRef, useEffect } from 'react'
 import * as d3 from 'd3'
-import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
 
 import { HistoricModel as _HistoricModel, ModelValue } from 'api/modelAPI'
 import { ReadingValue } from 'api/readingAPI'
 import { formatDateInPDT } from 'utils/date'
-
-const useStyles = makeStyles({
-  // Give styling through classes for svg elements
-  root: {
-    '& .xAxisLabel': {
-      textAnchor: 'start',
-      font: '9px sans-serif'
-    },
-    '& .yAxisLabel': {
-      textAnchor: 'middle',
-      font: '9px sans-serif'
-    },
-    '& .currLine': {
-      strokeWidth: 1,
-      stroke: 'green',
-      strokeDasharray: '4,4'
-    },
-    '& .currLabel': {
-      font: '9px sans-serif',
-      fill: 'green'
-    },
-    '& .tooltipCursor': {
-      strokeWidth: 1,
-      stroke: 'gray',
-      strokeDasharray: '1,1',
-      opacity: 0
-    },
-    '& .tooltip': {
-      pointerEvents: 'none',
-      font: '8.5px sans-serif',
-
-      '&--hidden': {
-        display: 'none'
-      }
-    },
-    '& .readingTempDot': {
-      stroke: 'crimson',
-      fill: 'none',
-      cursor: 'pointer'
-    },
-    '& .readingRHDot': {
-      stroke: 'royalblue',
-      fill: 'none',
-      cursor: 'pointer'
-    },
-    '& .readingTempArea': {
-      fill: '#ffbac7',
-      opacity: 0.5
-    },
-    '& .readingRHArea': {
-      fill: '#8bb4ff',
-      opacity: 0.5
-    },
-    '& .modelTempDot': {
-      stroke: '#fc6f03',
-      fill: 'none',
-      cursor: 'pointer'
-    },
-    '& .modelRHDot': {
-      stroke: '#03a1fc',
-      fill: 'none',
-      cursor: 'pointer'
-    }
-  },
-  title: {
-    paddingBottom: 6
-  }
-})
-
-const getNearestBasedOnDate = (invertedDate: Date, arr: { date: Date }[]) => {
-  // What is bisect: https://observablehq.com/@d3/d3-bisect
-  const bisect = d3.bisector((d: { date: Date }) => d.date).left
-  const index = bisect(arr, invertedDate, 1)
-  const a = arr[index - 1]
-  const b = arr[index]
-  // Get the nearest value from the user's mouse position
-  const value =
-    b &&
-    invertedDate.valueOf() - a.date.valueOf() > b.date.valueOf() - invertedDate.valueOf()
-      ? b
-      : a
-
-  return value
-}
-
-const formatDate = d3.timeFormat('%b %d') as (
-  value: Date | { valueOf(): number }
-) => string
-
-const storeEachDayLookup = (lookup: { [k: string]: Date }, datetime: string) => {
-  const date = d3.isoParse(datetime) as Date
-  const day = formatDate(date)
-  if (!lookup[day]) {
-    lookup[day] = new Date(date) //.setHours(0, 0, 0)
-  }
-
-  return date
-}
+import { useStyles } from 'features/fireWeather/components/TempRHGraph.styles'
+import { getNearestBasedOnDate, formatDateInMonthAndDay, storeDaysLookup } from 'utils/d3'
 
 interface WeatherValue {
   date: Date
@@ -115,9 +17,9 @@ interface WeatherValue {
 type HistoricModel = Omit<_HistoricModel, 'datetime'> & { date: Date }
 
 interface Props {
-  readingValues: ReadingValue[] | undefined
-  modelValues: ModelValue[] | undefined
-  historicModels: _HistoricModel[] | undefined
+  readingValues: ReadingValue[]
+  modelValues: ModelValue[]
+  historicModels: _HistoricModel[]
 }
 
 const TempRHGraph = ({
@@ -130,42 +32,52 @@ const TempRHGraph = ({
 
   useEffect(() => {
     if (svgRef.current) {
+      /* Clear previous svg before rendering a new one*/
+      d3.select(svgRef.current)
+        .selectAll('*')
+        .remove()
+
       /* Prepare for data */
-      const eachDayLookup: { [k: string]: Date } = {}
-      // Lookup table storing all the wx data with key of each datetime
-      const weatherLookup: { [k: string]: WeatherValue } = {}
+      const daysLookup: { [k: string]: Date } = {} // will help to create the date range on x axis
+      const allDates: Date[] = [] // will be used to determine x axis range
+      const readingsAndModelsLookup: { [k: string]: WeatherValue } = {}
       const readingValues = _readingValues.map(d => {
-        const date = storeEachDayLookup(eachDayLookup, d.datetime)
+        const date = storeDaysLookup(daysLookup, d.datetime)
         const reading = {
           date,
           temp: Number(d.temperature.toFixed(2)),
           rh: Math.round(d.relative_humidity)
         }
-        weatherLookup[d.datetime] = reading
+        readingsAndModelsLookup[d.datetime] = reading
+        allDates.push(date)
 
         return reading
       })
       const modelValues = _modelValues.map(d => {
-        const date = storeEachDayLookup(eachDayLookup, d.datetime)
+        const date = storeDaysLookup(daysLookup, d.datetime)
         const model = {
           date,
           modelTemp: Number(d.temperature.toFixed(2)),
           modelRH: Math.round(d.relative_humidity)
         }
         // combine with the existing reading value
-        weatherLookup[d.datetime] = { ...weatherLookup[d.datetime], ...model }
+        readingsAndModelsLookup[d.datetime] = {
+          ...readingsAndModelsLookup[d.datetime],
+          ...model
+        }
+        allDates.push(date)
 
         return model
       })
       const historicModels: HistoricModel[] = _historicModels.map(d => {
-        const date = storeEachDayLookup(eachDayLookup, d.datetime)
-        const hModel = { ...d, date }
-        weatherLookup[d.datetime] = { ...weatherLookup[d.datetime], ...hModel }
+        const date = storeDaysLookup(daysLookup, d.datetime)
+        allDates.push(date)
 
-        return hModel
+        return { ...d, date }
       })
-      const weatherValues = Object.values(weatherLookup)
-      const xTickValues = Object.values(eachDayLookup)
+      const readingAndModelValues = Object.values(readingsAndModelsLookup)
+      const minAndMaxDate = d3.extent(allDates) as [Date, Date]
+      const xTickValues = Object.values(daysLookup)
         .sort((a, b) => a.valueOf() - b.valueOf()) // in ascending order
         .map((day, idx) => {
           if (idx === 0) {
@@ -191,7 +103,7 @@ const TempRHGraph = ({
       /* Create scales for x and y axis */
       const xScale = d3
         .scaleTime()
-        .domain(d3.extent(weatherValues, d => d.date) as [Date, Date])
+        .domain(minAndMaxDate)
         .range([0, width])
       const yTempScale = d3
         .scaleLinear()
@@ -265,22 +177,30 @@ const TempRHGraph = ({
         .attr('r', 1)
 
       /* Render the current time reference line */
-      const scaledCurrTime = xScale(new Date())
-      svg
-        .append('line')
-        .attr('x1', scaledCurrTime)
-        .attr('y1', 0)
-        .attr('x2', scaledCurrTime)
-        .attr('y2', height)
-        .attr('class', 'currLine')
-      svg
-        .append('text')
-        .attr('y', -12)
-        .attr('x', scaledCurrTime)
-        .attr('dy', '1em')
-        .attr('dx', '-1em')
-        .attr('class', 'currLabel')
-        .text('Now')
+      const currDate = new Date()
+      const scaledCurrTime = xScale(currDate)
+      const isCurrDateInXAxisRange =
+        minAndMaxDate[0] &&
+        minAndMaxDate[1] &&
+        minAndMaxDate[0].valueOf() < currDate.valueOf() &&
+        minAndMaxDate[1].valueOf() > currDate.valueOf()
+      if (isCurrDateInXAxisRange) {
+        svg
+          .append('line')
+          .attr('x1', scaledCurrTime)
+          .attr('y1', 0)
+          .attr('x2', scaledCurrTime)
+          .attr('y2', height)
+          .attr('class', 'currLine')
+        svg
+          .append('text')
+          .attr('y', -12)
+          .attr('x', scaledCurrTime)
+          .attr('dy', '1em')
+          .attr('dx', '-1em')
+          .attr('class', 'currLabel')
+          .text('Now')
+      }
 
       /* Render the X & Y axis and labels */
       svg // X axis
@@ -289,7 +209,7 @@ const TempRHGraph = ({
         .call(
           d3
             .axisBottom(xScale)
-            .tickFormat(formatDate)
+            .tickFormat(formatDateInMonthAndDay)
             .tickValues(xTickValues)
         )
         .selectAll('text')
@@ -396,7 +316,8 @@ const TempRHGraph = ({
       svg.on('touchmove mousemove', function() {
         const mx = d3.mouse(this)[0]
         const invertedDate = xScale.invert(mx)
-        const nearest = getNearestBasedOnDate(invertedDate, weatherValues)
+        const nearest = getNearestBasedOnDate(invertedDate, readingAndModelValues)
+        if (!nearest) return
         const nearestX = xScale(nearest.date)
         const whichDirection = width / 2 > nearestX ? 'right' : 'left'
         const tooltipText = Object.entries(nearest)
@@ -425,14 +346,10 @@ const TempRHGraph = ({
         tooltip.call(createTooltipCallout(), null)
       })
     }
-  }, [_readingValues, _modelValues, _historicModels])
+  }, [classes.root, _readingValues, _modelValues, _historicModels])
 
   return (
     <div className={classes.root} data-testid="weather-graph-by-station">
-      <Typography className={classes.title} component="div" variant="subtitle2">
-        Past 5 days of hourly readings and GDPS 3 hourly model with interpolated noon
-        values (PDT, UTC-7):
-      </Typography>
       <svg ref={svgRef} />
     </div>
   )

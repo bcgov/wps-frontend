@@ -26,7 +26,7 @@ it('renders fire weather page', async () => {
 
   // Check if all the components are rendered after authenticated
   await waitForElement(() => getByText(/Predictive Services Unit/i))
-  expect(getByText(/Daily Weather Model/i)).toBeInTheDocument()
+  expect(getByText(/MoreCast/i)).toBeInTheDocument()
   expect(getByTestId('weather-station-dropdown')).toBeInTheDocument()
 })
 
