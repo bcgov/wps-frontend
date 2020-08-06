@@ -3,7 +3,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import moment from 'moment'
 
-import WxDataGraph from 'features/fireWeather/components/NewWxDataGraph'
+import WxDataGraph from 'features/fireWeather/components/WxDataGraph'
 
 const getModelValues = () => {
   const modelValues = []

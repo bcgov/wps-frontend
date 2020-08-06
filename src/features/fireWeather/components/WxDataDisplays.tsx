@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import DailyModelsDisplay from 'features/fireWeather/components/DailyModelsDisplay'
 import HourlyReadingsDisplay from 'features/fireWeather/components/HourlyReadingsDisplay'
-import WxDataGraph from 'features/fireWeather/components/NewWxDataGraph'
+import WxDataGraph from 'features/fireWeather/components/WxDataGraph'
 import { Station } from 'api/stationAPI'
 import {
   selectReadings,

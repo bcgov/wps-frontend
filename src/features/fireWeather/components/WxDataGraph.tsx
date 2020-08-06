@@ -1,123 +1,43 @@
 import React, { useState } from 'react'
-import {
-  LineChart,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  ReferenceLine
-} from 'recharts'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { formatDateInPDT } from 'utils/date'
-import { MODEL_VALUE_DECIMAL } from 'utils/constants'
-import { ModelValue, HistoricModel } from 'api/modelAPI'
+import { HistoricModel, ModelValue } from 'api/modelAPI'
 import { ReadingValue } from 'api/readingAPI'
+import TempRHGraph from 'features/fireWeather/components/TempRHGraph'
 import WxDataGraphToggles from 'features/fireWeather/components/WxDataGraphToggles'
 
-const formatXAxis = (dt: string) => {
-  return formatDateInPDT(dt, 'Do MMM')
-}
-
-const formatTooltipLabel = (dt: string | number) => {
-  return formatDateInPDT(dt, 'h:mm a, dddd, MMM Do')
-}
-
-const formatTooltipValue = (
-  value: string | number | (string | number)[],
-  name: string
-) => {
-  if (typeof value === 'number') {
-    if (name === 'RH') return Math.round(value)
-
-    return value.toFixed(MODEL_VALUE_DECIMAL)
-  }
-
-  return value
-}
-
-const sortByDatetime = (a: string, b: string) => {
-  const a1 = new Date(a)
-  const b1 = new Date(b)
-
-  return a1 > b1 ? 1 : a1 < b1 ? -1 : 0
-}
-
-const getEarlierDt = (a: string, b: string) => {
-  const aDate = new Date(a)
-  const bDate = new Date(b)
-
-  return aDate > bDate ? b : a
-}
-
-const getDateRangeAndToday = (wxData: WxValue[]) => {
-  const lookup: { [k: string]: string } = {}
-  const today = formatDateInPDT(new Date().toISOString(), 'Do MMM')
-  let todayDt: string | undefined = undefined
-
-  wxData.forEach(v => {
-    const day = formatDateInPDT(v.datetime, 'Do MMM')
-
-    if (!lookup[day]) {
-      lookup[day] = v.datetime
-    } else {
-      lookup[day] = getEarlierDt(lookup[day], v.datetime)
-    }
-
-    if (today === day) {
-      todayDt = lookup[day]
-    }
-  })
-
-  const dateRange = Object.values(lookup).sort(sortByDatetime)
-
-  return { dateRange, todayDt }
-}
-
 const useStyles = makeStyles({
-  graph: {
-    paddingBottom: 16
-  },
   title: {
-    paddingBottom: 4
+    paddingBottom: 6
+  },
+  switchWrapper: {
+    marginLeft: -5
+  },
+  switchLabel: {
+    marginLeft: 2
   }
 })
 
-type WxValue = ReadingValue | ModelValue
-
 interface Props {
-  modelValues: ModelValue[] | undefined
   readingValues: ReadingValue[] | undefined
+  modelValues: ModelValue[] | undefined
   historicModels: HistoricModel[] | undefined
 }
 
-const WxDataGraph = ({
-  modelValues = [],
+const NewWxDataGraph = ({
   readingValues = [],
+  modelValues = [],
   historicModels = []
 }: Props) => {
   const classes = useStyles()
-  const noModels = modelValues.length === 0
   const noReadings = readingValues.length === 0
+  const noModels = modelValues.length === 0
   const [showReadings, setShowReadings] = useState<boolean>(!noReadings)
   const [showModels, setShowModels] = useState<boolean>(!noModels)
 
-  let wxData: WxValue[] = []
-  if (showReadings) {
-    wxData = wxData.concat(readingValues)
-  }
-  if (showModels) {
-    wxData = wxData.concat(modelValues)
-  }
-
-  const { dateRange, todayDt } = getDateRangeAndToday(wxData)
-
   return (
-    <div className={classes.graph} data-testid="wx-data-graph">
+    <>
       <Typography className={classes.title} component="div" variant="subtitle2">
         Past 5 days of hourly readings and GDPS 3 hourly model with interpolated noon
         values (PDT, UTC-7):
@@ -132,164 +52,13 @@ const WxDataGraph = ({
         setShowModels={setShowModels}
       />
 
-      <ResponsiveContainer width="100%" minHeight={300}>
-        <LineChart margin={{ top: 10, right: 20, bottom: 5, left: 0 }}>
-          <CartesianGrid stroke="#ccc" strokeDasharray="1 1" />
-          <XAxis
-            dataKey="datetime"
-            type="category"
-            allowDuplicatedCategory={false}
-            ticks={dateRange}
-            tickFormatter={formatXAxis}
-          />
-          <YAxis
-            yAxisId="left"
-            dataKey="temperature"
-            orientation="left"
-            unit="°"
-            domain={[-10, 45]}
-            label={{ value: 'Temp (°C)', angle: -90, position: 'insideLeft' }}
-          />
-          <YAxis
-            yAxisId="right"
-            dataKey="relative_humidity"
-            orientation="right"
-            unit="%"
-            domain={[0, 100]}
-            label={{
-              value: 'RH',
-              angle: -270,
-              position: 'insideRight'
-            }}
-          />
-          <Tooltip labelFormatter={formatTooltipLabel} formatter={formatTooltipValue} />
-          <Legend />
-          <ReferenceLine
-            x={todayDt}
-            yAxisId="left"
-            stroke="green"
-            label="Today"
-            strokeDasharray="4 4"
-            strokeWidth={1.5}
-          />
-          {showReadings && (
-            <Line
-              yAxisId="left"
-              name="Temp"
-              dataKey="temperature"
-              data={readingValues}
-              strokeWidth={1.5}
-              type="monotone"
-              stroke="crimson"
-            />
-          )}
-          {showModels && (
-            <Line
-              yAxisId="left"
-              name="Model Temp"
-              dataKey="temperature"
-              data={modelValues}
-              type="monotone"
-              stroke="indianred"
-            />
-          )}
-          {showReadings && (
-            <Line
-              yAxisId="right"
-              name="RH"
-              dataKey="relative_humidity"
-              data={readingValues}
-              strokeWidth={1.5}
-              type="monotone"
-              stroke="royalblue"
-            />
-          )}
-          {showModels && (
-            <Line
-              yAxisId="right"
-              name="Model RH"
-              dataKey="relative_humidity"
-              data={modelValues}
-              type="monotone"
-              stroke="dodgerblue"
-            />
-          )}
-          {showModels && (
-            <Line
-              yAxisId="left"
-              name="Model Temp 5th"
-              dataKey="tmp_tgl_2_5th"
-              data={historicModels}
-              strokeWidth={0.5}
-              dot={false}
-              type="monotone"
-              stroke="crimson"
-            />
-          )}
-          {showModels && (
-            <Line
-              yAxisId="left"
-              name="Model Temp Median"
-              dataKey="tmp_tgl_2_median"
-              data={historicModels}
-              strokeWidth={0.5}
-              dot={false}
-              type="monotone"
-              stroke="crimson"
-            />
-          )}
-          {showModels && (
-            <Line
-              yAxisId="left"
-              name="Model Temp 90th"
-              dataKey="tmp_tgl_2_90th"
-              data={historicModels}
-              strokeWidth={1}
-              dot={false}
-              type="monotone"
-              stroke="crimson"
-            />
-          )}
-          {showModels && (
-            <Line
-              yAxisId="right"
-              name="Model RH 5th"
-              dataKey="rh_tgl_2_5th"
-              data={historicModels}
-              strokeWidth={0.5}
-              dot={false}
-              type="monotone"
-              stroke="royalblue"
-            />
-          )}
-          {showModels && (
-            <Line
-              yAxisId="right"
-              name="Model RH Median"
-              dataKey="rh_tgl_2_median"
-              data={historicModels}
-              strokeWidth={0.5}
-              dot={false}
-              type="monotone"
-              stroke="royalblue"
-            />
-          )}
-          {showModels && (
-            <Line
-              yAxisId="right"
-              name="Model RH 90th"
-              dataKey="rh_tgl_2_90th"
-              data={historicModels}
-              strokeWidth={1}
-              dot={false}
-              type="monotone"
-              stroke="royalblue"
-            />
-          )}
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+      <TempRHGraph
+        modelValues={showModels ? modelValues : []}
+        readingValues={showReadings ? readingValues : []}
+        historicModels={historicModels}
+      />
+    </>
   )
 }
 
-export default React.memo(WxDataGraph)
+export default NewWxDataGraph
