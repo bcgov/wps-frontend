@@ -56,7 +56,7 @@ it('renders daily model and hourly values in response to user inputs', async () 
   mockAxios.onPost('/models/GDPS/forecasts/').replyOnce(200, mockModelsResponse)
   mockAxios.onPost('/hourlies/').replyOnce(200, mockReadingsResponse)
   mockAxios
-    .onPost('/models/GDPS/forecasts/summaries')
+    .onPost('/models/GDPS/forecasts/summaries/')
     .replyOnce(200, mockHistoricModelsResponse)
 
   const { getByText, getByTestId, getAllByTestId } = renderWithRedux(<FireWeatherPage />)
@@ -75,15 +75,15 @@ it('renders daily model and hourly values in response to user inputs', async () 
   fireEvent.click(getByTestId('get-wx-data-button'))
 
   // Wait until all the displays show up
-  await waitForElement(() => getByTestId('daily-models-display'))
-  await waitForElement(() => getByTestId('hourly-readings-display'))
-  await waitForElement(() => getByTestId('wx-data-graph'))
+  await waitForElement(() => [
+    getByTestId('daily-models-display'),
+    getByTestId('hourly-readings-display'),
+    getByTestId('wx-data-graph')
+  ])
 
   // Test toggle switches
-  const readingToggle = getByTestId('wx-data-reading-toggle')
-  fireEvent.click(readingToggle)
-  const modelToggle = getByTestId('wx-data-model-toggle')
-  fireEvent.click(modelToggle)
+  fireEvent.click(getByTestId('wx-data-reading-toggle'))
+  fireEvent.click(getByTestId('wx-data-model-toggle'))
 
   // Check to see if some of SVG are rendered in the graph (dots, area, and tooltip)
   getAllByTestId('wx-data-model-temp-dot')
@@ -103,4 +103,33 @@ it('renders daily model and hourly values in response to user inputs', async () 
       })
     )
   })
+})
+
+it('renders error messages in response to network errors', async () => {
+  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onPost('/models/GDPS/forecasts/').replyOnce(400)
+  mockAxios.onPost('/hourlies/').replyOnce(400)
+  mockAxios.onPost('/models/GDPS/forecasts/summaries/').replyOnce(400)
+
+  const { getByText, getByTestId, queryByText } = renderWithRedux(<FireWeatherPage />)
+
+  // wait for authentication
+  await waitForElement(() => getByText(/Predictive Services Unit/i))
+
+  // Select a weather station
+  fireEvent.click(getByTestId('weather-station-dropdown'))
+  const station1 = await waitForElement(() =>
+    getByText(`${mockStations[0].name} (${mockStations[0].code})`)
+  )
+  fireEvent.click(station1)
+
+  // Send the request
+  fireEvent.click(getByTestId('get-wx-data-button'))
+
+  // Wait until all the error messages show up
+  await waitForElement(() => [
+    queryByText(/while fetching global model data/i),
+    queryByText(/while fetching hourly readings/i),
+    queryByText(/while fetching historic global model data/i)
+  ])
 })
