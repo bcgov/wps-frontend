@@ -363,4 +363,4 @@ const TempRHGraph = ({
   )
 }
 
-export default TempRHGraph
+export default React.memo(TempRHGraph)

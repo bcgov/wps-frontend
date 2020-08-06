@@ -25,7 +25,7 @@ interface Props {
   historicModels: HistoricModel[] | undefined
 }
 
-const NewWxDataGraph = ({
+const WxDataGraph = ({
   readingValues = [],
   modelValues = [],
   historicModels = []
@@ -33,8 +33,13 @@ const NewWxDataGraph = ({
   const classes = useStyles()
   const noReadings = readingValues.length === 0
   const noModels = modelValues.length === 0
+  const noHistoricModels = historicModels.length === 0
   const [showReadings, setShowReadings] = useState<boolean>(!noReadings)
   const [showModels, setShowModels] = useState<boolean>(!noModels)
+
+  if (noReadings && noModels && noHistoricModels) {
+    return null
+  }
 
   return (
     <>
@@ -61,4 +66,4 @@ const NewWxDataGraph = ({
   )
 }
 
-export default NewWxDataGraph
+export default React.memo(WxDataGraph)

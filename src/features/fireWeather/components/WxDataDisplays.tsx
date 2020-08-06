@@ -27,6 +27,9 @@ const useStyles = makeStyles({
     fontSize: '1.1rem',
     paddingTop: 8,
     paddingBottom: 8
+  },
+  noDataAvailable: {
+    paddingBottom: 8
   }
 })
 
@@ -52,15 +55,16 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const historicModels = historicModelsByStation[s.code]
           const nothingToDisplay = !readingValues && !modelValues && !historicModels
 
-          if (nothingToDisplay) {
-            return 'There is no data available.'
-          }
-
           return (
             <Paper key={s.code} className={classes.paper} elevation={3}>
               <Typography className={classes.station} variant="subtitle1" component="div">
                 Weather station: {`${s.name} (${s.code})`}
               </Typography>
+              {nothingToDisplay && (
+                <Typography className={classes.noDataAvailable} variant="body2">
+                  Data is not available.
+                </Typography>
+              )}
               <HourlyReadingsDisplay values={readingValues} />
               <DailyModelsDisplay values={noonModelValues} />
               <WxDataGraph

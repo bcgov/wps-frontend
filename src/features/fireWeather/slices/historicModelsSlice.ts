@@ -20,11 +20,12 @@ const historicModelsSlice = createSlice({
   initialState,
   reducers: {
     getHistoricModelsStart(state: State) {
+      state.error = null
       state.loading = true
     },
     getHistoricModelsFailed(state: State, action: PayloadAction<string>) {
-      state.loading = false
       state.error = action.payload
+      state.loading = false
     },
     getHistoricModelsSuccess(
       state: State,
