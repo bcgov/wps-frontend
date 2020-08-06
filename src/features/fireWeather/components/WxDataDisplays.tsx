@@ -54,7 +54,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
 
   const noonForecastsTableMetadata: TableMetadata = {
     testId: 'noon-forecasts-display',
-    title: 'Forecast noon (12pm PDT) values:'
+    title: 'Forecast noon (12pm PST) values:'
   }
 
   return (
@@ -85,8 +85,14 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
                 Weather station: {`${s.name} (${s.code})`}
               </Typography>
               <HourlyReadingsDisplay values={readingValues} />
-              <DailyWeatherDisplay {...modelTableProps} />
-              <DailyWeatherDisplay {...forecastsTableProps} />
+              <DailyWeatherDisplay
+                values={noonModelValues}
+                tableMetadata={modelsTableMetadata}
+              />
+              <DailyWeatherDisplay
+                values={noonForecastValues}
+                tableMetadata={noonForecastsTableMetadata}
+              />
               <WxGraphByStation
                 modelValues={modelValues}
                 readingValues={readingValues}

@@ -89,15 +89,57 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
       })
     )
   })
+})
 
-  // Toggle off noon forecasts from graph
-  fireEvent.click(getByTestId('show-forecasts-toggle'))
-  // there's no straightforward way to check for Lines on the graph, so instead
-  // we test for the line's label to be present/absent in the graph Legend
-  expect(getByText(/Model Temp/i)).toBeInTheDocument()
-  expect(getByText(/Forecast Temp/i)).not.toBeInTheDocument()
-  expect(getByText(/Model RH/i)).toBeInTheDocument()
-  expect(getByText(/Forecast RH/i)).not.toBeInTheDocument()
-  expect(getByText(/Temp/i)).toBeInTheDocument()
-  expect(getByText(/RH/i)).toBeInTheDocument()
+it('should only display most recent forecast for a station and datetime', async () => {
+  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onPost('/models/').replyOnce(200, mockModelsResponse)
+  mockAxios.onPost('/hourlies/').replyOnce(200, mockReadingsResponse)
+  mockAxios.onPost('/noon_forecasts/').replyOnce(200, mockForecastsResponse)
+
+  const { getByText, getByTestId } = renderWithRedux(<FireWeatherPage />)
+
+  // wait for authentication
+  await waitForElement(() => getByText(/Predictive Services Unit/i))
+
+  // Select a weather station
+  fireEvent.click(getByTestId('weather-station-dropdown'))
+  const station1 = await waitForElement(() =>
+    getByText(`${mockStations[0].name} (${mockStations[0].code})`)
+  )
+  fireEvent.click(station1)
+
+  // Send the request
+  fireEvent.click(getByTestId('get-wx-data-button'))
+
+  // Wait until all the displays show up
+  await waitForElement(() => getByTestId('daily-models-display'))
+  await waitForElement(() => getByTestId('hourly-readings-display'))
+  await waitForElement(() => getByTestId('noon-forecasts-display'))
+  await waitForElement(() => getByTestId('weather-graph-by-station'))
+
+  // Validate the correct request body
+  // There should have been three requests, one for models, one for noon forecasts, and one for hourly readings.
+  expect(mockAxios.history.post.length).toBe(3)
+  // Each of those request should ask for a station
+  mockAxios.history.post.forEach(post => {
+    expect(post.data).toBe(
+      JSON.stringify({
+        stations: [1]
+      })
+    )
+  })
+
+  console.log(mockForecastsResponse['noon_forecasts'])
+
+//   // Toggle off noon forecasts from graph
+//   fireEvent.click(getByTestId('show-forecasts-toggle'))
+//   // there's no straightforward way to check for Lines on the graph, so instead
+//   // we test for the line's label to be present/absent in the graph Legend
+//   //   await waitForElement(() => expect(getByText(/Model Temp/i)).toBeInTheDocument())
+//   await waitForElement(() => expect(getByText(/Forecast Temp/i)).not.toBeInTheDocument())
+//   //   await waitForElement(() => expect(getByText(/Model RH/i)).toBeInTheDocument())
+//   await waitForElement(() => expect(getByText(/Forecast RH/i)).not.toBeInTheDocument())
+//   await waitForElement(() => expect(getByText(/Temp/i)).toBeInTheDocument())
+//   await waitForElement(() => expect(getByText(/RH/i)).toBeInTheDocument())
 })

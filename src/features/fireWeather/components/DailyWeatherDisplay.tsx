@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
 import { MODEL_VALUE_DECIMAL } from 'utils/constants'
+import { datetimeInPDT } from 'utils/date'
 import { ModelValue } from 'api/modelAPI'
 import { NoonForecastValue } from 'api/forecastAPI'
 
@@ -51,7 +52,7 @@ const DailyWeatherDisplay = (props: {
               <TableRow>
                 <TableCell>Date</TableCell>
                 {props.values.map(v => (
-                  <TableCell key={v.datetime}>{v.datetime.slice(0, 10)}</TableCell>
+                  <TableCell key={v.datetime}>{datetimeInPDT(v.datetime)}</TableCell>
                 ))}
               </TableRow>
               <TableRow>

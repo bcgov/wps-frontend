@@ -38,8 +38,12 @@ const forecastsSlice = createSlice({
             if (state.noonForecastsByStation[code] === undefined) {
               state.noonForecastsByStation[code] = [forecast.values[index]]
             } else if (
+              forecast.values[+index - 1] &&
               forecast.values[index].datetime !== forecast.values[+index - 1].datetime
             ) {
+              // only add the most recent forecast for the station and datetime
+              // (query returns forecasts in order for each datetime, from most recently
+              // issued down to first issued)
               state.noonForecastsByStation[code]?.push(forecast.values[index])
             }
           }

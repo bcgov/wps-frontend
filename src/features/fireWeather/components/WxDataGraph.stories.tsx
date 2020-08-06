@@ -4,6 +4,7 @@ import { storiesOf } from '@storybook/react'
 import moment from 'moment'
 
 import WxDataGraph from 'features/fireWeather/components/WxDataGraph'
+import DailyWeatherDisplay from 'features/fireWeather/components/DailyWeatherDisplay'
 
 const getModelValues = () => {
   const modelValues = []
@@ -75,7 +76,7 @@ const getForecastValues = () => {
   const days = 2
   const first = moment()
     .utc()
-    .set({ hour: 20, minute: 0, second: 0 })
+    .set({ hour: 19, minute: 0, second: 0 })
     .subtract(days, 'days')
   const last = moment(first).add(days, 'days')
 
@@ -86,7 +87,7 @@ const getForecastValues = () => {
       relative_humidity: Math.random() * 101,
       wind_speed: Math.random() * 10,
       wind_direction: Math.random() * 100,
-      precipitation: Math.random() * 10,
+      total_precipitation: Math.random() * 10,
       gc: null,
       ffmc: null,
       dmc: null,
@@ -112,6 +113,26 @@ storiesOf('WxDataGraph', module).add('default', () => {
       <WxDataGraph modelValues={modelValues} readingValues={readingValues} forecastValues={forecastValues} />
       <h3>When only model values provided</h3>
       <WxDataGraph modelValues={modelValues} readingValues={[]} forecastValues={[]} />
+    </>
+  )
+})
+
+storiesOf('DailyWeatherDisplay', module).add('default', () => {
+  const modelValues = getModelValues()
+  const forecastValues = getForecastValues()
+  const modelTableMetadata = {
+    testid: '',
+    title: 'Model Values (UTC Timezone)'
+  }
+  const forecastTableMetadata = {
+    testid: '',
+    title: 'Noon Forecast Values (UTC Timezone)'
+  }
+
+  return (
+    <>
+      <DailyWeatherDisplay values={modelValues} tableMetadata={modelTableMetadata} />
+      <DailyWeatherDisplay values={forecastValues} tableMetadata={forecastTableMetadata} />
     </>
   )
 })
