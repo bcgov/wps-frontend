@@ -69,7 +69,7 @@ export interface HistoricModelSummary {
   values: HistoricModel[]
 }
 
-interface HistoricModelSummariesResponse {
+export interface HistoricModelSummariesResponse {
   summaries: HistoricModelSummary[]
 }
 

@@ -117,7 +117,7 @@ const WxDataGraph = ({
   const { dateRange, todayDt } = getDateRangeAndToday(wxData)
 
   return (
-    <div className={classes.graph} data-testid="weather-graph-by-station">
+    <div className={classes.graph} data-testid="wx-data-graph">
       <Typography className={classes.title} component="div" variant="subtitle2">
         Past 5 days of hourly readings and GDPS 3 hourly model with interpolated noon
         values (PDT, UTC-7):

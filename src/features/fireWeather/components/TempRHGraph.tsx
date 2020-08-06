@@ -115,7 +115,7 @@ const TempRHGraph = ({
         .range([height, 0])
 
       /* Render area and dots for temperature */
-      const readingTempArea = d3
+      const historicModelTempArea = d3
         .area<HistoricModel>()
         .curve(d3.curveNatural)
         .x(d => xScale(d.date))
@@ -124,8 +124,9 @@ const TempRHGraph = ({
       svg
         .append('path')
         .datum(historicModels)
-        .attr('class', 'readingTempArea')
-        .attr('d', readingTempArea)
+        .attr('class', 'historicModelTempArea')
+        .attr('d', historicModelTempArea)
+        .attr('data-testid', 'historic-model-temp-area')
       svg
         .selectAll('.readingTempDot')
         .data(readingValues)
@@ -135,6 +136,7 @@ const TempRHGraph = ({
         .attr('cx', d => xScale(d.date))
         .attr('cy', d => yTempScale(d.temp))
         .attr('r', 1)
+        .attr('data-testid', 'wx-data-reading-temp-dot')
       svg
         .selectAll('.modelTempDot')
         .data(modelValues)
@@ -144,9 +146,10 @@ const TempRHGraph = ({
         .attr('cx', d => xScale(d.date))
         .attr('cy', d => yTempScale(d.modelTemp))
         .attr('r', 1)
+        .attr('data-testid', 'wx-data-model-temp-dot')
 
       /* Render area and dots for RH */
-      const readingRHArea = d3
+      const historicModelRHArea = d3
         .area<HistoricModel>()
         .curve(d3.curveNatural)
         .x(d => xScale(d.date))
@@ -155,8 +158,8 @@ const TempRHGraph = ({
       svg
         .append('path')
         .datum(historicModels)
-        .attr('class', 'readingRHArea')
-        .attr('d', readingRHArea)
+        .attr('class', 'historicModelRHArea')
+        .attr('d', historicModelRHArea)
       svg
         .selectAll('.readingRHDot')
         .data(readingValues)
@@ -275,6 +278,11 @@ const TempRHGraph = ({
               .text(d => d)
           )
 
+        // Don't show the tooltip if for some reason getBBox method doesn't exist
+        if (!(text.node() as SVGSVGElement).getBBox) {
+          return g.attr('class', 'tooltip--hidden')
+        }
+
         const { y: textY, width: w, height: h } = (text.node() as SVGSVGElement).getBBox()
         const padding = 8
         const xStart = 13
@@ -304,7 +312,7 @@ const TempRHGraph = ({
         .attr('width', '100%')
         .attr('height', '100%')
         .attr('fill', 'transparent')
-
+        .attr('data-testid', 'wx-data-graph-background')
       const tooltipCursor = svg
         .append('line')
         .attr('x1', 0)
@@ -349,8 +357,8 @@ const TempRHGraph = ({
   }, [classes.root, _readingValues, _modelValues, _historicModels])
 
   return (
-    <div className={classes.root} data-testid="weather-graph-by-station">
-      <svg ref={svgRef} />
+    <div className={classes.root}>
+      <svg data-testid="wx-data-graph" ref={svgRef} />
     </div>
   )
 }

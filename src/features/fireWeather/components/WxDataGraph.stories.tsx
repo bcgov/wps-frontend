@@ -3,8 +3,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 import moment from 'moment'
 
-import WxDataGraph from 'features/fireWeather/components/WxDataGraph'
-import TempRHGraph from 'features/fireWeather/components/TempRHGraph'
+import WxDataGraph from 'features/fireWeather/components/NewWxDataGraph'
 
 const getModelValues = () => {
   const modelValues = []
@@ -113,18 +112,6 @@ storiesOf('WxDataGraph', module)
       <WxDataGraph
         modelValues={modelValues}
         readingValues={readingValues}
-        historicModels={historicModels}
-      />
-    )
-  })
-  .add('TempRHGraph', () => {
-    const modelValues = getModelValues()
-    const { readingValues, historicModels } = getPastValues()
-
-    return (
-      <TempRHGraph
-        readingValues={readingValues}
-        modelValues={modelValues}
         historicModels={historicModels}
       />
     )

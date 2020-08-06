@@ -9,7 +9,8 @@ import FireWeatherPage from 'features/fireWeather/pages/FireWeatherPage'
 import {
   mockStations,
   mockModelsResponse,
-  mockReadingsResponse
+  mockReadingsResponse,
+  mockHistoricModelsResponse
 } from 'features/fireWeather/pages/FireWeatherPage.mock'
 
 const mockAxios = new MockAdapter(axios)
@@ -54,8 +55,11 @@ it('renders daily model and hourly values in response to user inputs', async () 
   mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
   mockAxios.onPost('/models/GDPS/forecasts/').replyOnce(200, mockModelsResponse)
   mockAxios.onPost('/hourlies/').replyOnce(200, mockReadingsResponse)
+  mockAxios
+    .onPost('/models/GDPS/forecasts/summaries')
+    .replyOnce(200, mockHistoricModelsResponse)
 
-  const { getByText, getByTestId } = renderWithRedux(<FireWeatherPage />)
+  const { getByText, getByTestId, getAllByTestId } = renderWithRedux(<FireWeatherPage />)
 
   // wait for authentication
   await waitForElement(() => getByText(/Predictive Services Unit/i))
@@ -73,12 +77,25 @@ it('renders daily model and hourly values in response to user inputs', async () 
   // Wait until all the displays show up
   await waitForElement(() => getByTestId('daily-models-display'))
   await waitForElement(() => getByTestId('hourly-readings-display'))
-  await waitForElement(() => getByTestId('weather-graph-by-station'))
+  await waitForElement(() => getByTestId('wx-data-graph'))
 
-  // Validate the correct request body
-  // There should have been 3 requests (models, hourly readings, and historic models).
+  // Test toggle switches
+  const readingToggle = getByTestId('wx-data-reading-toggle')
+  fireEvent.click(readingToggle)
+  const modelToggle = getByTestId('wx-data-model-toggle')
+  fireEvent.click(modelToggle)
+
+  // Check to see if some of SVG are rendered in the graph (dots, area, and tooltip)
+  getAllByTestId('wx-data-model-temp-dot')
+  getAllByTestId('wx-data-reading-temp-dot')
+  getByTestId('historic-model-temp-area')
+  const graphBg = getByTestId('wx-data-graph-background')
+  fireEvent.mouseMove(graphBg)
+  fireEvent.mouseLeave(graphBg)
+
+  // There should have been 3 post requests (models, hourly readings, and historic models).
   expect(mockAxios.history.post.length).toBe(3)
-  // Each of those request should ask for a station
+  // all post requests should include station codes in the body
   mockAxios.history.post.forEach(post => {
     expect(post.data).toBe(
       JSON.stringify({

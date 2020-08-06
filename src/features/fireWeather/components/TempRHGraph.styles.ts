@@ -44,11 +44,11 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .readingTempArea': {
+    '& .historicModelTempArea': {
       fill: '#ff91a5',
       opacity: 0.5
     },
-    '& .readingRHArea': {
+    '& .historicModelRHArea': {
       fill: '#87b1ff',
       opacity: 0.5
     },
