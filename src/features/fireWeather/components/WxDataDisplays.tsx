@@ -7,7 +7,12 @@ import DailyModelsDisplay from 'features/fireWeather/components/DailyModelsDispl
 import HourlyReadingsDisplay from 'features/fireWeather/components/HourlyReadingsDisplay'
 import WxDataGraph from 'features/fireWeather/components/NewWxDataGraph'
 import { Station } from 'api/stationAPI'
-import { selectReadings, selectModels, selectHistoricModels } from 'app/rootReducer'
+import {
+  selectReadings,
+  selectModels,
+  selectHistoricModels,
+  selectWxDataLoading
+} from 'app/rootReducer'
 
 const useStyles = makeStyles({
   displays: {
@@ -32,14 +37,10 @@ interface Props {
 const WxDataDisplays = ({ requestedStations }: Props) => {
   const classes = useStyles()
 
-  const { loading: loadingReadings, readingsByStation } = useSelector(selectReadings)
-  const { loading: loadingModels, noonModelsByStation, modelsByStation } = useSelector(
-    selectModels
-  )
-  const { loading: loadingHistoricModels, historicModelsByStation } = useSelector(
-    selectHistoricModels
-  )
-  const wxDataLoading = loadingModels || loadingReadings || loadingHistoricModels
+  const { readingsByStation } = useSelector(selectReadings)
+  const { noonModelsByStation, modelsByStation } = useSelector(selectModels)
+  const { historicModelsByStation } = useSelector(selectHistoricModels)
+  const wxDataLoading = useSelector(selectWxDataLoading)
 
   return (
     <div className={classes.displays}>

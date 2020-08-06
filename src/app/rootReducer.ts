@@ -28,3 +28,5 @@ export const selectToken = (state: RootState) => state.authentication.token
 export const selectModels = (state: RootState) => state.models
 export const selectReadings = (state: RootState) => state.readings
 export const selectHistoricModels = (state: RootState) => state.historicModels
+export const selectWxDataLoading = (state: RootState) =>
+  state.models.loading || state.readings.loading || state.historicModels.loading
