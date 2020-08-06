@@ -89,10 +89,11 @@
     "collectCoverageFrom": [
       "src/**/*.{ts,tsx}",
       "!src/**/*.stories.tsx",
-      "!src/app/*.{ts,tsx}",
+      "!src/**/*.d.ts",
       "!src/index.tsx",
       "!src/serviceWorker.ts",
-      "!src/**/*.d.ts"
+      "!src/app/*.{ts,tsx}",
+      "!src/app/rootReducer.ts"
     ]
   }
 }
