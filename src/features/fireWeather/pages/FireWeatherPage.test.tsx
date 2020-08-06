@@ -10,7 +10,10 @@ import {
   mockStations,
   mockModelsResponse,
   mockReadingsResponse,
-  mockHistoricModelsResponse
+  mockHistoricModelsResponse,
+  emptyModelsResponse,
+  emptyReadingsResponse,
+  emptyHistoricModelsResponse
 } from 'features/fireWeather/pages/FireWeatherPage.mock'
 
 const mockAxios = new MockAdapter(axios)
@@ -49,6 +52,60 @@ it('renders weather stations dropdown with data', async () => {
 
   fireEvent.click(station1)
   expect(selectStations(store.getState()).stations).toEqual(mockStations)
+})
+
+it('renders no data available message if there is no weather data returned', async () => {
+  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onPost('/models/GDPS/forecasts/').replyOnce(200, emptyModelsResponse)
+  mockAxios.onPost('/hourlies/').replyOnce(200, emptyReadingsResponse)
+  mockAxios
+    .onPost('/models/GDPS/forecasts/summaries/')
+    .replyOnce(200, emptyHistoricModelsResponse)
+  const { getByText, getByTestId, queryByText } = renderWithRedux(<FireWeatherPage />)
+
+  // wait for authentication
+  await waitForElement(() => getByText(/Predictive Services Unit/i))
+
+  // Select a weather station
+  fireEvent.click(getByTestId('weather-station-dropdown'))
+  const station1 = await waitForElement(() =>
+    getByText(`${mockStations[0].name} (${mockStations[0].code})`)
+  )
+  fireEvent.click(station1)
+
+  // Send the request
+  fireEvent.click(getByTestId('get-wx-data-button'))
+
+  await waitForElement(() => queryByText(/Data is not available./i))
+})
+
+it('renders error messages in response to network errors', async () => {
+  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onPost('/models/GDPS/forecasts/').replyOnce(400)
+  mockAxios.onPost('/hourlies/').replyOnce(400)
+  mockAxios.onPost('/models/GDPS/forecasts/summaries/').replyOnce(400)
+
+  const { getByText, getByTestId, queryByText } = renderWithRedux(<FireWeatherPage />)
+
+  // wait for authentication
+  await waitForElement(() => getByText(/Predictive Services Unit/i))
+
+  // Select a weather station
+  fireEvent.click(getByTestId('weather-station-dropdown'))
+  const station1 = await waitForElement(() =>
+    getByText(`${mockStations[0].name} (${mockStations[0].code})`)
+  )
+  fireEvent.click(station1)
+
+  // Send the request
+  fireEvent.click(getByTestId('get-wx-data-button'))
+
+  // Wait until all the error messages show up
+  await waitForElement(() => [
+    queryByText(/while fetching global model data/i),
+    queryByText(/while fetching hourly readings/i),
+    queryByText(/while fetching historic global model data/i)
+  ])
 })
 
 it('renders daily model and hourly values in response to user inputs', async () => {
@@ -103,33 +160,4 @@ it('renders daily model and hourly values in response to user inputs', async () 
       })
     )
   })
-})
-
-it('renders error messages in response to network errors', async () => {
-  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
-  mockAxios.onPost('/models/GDPS/forecasts/').replyOnce(400)
-  mockAxios.onPost('/hourlies/').replyOnce(400)
-  mockAxios.onPost('/models/GDPS/forecasts/summaries/').replyOnce(400)
-
-  const { getByText, getByTestId, queryByText } = renderWithRedux(<FireWeatherPage />)
-
-  // wait for authentication
-  await waitForElement(() => getByText(/Predictive Services Unit/i))
-
-  // Select a weather station
-  fireEvent.click(getByTestId('weather-station-dropdown'))
-  const station1 = await waitForElement(() =>
-    getByText(`${mockStations[0].name} (${mockStations[0].code})`)
-  )
-  fireEvent.click(station1)
-
-  // Send the request
-  fireEvent.click(getByTestId('get-wx-data-button'))
-
-  // Wait until all the error messages show up
-  await waitForElement(() => [
-    queryByText(/while fetching global model data/i),
-    queryByText(/while fetching hourly readings/i),
-    queryByText(/while fetching historic global model data/i)
-  ])
 })

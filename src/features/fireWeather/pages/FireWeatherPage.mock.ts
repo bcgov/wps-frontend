@@ -6,6 +6,10 @@ export const mockStations = [
   { code: 2, name: 'Station 2', lat: 2, long: 2 }
 ]
 
+export const emptyModelsResponse = {
+  forecasts: []
+}
+
 export const mockModelsResponse: RecursivePartial<ModelsResponse> = {
   forecasts: [
     {
@@ -30,6 +34,10 @@ export const mockModelsResponse: RecursivePartial<ModelsResponse> = {
       ]
     }
   ]
+}
+
+export const emptyReadingsResponse = {
+  hourlies: []
 }
 
 export const mockReadingsResponse: RecursivePartial<ReadingsResponse> = {
@@ -64,6 +72,10 @@ export const mockReadingsResponse: RecursivePartial<ReadingsResponse> = {
       ]
     }
   ]
+}
+
+export const emptyHistoricModelsResponse = {
+  summaries: []
 }
 
 export const mockHistoricModelsResponse: RecursivePartial<HistoricModelSummariesResponse> = {
