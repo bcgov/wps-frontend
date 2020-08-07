@@ -61,7 +61,9 @@ it('renders no data available message if there is no weather data returned', asy
   mockAxios
     .onPost('/models/GDPS/forecasts/summaries/')
     .replyOnce(200, emptyHistoricModelsResponse)
-  const { getByText, getByTestId, queryByText } = renderWithRedux(<FireWeatherPage />)
+  const { getByText, getByTestId, queryByText, queryByTestId } = renderWithRedux(
+    <FireWeatherPage />
+  )
 
   // wait for authentication
   await waitForElement(() => getByText(/Predictive Services Unit/i))
@@ -76,7 +78,13 @@ it('renders no data available message if there is no weather data returned', asy
   // Send the request
   fireEvent.click(getByTestId('get-wx-data-button'))
 
+  // Wait for the response
   await waitForElement(() => queryByText(/Data is not available./i))
+
+  // There shouldn't be any display rendered
+  expect(queryByTestId('daily-models-display')).not.toBeInTheDocument()
+  expect(queryByTestId('hourly-readings-display')).not.toBeInTheDocument()
+  expect(queryByTestId('wx-data-graph')).not.toBeInTheDocument()
 })
 
 it('renders error messages in response to network errors', async () => {
@@ -104,7 +112,8 @@ it('renders error messages in response to network errors', async () => {
   await waitForElement(() => [
     queryByText(/while fetching global model data/i),
     queryByText(/while fetching hourly readings/i),
-    queryByText(/while fetching historic global model data/i)
+    queryByText(/while fetching historic global model data/i),
+    queryByText(/Data is not available./i)
   ])
 })
 
