@@ -78,7 +78,7 @@ const TempRHGraph = ({
       const readingAndModelValues = Object.values(readingsAndModelsLookup)
       const minAndMaxDate = d3.extent(allDates) as [Date, Date]
       const xTickValues = Object.values(daysLookup)
-        .sort((a, b) => a.valueOf() - b.valueOf()) // in ascending order
+        .sort((a, b) => a.valueOf() - b.valueOf()) // sort in ascending order
         .map((day, idx) => {
           if (idx === 0) {
             // Return the first day as it is
@@ -181,7 +181,7 @@ const TempRHGraph = ({
 
       /* Render the current time reference line */
       const currDate = new Date()
-      const scaledCurrTime = xScale(currDate)
+      const scaledCurrDate = xScale(currDate)
       const isCurrDateInXAxisRange =
         minAndMaxDate[0] &&
         minAndMaxDate[1] &&
@@ -190,15 +190,15 @@ const TempRHGraph = ({
       if (isCurrDateInXAxisRange) {
         svg
           .append('line')
-          .attr('x1', scaledCurrTime)
+          .attr('x1', scaledCurrDate)
           .attr('y1', 0)
-          .attr('x2', scaledCurrTime)
+          .attr('x2', scaledCurrDate)
           .attr('y2', height)
           .attr('class', 'currLine')
         svg
           .append('text')
           .attr('y', -12)
-          .attr('x', scaledCurrTime)
+          .attr('x', scaledCurrDate)
           .attr('dy', '1em')
           .attr('dx', '-1em')
           .attr('class', 'currLabel')
@@ -247,7 +247,7 @@ const TempRHGraph = ({
         .attr('class', 'yAxisLabel')
         .text('RH (%)')
 
-      /* Render tooltip and attach its listeners https://observablehq.com/@d3/line-chart-with-tooltip */
+      /* Render tooltip and attach its listeners inspired by: https://observablehq.com/@d3/line-chart-with-tooltip */
       // High order function
       const createTooltipCallout = (dir?: 'right' | 'left') => (
         g: typeof svg,
@@ -285,24 +285,26 @@ const TempRHGraph = ({
 
         const { y: textY, width: w, height: h } = (text.node() as SVGSVGElement).getBBox()
         const padding = 8
-        const xStart = 13
-        let translateX = xStart
-        let HMove = xStart + padding + w
-        let MX = xStart - padding
+        const startX = 13
+        let translateX = startX
+        let HMove = startX + padding + w
+        let MPointX = startX - padding
+        const MPointY = textY - 2 * padding
+        // Render the tooltip on the left side
         if (dir === 'left') {
-          translateX = -w - xStart
-          HMove = -xStart + padding
-          MX = -xStart - padding - w
+          translateX = -w - startX
+          HMove = -startX + padding
+          MPointX = -startX - padding - w
         }
         text.attr('transform', `translate(${translateX}, ${textY})`)
         path.attr(
           'd',
-          `M ${MX}, ${textY - 2 * padding}
-             H${HMove}
-             v${h + 2 * padding}
-             h-${w + 2 * padding}
-             z
-            `
+          `M ${MPointX}, ${MPointY}
+           H${HMove}
+           v${h + 2 * padding}
+           h-${w + 2 * padding}
+           z
+          `
         )
       }
       // Draw a rectangular that covers the whole svg space so that
@@ -325,7 +327,7 @@ const TempRHGraph = ({
         const mx = d3.mouse(this)[0]
         const invertedDate = xScale.invert(mx)
         const nearest = getNearestBasedOnDate(invertedDate, readingAndModelValues)
-        if (!nearest) return
+        if (!nearest) return // couldn't find the nearest, so don't render the tooltip
         const nearestX = xScale(nearest.date)
         const whichDirection = width / 2 > nearestX ? 'right' : 'left'
         const tooltipText = Object.entries(nearest)
@@ -350,8 +352,8 @@ const TempRHGraph = ({
         tooltipCursor.attr('transform', `translate(${nearestX}, 0)`).style('opacity', 1)
       })
       svg.on('touchend mouseleave', () => {
-        tooltipCursor.style('opacity', 0)
         tooltip.call(createTooltipCallout(), null)
+        tooltipCursor.style('opacity', 0)
       })
     }
   }, [classes.root, _readingValues, _modelValues, _historicModels])
