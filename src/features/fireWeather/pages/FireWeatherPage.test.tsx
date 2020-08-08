@@ -144,12 +144,10 @@ it('renders daily model and hourly values in response to user inputs', async () 
   await waitForElement(() => [
     getByTestId('daily-models-display'),
     getByTestId('hourly-readings-display'),
-    getByTestId('wx-data-graph')
+    getByTestId('wx-data-graph'),
+    getByTestId('wx-data-reading-toggle'),
+    getByTestId('wx-data-model-toggle')
   ])
-
-  // Test toggle switches
-  fireEvent.click(getByTestId('wx-data-reading-toggle'))
-  fireEvent.click(getByTestId('wx-data-model-toggle'))
 
   // Check to see if some of SVG are rendered in the graph (dots, area, and tooltip)
   getAllByTestId('wx-data-model-temp-dot')
