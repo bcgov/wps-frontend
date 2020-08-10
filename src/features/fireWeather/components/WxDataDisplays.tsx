@@ -47,16 +47,6 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
 
   const wxDataLoading = loadingModels || loadingReadings || loadingForecasts
 
-  const modelsTableMetadata: TableMetadata = {
-    testId: 'daily-models-display',
-    title: '10 days of interpolated GDPS noon (12pm PST) values:'
-  }
-
-  const noonForecastsTableMetadata: TableMetadata = {
-    testId: 'noon-forecasts-display',
-    title: 'Forecast noon (12pm PST) values:'
-  }
-
   return (
     <div className={classes.displays}>
       {!wxDataLoading &&
@@ -64,16 +54,16 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const readingValues = readingsByStation[s.code]
           const modelValues = modelsByStation[s.code]
           const noonModelValues = noonModelsByStation[s.code]
+          const modelsTableMetadata: TableMetadata = {
+            testId: `daily-models-display-` + s.code,
+            title: '10 days of interpolated GDPS noon (12pm PST) values: '
+          }
           const noonForecastValues = noonForecastsByStation[s.code]
+          const noonForecastsTableMetadata: TableMetadata = {
+            testId: `noon-forecasts-display-` + s.code,
+            title: 'Forecast noon values:'
+          }
           const nothingToDisplay = !readingValues && !modelValues && !noonForecastValues
-          const modelTableProps = {
-            values: noonModelValues,
-            tableMetadata: modelsTableMetadata
-          }
-          const forecastsTableProps = {
-            values: noonForecastValues,
-            tableMetadata: noonForecastsTableMetadata
-          }
 
           if (nothingToDisplay) {
             return null

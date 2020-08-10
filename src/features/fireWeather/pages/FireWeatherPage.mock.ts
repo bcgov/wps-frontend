@@ -53,7 +53,7 @@ export const mockForecastsResponse: RecursivePartial<ForecastResponse> = {
       station_code: mockStations[0]['code'],
       values: [
         {
-          datetime: '2020-07-23T19:00:00',
+          datetime: '2020-07-23T12:00:00',
           temperature: 21,
           relative_humidity: 38,
           wind_direction: 290,
@@ -70,7 +70,7 @@ export const mockForecastsResponse: RecursivePartial<ForecastResponse> = {
           created_at: '2020-07-21T15:30:00'
         },
         {
-          datetime: '2020-07-24T19:00:00',
+          datetime: '2020-07-24T12:00:00',
           temperature: 24,
           relative_humidity: 38,
           wind_direction: 290,
@@ -85,23 +85,6 @@ export const mockForecastsResponse: RecursivePartial<ForecastResponse> = {
           fwi: 19.99413,
           danger_rating: 2,
           created_at: '2020-07-21T15:30:00'
-        },
-        {
-          datetime: '2020-07-24T19:00:00',
-          temperature: 21,
-          relative_humidity: 38,
-          wind_direction: 290,
-          wind_speed: 5.5,
-          total_precipitation: 0.0,
-          gc: undefined,
-          ffmc: 87.398,
-          dmc: 50.918,
-          dc: 550.5439,
-          isi: 5.97819,
-          bui: 82.7119,
-          fwi: 19.99413,
-          danger_rating: 2,
-          created_at: '2020-07-20T15:30:00'
         }
       ]
     }
