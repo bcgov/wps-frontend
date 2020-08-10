@@ -38,7 +38,7 @@ const TempRHGraph = ({
         .remove()
 
       /* Prepare for data */
-      const daysLookup: { [k: string]: Date } = {} // will help to create the date range on x axis
+      const daysLookup: { [k: string]: Date } = {} // will help to create the date label on x axis
       const allDates: Date[] = [] // will be used to determine x axis range
       const readingsAndModelsLookup: { [k: string]: WeatherValue } = {}
       const readingValues = _readingValues.map(d => {
