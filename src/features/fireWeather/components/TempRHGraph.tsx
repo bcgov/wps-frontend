@@ -96,6 +96,7 @@ const TempRHGraph = ({
       const height = heightValue - margin.top - margin.bottom
       const svg = d3
         .select(svgRef.current)
+        // Make it responsive: https://medium.com/@louisemoxy/a-simple-way-to-make-d3-js-charts-svgs-responsive-7afb04bc2e4b
         .attr('viewBox', `0 0 ${widthValue} ${heightValue}`)
         .append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
@@ -181,13 +182,13 @@ const TempRHGraph = ({
 
       /* Render the current time reference line */
       const currDate = new Date()
-      const scaledCurrDate = xScale(currDate)
       const isCurrDateInXAxisRange =
         minAndMaxDate[0] &&
         minAndMaxDate[1] &&
         minAndMaxDate[0].valueOf() < currDate.valueOf() &&
         minAndMaxDate[1].valueOf() > currDate.valueOf()
       if (isCurrDateInXAxisRange) {
+        const scaledCurrDate = xScale(currDate)
         svg
           .append('line')
           .attr('x1', scaledCurrDate)
