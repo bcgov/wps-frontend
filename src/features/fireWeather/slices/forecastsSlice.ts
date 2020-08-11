@@ -29,8 +29,6 @@ const forecastsSlice = createSlice({
       state.error = action.payload
     },
     getForecastsSuccess(state: State, action: PayloadAction<Forecast[]>) {
-      state.loading = false
-      state.error = null
       action.payload.forEach(forecast => {
         if (forecast.station_code) {
           const code = forecast.station_code
@@ -57,6 +55,8 @@ const forecastsSlice = createSlice({
         }
         counter++
       }
+      state.loading = false
+      state.error = null
     }
   }
 })
