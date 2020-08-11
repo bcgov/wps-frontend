@@ -30,21 +30,23 @@ const useStyles = makeStyles({
   }
 })
 
-const DailyForecastDisplay = (props: {
+interface Props {
   values: (ModelValue | NoonForecastValue)[] | undefined
   testId: string
   title: string
-}) => {
+}
+
+const DailyForecastDisplay = ({ values, testId, title }: Props) => {
   const classes = useStyles()
 
-  if (!props.values) {
+  if (!values) {
     return null
   }
 
   return (
-    <div className={classes.display} data-testid={props.testId}>
+    <div className={classes.display} data-testid={testId}>
       <Typography className={classes.title} variant="subtitle2" component="div">
-        {props.title}
+        {title}
       </Typography>
       <Paper elevation={1}>
         <TableContainer>
@@ -52,13 +54,13 @@ const DailyForecastDisplay = (props: {
             <TableBody>
               <TableRow>
                 <TableCell>Date</TableCell>
-                {props.values.map(v => (
+                {values.map(v => (
                   <TableCell key={v.datetime}>{formatDateInPDT(v.datetime)}</TableCell>
                 ))}
               </TableRow>
               <TableRow>
                 <TableCell>Temp (°C)</TableCell>
-                {props.values.map(v => (
+                {values.map(v => (
                   <TableCell key={v.datetime}>
                     {v.temperature.toFixed(MODEL_VALUE_DECIMAL)}
                   </TableCell>
@@ -66,7 +68,7 @@ const DailyForecastDisplay = (props: {
               </TableRow>
               <TableRow>
                 <TableCell>RH (%)</TableCell>
-                {props.values.map(v => (
+                {values.map(v => (
                   <TableCell key={v.datetime}>
                     {Math.round(v.relative_humidity)}
                   </TableCell>
@@ -74,7 +76,7 @@ const DailyForecastDisplay = (props: {
               </TableRow>
               <TableRow>
                 <TableCell>Wind Dir</TableCell>
-                {props.values.map(v => (
+                {values.map(v => (
                   <TableCell key={v.datetime}>
                     {v.wind_direction != null && Math.round(v.wind_direction)}
                   </TableCell>
@@ -82,7 +84,7 @@ const DailyForecastDisplay = (props: {
               </TableRow>
               <TableRow>
                 <TableCell>Wind Spd (km/h)</TableCell>
-                {props.values.map(v => (
+                {values.map(v => (
                   <TableCell key={v.datetime}>
                     {v.wind_speed?.toFixed(MODEL_VALUE_DECIMAL)}
                   </TableCell>
@@ -90,7 +92,7 @@ const DailyForecastDisplay = (props: {
               </TableRow>
               <TableRow>
                 <TableCell>Precip (mm/cm)</TableCell>
-                {props.values.map(v => (
+                {values.map(v => (
                   <TableCell key={v.datetime}>
                     {v.total_precipitation?.toFixed(MODEL_VALUE_DECIMAL)}
                   </TableCell>
