@@ -158,7 +158,8 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
     getByTestId('hourly-readings-display'),
     getByTestId('wx-data-graph'),
     getByTestId('wx-data-reading-toggle'),
-    getByTestId('wx-data-model-toggle')
+    getByTestId('wx-data-model-toggle'),
+    getByTestId('wx-data-forecast-toggle')
   ])
 
   // Check to see if some of SVG are rendered in the graph (dots, area, and tooltip)
