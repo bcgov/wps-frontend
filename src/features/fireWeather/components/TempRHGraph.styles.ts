@@ -67,7 +67,7 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .forecastRhDot': {
+    '& .forecastRHDot': {
       stroke: 'deepskyblue',
       fill: 'none',
       cursor: 'pointer'
