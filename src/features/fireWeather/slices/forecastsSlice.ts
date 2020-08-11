@@ -7,14 +7,12 @@ interface State {
   loading: boolean
   error: string | null
   noonForecastsByStation: Record<number, NoonForecastValue[] | undefined>
-  noonForecasts: Record<number, {} | undefined>
 }
 
 const initialState: State = {
   loading: false,
   error: null,
-  noonForecastsByStation: {},
-  noonForecasts: []
+  noonForecastsByStation: {}
 }
 
 const forecastsSlice = createSlice({
@@ -32,29 +30,20 @@ const forecastsSlice = createSlice({
       action.payload.forEach(forecast => {
         if (forecast.station_code) {
           const code = forecast.station_code
-          for (const index in forecast.values) {
-            if (state.noonForecastsByStation[code] === undefined) {
-              state.noonForecastsByStation[code] = [forecast.values[index]]
-            } else if (
-              forecast.values[+index - 1] &&
-              forecast.values[index].datetime !== forecast.values[+index - 1].datetime
-            ) {
-              // only add the most recent forecast for the station and datetime
-              // (query returns forecasts in order for each datetime, from most recently
-              // issued down to first issued)
-              state.noonForecastsByStation[code]?.push(forecast.values[index])
+          let previousDatetime: string
+          const mostRecentForecasts: NoonForecastValue[] = []
+          // only add the most recent forecast for the station and datetime
+          // (query returns forecasts in order for each datetime, from most recently
+          // issued down to first issued)
+          forecast.values.forEach(value => {
+            if (previousDatetime !== value.datetime) {
+              mostRecentForecasts.push(value)
+              previousDatetime = value.datetime
             }
-          }
+          })
+          state.noonForecastsByStation[code] = mostRecentForecasts
         }
       })
-      let counter = 0
-      for (const key in state.noonForecastsByStation) {
-        state.noonForecasts[counter] = {
-          station_code: key,
-          values: state.noonForecastsByStation[key]
-        }
-        counter++
-      }
       state.loading = false
       state.error = null
     }

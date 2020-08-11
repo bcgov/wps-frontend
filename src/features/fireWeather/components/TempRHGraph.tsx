@@ -98,7 +98,7 @@ const TempRHGraph = ({
       })
       const readingForecastAndModelValues = Object.values(
         readingsForecastsAndModelsLookup
-      )
+      ).sort((a, b) => a.date.valueOf() - b.date.valueOf())
       const minAndMaxDate = d3.extent(allDates) as [Date, Date]
       const xTickValues = Object.values(daysLookup)
         .sort((a, b) => a.valueOf() - b.valueOf()) // sort in ascending order
@@ -403,7 +403,7 @@ const TempRHGraph = ({
         tooltipCursor.style('opacity', 0)
       })
     }
-  }, [classes.root, _readingValues, _modelValues, _historicModels])
+  }, [classes.root, _readingValues, _modelValues, _historicModels, _forecastValues])
 
   return (
     <div className={classes.root}>
