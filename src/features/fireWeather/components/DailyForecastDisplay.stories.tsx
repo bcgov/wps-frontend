@@ -3,7 +3,7 @@ import React from 'react'
 import { storiesOf } from '@storybook/react'
 
 import DailyForecastDisplay from 'features/fireWeather/components/DailyForecastDisplay'
-import { ForecastValues, ModelValues } from 'utils/stories.common'
+import { ForecastValues, ModelValues } from 'utils/storybook'
 
 storiesOf('DailyForecastDisplay', module).add('default', () => {
   const modelValues = ModelValues
@@ -13,8 +13,12 @@ storiesOf('DailyForecastDisplay', module).add('default', () => {
 
   return (
     <>
-      <DailyForecastDisplay values={modelValues} title={modelTableTitle} testId='' />
-      <DailyForecastDisplay values={forecastValues} title={forecastTableTitle} testId='' />
+      <DailyForecastDisplay values={modelValues} title={modelTableTitle} testId="" />
+      <DailyForecastDisplay
+        values={forecastValues}
+        title={forecastTableTitle}
+        testId=""
+      />
     </>
   )
 })
