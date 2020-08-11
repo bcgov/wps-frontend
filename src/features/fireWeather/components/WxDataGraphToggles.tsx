@@ -47,6 +47,7 @@ const WxDataToggles = ({
         control={
           <Switch
             name="showReadings"
+            data-testid="wx-data-reading-toggle"
             checked={showReadings}
             disabled={noReadings}
             size="small"
@@ -67,6 +68,7 @@ const WxDataToggles = ({
         control={
           <Switch
             name="showModels"
+            data-testid="wx-data-model-toggle"
             checked={showModels}
             disabled={noModels}
             size="small"

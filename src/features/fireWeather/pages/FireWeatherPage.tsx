@@ -6,7 +6,7 @@ import { Station } from 'api/stationAPI'
 import { selectAuthentication } from 'app/rootReducer'
 import { PageHeader, PageTitle, Container } from 'components'
 import WxStationDropdown from 'features/stations/components/WxStationDropdown'
-import WxDisplaysByStations from 'features/fireWeather/components/WxDataDisplays'
+import WxDataDisplays from 'features/fireWeather/components/WxDataDisplays'
 import {
   authenticate,
   setAxiosRequestInterceptors
@@ -16,6 +16,7 @@ import { fetchModels } from 'features/fireWeather/slices/modelsSlice'
 import { fetchReadings } from 'features/fireWeather/slices/readingsSlice'
 import GetWxDataButton from '../components/GetWxDataButton'
 import { fetchForecasts } from '../slices/forecastsSlice'
+import { fetchHistoricModels } from '../slices/historicModelsSlice'
 
 const useStyles = makeStyles({
   stationDropdown: {
@@ -58,12 +59,13 @@ const FireWeatherPage = () => {
     dispatch(fetchModels(stationCodes))
     dispatch(fetchReadings(stationCodes))
     dispatch(fetchForecasts(stationCodes))
+    dispatch(fetchHistoricModels(stationCodes))
   }
 
   return (
     <div data-testid="fire-weather-page">
       <PageHeader title="Predictive Services Unit" />
-      <PageTitle title="Daily Weather Model" />
+      <PageTitle title="MoreCast" />
       <Container>
         <WxStationDropdown
           className={classes.stationDropdown}
@@ -71,7 +73,7 @@ const FireWeatherPage = () => {
           onStationsChange={onStationsChange}
         />
         <GetWxDataButton onBtnClick={onSubmitClick} selectedStations={selectedStations} />
-        <WxDisplaysByStations requestedStations={requestedStations} />
+        <WxDataDisplays requestedStations={requestedStations} />
       </Container>
     </div>
   )

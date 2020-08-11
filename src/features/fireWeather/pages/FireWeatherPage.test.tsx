@@ -1,6 +1,6 @@
 import React from 'react'
 import MockAdapter from 'axios-mock-adapter'
-import { waitForElement, cleanup, fireEvent, findByText, getByTestId } from '@testing-library/react'
+import { waitForElement, cleanup, fireEvent, findByText } from '@testing-library/react'
 
 import { selectStations } from 'app/rootReducer'
 import axios from 'api/axios'
@@ -10,7 +10,12 @@ import {
   mockStations,
   mockModelsResponse,
   mockReadingsResponse,
-  mockForecastsResponse
+  mockForecastsResponse,
+  mockHistoricModelsResponse,
+  emptyModelsResponse,
+  emptyReadingsResponse,
+  emptyForecastsResponse,
+  emptyHistoricModelsResponse
 } from 'features/fireWeather/pages/FireWeatherPage.mock'
 
 const mockAxios = new MockAdapter(axios)
@@ -27,7 +32,7 @@ it('renders fire weather page', async () => {
 
   // Check if all the components are rendered after authenticated
   await waitForElement(() => getByText(/Predictive Services Unit/i))
-  expect(getByText(/Daily Weather Model/i)).toBeInTheDocument()
+  expect(getByText(/MoreCast/i)).toBeInTheDocument()
   expect(getByTestId('weather-station-dropdown')).toBeInTheDocument()
 })
 
@@ -51,13 +56,83 @@ it('renders weather stations dropdown with data', async () => {
   expect(selectStations(store.getState()).stations).toEqual(mockStations)
 })
 
-it('renders daily model, forecast, and hourly values in response to user inputs', async () => {
+it('renders no data available message if there is no weather data returned', async () => {
+  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onPost('/models/GDPS/forecasts/').replyOnce(200, emptyModelsResponse)
+  mockAxios.onPost('/hourlies/').replyOnce(200, emptyReadingsResponse)
+  mockAxios.onPost('/noon_forecasts/').replyOnce(200, emptyForecastsResponse)
+  mockAxios
+    .onPost('/models/GDPS/forecasts/summaries/')
+    .replyOnce(200, emptyHistoricModelsResponse)
+  const { getByText, getByTestId, queryByText, queryByTestId } = renderWithRedux(
+    <FireWeatherPage />
+  )
+
+  // wait for authentication
+  await waitForElement(() => getByText(/Predictive Services Unit/i))
+
+  // Select a weather station
+  fireEvent.click(getByTestId('weather-station-dropdown'))
+  const station1 = await waitForElement(() =>
+    getByText(`${mockStations[0].name} (${mockStations[0].code})`)
+  )
+  fireEvent.click(station1)
+
+  // Send the request
+  fireEvent.click(getByTestId('get-wx-data-button'))
+
+  // Wait for the response
+  await waitForElement(() => queryByText(/Data is not available./i))
+
+  // There shouldn't be any display rendered
+  expect(queryByTestId('daily-models-display')).not.toBeInTheDocument()
+  expect(queryByTestId('hourly-readings-display')).not.toBeInTheDocument()
+  expect(queryByTestId('noon-forecasts-display')).not.toBeInTheDocument()
+  expect(queryByTestId('wx-data-graph')).not.toBeInTheDocument()
+})
+
+it('renders error messages in response to network errors', async () => {
+  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onPost('/models/GDPS/forecasts/').replyOnce(400)
+  mockAxios.onPost('/hourlies/').replyOnce(400)
+  mockAxios.onPost('/noon_forecasts/').replyOnce(400)
+  mockAxios.onPost('/models/GDPS/forecasts/summaries/').replyOnce(400)
+
+  const { getByText, getByTestId, queryByText } = renderWithRedux(<FireWeatherPage />)
+
+  // wait for authentication
+  await waitForElement(() => getByText(/Predictive Services Unit/i))
+
+  // Select a weather station
+  fireEvent.click(getByTestId('weather-station-dropdown'))
+  const station1 = await waitForElement(() =>
+    getByText(`${mockStations[0].name} (${mockStations[0].code})`)
+  )
+  fireEvent.click(station1)
+
+  // Send the request
+  fireEvent.click(getByTestId('get-wx-data-button'))
+
+  // Wait until all the error messages show up
+  await waitForElement(() => [
+    queryByText(/while fetching global model data/i),
+    queryByText(/while fetching hourly readings/i),
+    queryByText(/while fetching historic global model data/i),
+    queryByText(/while fetching noon forecasts/i),
+    queryByText(/Data is not available./i)
+  ])
+})
+
+it('renders daily model and hourly values in response to user inputs', async () => {
   mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
   mockAxios.onPost('/models/GDPS/forecasts/').replyOnce(200, mockModelsResponse)
   mockAxios.onPost('/hourlies/').replyOnce(200, mockReadingsResponse)
   mockAxios.onPost('/noon_forecasts/').replyOnce(200, mockForecastsResponse)
+  mockAxios
+    .onPost('/models/GDPS/forecasts/summaries/')
+    .replyOnce(200, mockHistoricModelsResponse)
 
-  const { getByText, getByTestId } = renderWithRedux(<FireWeatherPage />)
+  const { getByText, getByTestId, getAllByTestId } = renderWithRedux(<FireWeatherPage />)
 
   // wait for authentication
   await waitForElement(() => getByText(/Predictive Services Unit/i))
@@ -73,17 +148,27 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
   fireEvent.click(getByTestId('get-wx-data-button'))
 
   // Wait until all the displays show up
-  await waitForElement(() => getByTestId(`daily-models-display-` + mockStations[0].code))
-  await waitForElement(() => getByTestId('hourly-readings-display'))
-  await waitForElement(() =>
-    getByTestId(`noon-forecasts-display-` + mockStations[0].code)
-  )
-  await waitForElement(() => getByTestId('weather-graph-by-station'))
+  await waitForElement(() => [
+    getByTestId(`daily-models-table-` + mockStations[0].code),
+    getByTestId(`noon-forecasts-table-` + mockStations[0].code),
+    getByTestId('hourly-readings-display'),
+    getByTestId('wx-data-graph'),
+    getByTestId('wx-data-reading-toggle'),
+    getByTestId('wx-data-model-toggle')
+  ])
 
-  // Validate the correct request body
-  // There should have been three requests, one for models, one for noon forecasts, and one for hourly readings.
-  expect(mockAxios.history.post.length).toBe(3)
-  // Each of those request should ask for a station
+  // Check to see if some of SVG are rendered in the graph (dots, area, and tooltip)
+  getAllByTestId('wx-data-model-temp-dot')
+  getAllByTestId('wx-data-reading-temp-dot')
+  getAllByTestId('wx-data-forecast-temp-dot')
+  getByTestId('historic-model-temp-area')
+  const graphBg = getByTestId('wx-data-graph-background')
+  fireEvent.mouseMove(graphBg)
+  fireEvent.mouseLeave(graphBg)
+
+  // There should have been 4 post requests (models, hourly readings, noon forecasts, and historic models).
+  expect(mockAxios.history.post.length).toBe(4)
+  // all post requests should include station codes in the body
   mockAxios.history.post.forEach(post => {
     expect(post.data).toBe(
       JSON.stringify({
@@ -91,33 +176,4 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
       })
     )
   })
-})
-
-it('only displays the most recent forecast for a station and weather date', async () => {
-  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
-  mockAxios.onPost('/noon_forecasts/').replyOnce(200, mockForecastsResponse)
-
-  const { getByText, getByTestId } = renderWithRedux(<FireWeatherPage />)
-
-  // wait for authentication
-  await waitForElement(() => getByText(/Predictive Services Unit/i))
-
-  // Select a weather station
-  fireEvent.click(getByTestId('weather-station-dropdown'))
-  const station1 = await waitForElement(() =>
-    getByText(`${mockStations[0].name} (${mockStations[0].code})`)
-  )
-  fireEvent.click(station1)
-
-  // Send the request
-  fireEvent.click(getByTestId('get-wx-data-button'))
-
-  await waitForElement(() =>
-    getByTestId(`noon-forecasts-display-` + mockStations[0].code)
-  )
-  const noonForecastsTable = getByTestId(`noon-forecasts-display-` + mockStations[0].code)
-  let searchForecastDatetimes = await findByText(noonForecastsTable, '2020-07-23 12:00')
-  expect(searchForecastDatetimes).toHaveLength(1)
-  searchForecastDatetimes = await findByText(noonForecastsTable, '2020-07-24 12:00')
-  expect(searchForecastDatetimes).toHaveLength(1)
 })

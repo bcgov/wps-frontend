@@ -6,6 +6,7 @@ import authReducer from 'features/auth/slices/authenticationSlice'
 import modelsReducer from 'features/fireWeather/slices/modelsSlice'
 import readingsReducer from 'features/fireWeather/slices/readingsSlice'
 import forecastsReducer from 'features/fireWeather/slices/forecastsSlice'
+import historicModelsReducer from 'features/fireWeather/slices/historicModelsSlice'
 
 const rootReducer = combineReducers({
   stations: stationsReducer,
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
   authentication: authReducer,
   models: modelsReducer,
   readings: readingsReducer,
-  forecasts: forecastsReducer
+  forecasts: forecastsReducer,
+  historicModels: historicModelsReducer
 })
 
 // Infer whatever gets returned from rootReducer and use it as the type of the root state
@@ -28,3 +30,9 @@ export const selectToken = (state: RootState) => state.authentication.token
 export const selectModels = (state: RootState) => state.models
 export const selectReadings = (state: RootState) => state.readings
 export const selectForecasts = (state: RootState) => state.forecasts
+export const selectHistoricModels = (state: RootState) => state.historicModels
+export const selectWxDataLoading = (state: RootState) =>
+  state.models.loading ||
+  state.readings.loading ||
+  state.historicModels.loading ||
+  state.forecasts.loading
