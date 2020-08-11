@@ -119,6 +119,6 @@ const getForecastValues = () => {
   return forecastValues
 }
 
-export const ModelValues = getModelValues()
-export const ForecastValues = getForecastValues()
-export const ReadingValues = getPastValues()
+export const modelValues = getModelValues()
+export const { readingValues, historicModels } = getPastValues()
+export const forecastValues = getForecastValues()
