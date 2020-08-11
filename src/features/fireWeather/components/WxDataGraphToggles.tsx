@@ -43,7 +43,6 @@ const WxDataToggles = ({
     <FormGroup row>
       <FormControlLabel
         className={classes.formControlLabel}
-        data-testid="show-readings-toggle"
         control={
           <Switch
             name="showReadings"
@@ -64,7 +63,6 @@ const WxDataToggles = ({
       />
       <FormControlLabel
         className={classes.formControlLabel}
-        data-testid="show-models-toggle"
         control={
           <Switch
             name="showModels"
@@ -85,10 +83,10 @@ const WxDataToggles = ({
       />
       <FormControlLabel
         className={classes.formControlLabel}
-        data-testid="show-forecasts-toggle"
         control={
           <Switch
             name="showForecasts"
+            data-testid="wx-data-forecast-toggle"
             checked={showForecasts}
             disabled={noForecasts}
             size="small"
