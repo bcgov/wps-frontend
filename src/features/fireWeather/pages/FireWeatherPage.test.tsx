@@ -1,6 +1,6 @@
 import React from 'react'
 import MockAdapter from 'axios-mock-adapter'
-import { waitForElement, cleanup, fireEvent, findByText } from '@testing-library/react'
+import { waitForElement, cleanup, fireEvent } from '@testing-library/react'
 
 import { selectStations } from 'app/rootReducer'
 import axios from 'api/axios'
@@ -85,9 +85,13 @@ it('renders no data available message if there is no weather data returned', asy
   await waitForElement(() => queryByText(/Data is not available./i))
 
   // There shouldn't be any display rendered
-  expect(queryByTestId('daily-models-display')).not.toBeInTheDocument()
+  expect(
+    queryByTestId(`daily-models-table-` + mockStations[0].code)
+  ).not.toBeInTheDocument()
   expect(queryByTestId('hourly-readings-display')).not.toBeInTheDocument()
-  expect(queryByTestId('noon-forecasts-display')).not.toBeInTheDocument()
+  expect(
+    queryByTestId(`noon-forecasts-table-` + mockStations[0].code)
+  ).not.toBeInTheDocument()
   expect(queryByTestId('wx-data-graph')).not.toBeInTheDocument()
 })
 
@@ -123,7 +127,7 @@ it('renders error messages in response to network errors', async () => {
   ])
 })
 
-it('renders daily model and hourly values in response to user inputs', async () => {
+it('renders daily model, forecast, and hourly values in response to user inputs', async () => {
   mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
   mockAxios.onPost('/models/GDPS/forecasts/').replyOnce(200, mockModelsResponse)
   mockAxios.onPost('/hourlies/').replyOnce(200, mockReadingsResponse)
@@ -149,7 +153,7 @@ it('renders daily model and hourly values in response to user inputs', async () 
 
   // Wait until all the displays show up
   await waitForElement(() => [
-    getByTestId(`daily-models-table-` + mockStations[0].code),
+    getByTestId(`noon-models-table-` + mockStations[0].code),
     getByTestId(`noon-forecasts-table-` + mockStations[0].code),
     getByTestId('hourly-readings-display'),
     getByTestId('wx-data-graph'),

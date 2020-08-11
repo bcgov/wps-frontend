@@ -32,7 +32,7 @@ export interface Model {
 }
 
 export interface ModelsResponse {
-  models: Model[]
+  forecasts: Model[]
 }
 
 export async function getModels(stationCodes: number[]): Promise<Model[]> {
@@ -42,7 +42,7 @@ export async function getModels(stationCodes: number[]): Promise<Model[]> {
     const { data } = await axios.post<ModelsResponse>(url, {
       stations: stationCodes
     })
-    return data.models
+    return data.forecasts
   } catch (err) {
     throw err.toString()
   }

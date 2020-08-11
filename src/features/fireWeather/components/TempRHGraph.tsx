@@ -80,7 +80,6 @@ const TempRHGraph = ({
 
         return { ...d, date }
       })
-      // TODO: is this right?
       const forecastValues = _forecastValues.map(d => {
         const date = storeDaysLookup(daysLookup, d.datetime)
         const forecast = {
