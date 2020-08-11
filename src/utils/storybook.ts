@@ -1,7 +1,7 @@
 import moment from 'moment'
 
 const getModelValues = () => {
-  const modelValues = []
+  const _modelValues = []
   const days = 2
   const first = moment()
     .utc()
@@ -11,7 +11,7 @@ const getModelValues = () => {
 
   while (last.diff(first, 'days') >= 0) {
     for (let length = 0; length < 24 / hourInterval; length++) {
-      modelValues.push({
+      _modelValues.push({
         datetime: moment(first)
           .add(hourInterval * length, 'hours')
           .utc()
@@ -28,12 +28,12 @@ const getModelValues = () => {
     first.add(1, 'days')
   }
 
-  return modelValues
+  return _modelValues
 }
 
 const getPastValues = () => {
-  const readingValues = []
-  const historicModels = []
+  const _readingValues = []
+  const _historicModels = []
 
   const days = 3
   const first = moment()
@@ -49,7 +49,7 @@ const getPastValues = () => {
 
       // every 3 hour
       if (length % 3 === 0) {
-        historicModels.push({
+        _historicModels.push({
           datetime: moment(first)
             .add(length, 'hours')
             .utc()
@@ -63,7 +63,7 @@ const getPastValues = () => {
         })
       }
       // every hour
-      readingValues.push({
+      _readingValues.push({
         datetime: moment(first)
           .add(length, 'hours')
           .utc()
@@ -83,11 +83,11 @@ const getPastValues = () => {
     first.add(1, 'days')
   }
 
-  return { readingValues, historicModels }
+  return [_readingValues, _historicModels]
 }
 
 const getForecastValues = () => {
-  const forecastValues = []
+  const _forecastValues = []
   const days = 4
   const first = moment()
     .utc()
@@ -95,7 +95,7 @@ const getForecastValues = () => {
   const last = moment(first).add(days, 'days')
 
   while (last.diff(first, 'days') >= 0) {
-    forecastValues.push({
+    _forecastValues.push({
       datetime: moment(first)
         .utc()
         .format(),
@@ -116,9 +116,9 @@ const getForecastValues = () => {
 
     first.add(1, 'days')
   }
-  return forecastValues
+  return _forecastValues
 }
 
 export const modelValues = getModelValues()
-export const { readingValues, historicModels } = getPastValues()
+export const [readingValues, historicModels] = getPastValues()
 export const forecastValues = getForecastValues()
