@@ -88,11 +88,10 @@ const getPastValues = () => {
 
 const getForecastValues = () => {
   const forecastValues = []
-  const days = 2
+  const days = 4
   const first = moment()
     .utc()
-    .set({ hour: 19, minute: 0, second: 0 })
-    .subtract(days, 'days')
+    .set({ hour: 20, minute: 0, second: 0 })
   const last = moment(first).add(days, 'days')
 
   while (last.diff(first, 'days') >= 0) {
