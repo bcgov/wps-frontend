@@ -97,7 +97,7 @@ const WxDataToggles = ({
         }
         label={
           <Typography className={classes.label} variant="body2">
-            Noon Forecasts
+            Weather Forecasts
           </Typography>
         }
       />

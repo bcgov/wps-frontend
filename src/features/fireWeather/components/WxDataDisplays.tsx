@@ -4,7 +4,7 @@ import { Paper, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import HourlyReadingsDisplay from 'features/fireWeather/components/HourlyReadingsDisplay'
-import DailyForecastDisplay from 'features/fireWeather/components/DailyForecastDisplay'
+import NoonForecastDisplay from 'features/fireWeather/components/NoonForecastDisplay'
 import WxDataGraph from 'features/fireWeather/components/WxDataGraph'
 import { Station } from 'api/stationAPI'
 import {
@@ -38,9 +38,6 @@ interface Props {
   requestedStations: Station[]
 }
 
-const modelsTableTitle = '10 days of interpolated GDPS noon (12pm PST) values: '
-const forecastTableTitle = 'Forecast noon values: '
-
 const WxDataDisplays = ({ requestedStations }: Props) => {
   const classes = useStyles()
 
@@ -72,16 +69,19 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
                   Data is not available.
                 </Typography>
               )}
-              <HourlyReadingsDisplay values={readingValues} />
-              <DailyForecastDisplay
-                values={noonModelValues}
-                testId={`noon-models-table-` + s.code}
-                title={modelsTableTitle}
+              <HourlyReadingsDisplay
+                title="Past 5 days of hourly readings from station: "
+                values={readingValues}
               />
-              <DailyForecastDisplay
+              <NoonForecastDisplay
+                testId={`noon-models-table-${s.code}`}
+                title="Interpolated global model noon values (20:00 UTC): "
+                values={noonModelValues}
+              />
+              <NoonForecastDisplay
+                testId={`noon-forecasts-table-${s.code}`}
+                title="Weather forecast noon values (20:00 UTC): "
                 values={noonForecastValues}
-                testId={`noon-forecasts-table-` + s.code}
-                title={forecastTableTitle}
               />
               <WxDataGraph
                 modelValues={modelValues}

@@ -376,7 +376,7 @@ const TempRHGraph = ({
         const tooltipText = Object.entries(nearest)
           .map(([key, value]) => {
             if (key === 'date') {
-              return formatDateInPDT(value, 'h:mm a, dddd, MMM Do')
+              return `${formatDateInPDT(value, 'h:mm a, ddd, MMM Do')} (PDT, UTC-7)`
             } else if (key === 'temp') {
               return `Temp: ${value} (°C)`
             } else if (key === 'modelTemp') {
