@@ -34,6 +34,7 @@ const getModelValues = () => {
 const getPastValues = () => {
   const _readingValues = []
   const _historicModels = []
+  const _historicForecasts = []
 
   const days = 3
   const first = moment()
@@ -47,6 +48,21 @@ const getPastValues = () => {
       const temp = 15 + Math.random() * 10
       const rh = 40 + Math.random() * 15
 
+      // every 12 hour
+      if (length % 12 === 0) {
+        _historicForecasts.push({
+          datetime: moment(first)
+            .add(length, 'hours')
+            .utc()
+            .format(),
+          tmp_5th: temp + Math.random() * 1,
+          tmp_median: temp + Math.random() * 2,
+          tmp_90th: temp + Math.random() * 3,
+          rh_5th: rh + Math.random() * 1,
+          rh_median: rh + Math.random() * 2,
+          rh_90th: rh + Math.random() * 3
+        })
+      }
       // every 3 hour
       if (length % 3 === 0) {
         _historicModels.push({
@@ -83,7 +99,7 @@ const getPastValues = () => {
     first.add(1, 'days')
   }
 
-  return [_readingValues, _historicModels]
+  return [_readingValues, _historicModels, _historicForecasts]
 }
 
 const getForecastValues = () => {
@@ -120,5 +136,5 @@ const getForecastValues = () => {
 }
 
 export const modelValues = getModelValues()
-export const [readingValues, historicModels] = getPastValues()
+export const [readingValues, historicModels, historicForecasts] = getPastValues()
 export const forecastValues = getForecastValues()

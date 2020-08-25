@@ -21,9 +21,15 @@ interface Props {
   noModels: boolean
   showModels: boolean
   setShowModels: (checked: boolean) => void
+  noHistoricModels: boolean
+  showHistoricModels: boolean
+  setShowHistoricModels: (checked: boolean) => void
   noForecasts: boolean
   showForecasts: boolean
   setShowForecasts: (checked: boolean) => void
+  noHistoricForecasts: boolean
+  showHistoricForecasts: boolean
+  setShowHistoricForecasts: (checked: boolean) => void
 }
 
 const WxDataToggles = ({
@@ -33,9 +39,15 @@ const WxDataToggles = ({
   noModels,
   showModels,
   setShowModels,
+  noHistoricModels,
+  showHistoricModels,
+  setShowHistoricModels,
   noForecasts,
   showForecasts,
-  setShowForecasts
+  setShowForecasts,
+  noHistoricForecasts,
+  showHistoricForecasts,
+  setShowHistoricForecasts
 }: Props) => {
   const classes = useStyles()
 
@@ -57,7 +69,7 @@ const WxDataToggles = ({
         }
         label={
           <Typography className={classes.label} variant="body2">
-            Weather Readings
+            Hourly Reading
           </Typography>
         }
       />
@@ -77,7 +89,27 @@ const WxDataToggles = ({
         }
         label={
           <Typography className={classes.label} variant="body2">
-            Weather Model
+            Model Prediction
+          </Typography>
+        }
+      />
+      <FormControlLabel
+        className={classes.formControlLabel}
+        control={
+          <Switch
+            name="showHistoricModels"
+            data-testid="wx-data-historic-model-toggle"
+            checked={showHistoricModels}
+            disabled={noHistoricModels}
+            size="small"
+            onChange={(_, checked) => {
+              setShowHistoricModels(checked)
+            }}
+          />
+        }
+        label={
+          <Typography className={classes.label} variant="body2">
+            Historic Model
           </Typography>
         }
       />
@@ -97,7 +129,27 @@ const WxDataToggles = ({
         }
         label={
           <Typography className={classes.label} variant="body2">
-            Weather Forecasts
+            Noon Forecast
+          </Typography>
+        }
+      />
+      <FormControlLabel
+        className={classes.formControlLabel}
+        control={
+          <Switch
+            name="showHistoricForecasts"
+            data-testid="wx-data-historic-forecast-toggle"
+            checked={showHistoricForecasts}
+            disabled={noHistoricForecasts}
+            size="small"
+            onChange={(_, checked) => {
+              setShowHistoricForecasts(checked)
+            }}
+          />
+        }
+        label={
+          <Typography className={classes.label} variant="body2">
+            Historic Noon Forecast
           </Typography>
         }
       />

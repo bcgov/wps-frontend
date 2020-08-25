@@ -44,11 +44,15 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .historicModelTempArea': {
+    '& .historicTempArea': {
+      stroke: '#ff91a5',
+      strokeWidth: 1,
       fill: '#ff91a5',
       opacity: 0.5
     },
-    '& .historicModelRHArea': {
+    '& .historicRHArea': {
+      stroke: '#87b1ff',
+      strokeWidth: 1,
       fill: '#87b1ff',
       opacity: 0.5
     },

@@ -12,7 +12,8 @@ import {
   selectModels,
   selectHistoricModels,
   selectForecasts,
-  selectWxDataLoading
+  selectWxDataLoading,
+  selectHistoricForecasts
 } from 'app/rootReducer'
 
 const useStyles = makeStyles({
@@ -45,6 +46,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
   const { noonModelsByStation, modelsByStation } = useSelector(selectModels)
   const { historicModelsByStation } = useSelector(selectHistoricModels)
   const { noonForecastsByStation } = useSelector(selectForecasts)
+  const { historicForecastsByStation } = useSelector(selectHistoricForecasts)
   const wxDataLoading = useSelector(selectWxDataLoading)
 
   return (
@@ -56,8 +58,13 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const noonModelValues = noonModelsByStation[s.code]
           const historicModels = historicModelsByStation[s.code]
           const noonForecastValues = noonForecastsByStation[s.code]
+          const historicForecasts = historicForecastsByStation[s.code]
           const nothingToDisplay =
-            !readingValues && !modelValues && !historicModels && !noonForecastValues
+            !readingValues &&
+            !modelValues &&
+            !historicModels &&
+            !noonForecastValues &&
+            !historicForecasts
 
           return (
             <Paper key={s.code} className={classes.paper} elevation={3}>
@@ -88,6 +95,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
                 readingValues={readingValues}
                 historicModels={historicModels}
                 forecastValues={noonForecastValues}
+                historicForecasts={historicForecasts}
               />
             </Paper>
           )

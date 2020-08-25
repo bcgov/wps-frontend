@@ -4,10 +4,11 @@ import { storiesOf } from '@storybook/react'
 
 import WxDataGraph from 'features/fireWeather/components/WxDataGraph'
 import {
-  modelValues,
-  forecastValues,
   readingValues,
-  historicModels
+  modelValues,
+  historicModels,
+  forecastValues,
+  historicForecasts
 } from 'utils/storybook'
 
 storiesOf('WxDataGraph', module).add('default', () => {
@@ -18,13 +19,7 @@ storiesOf('WxDataGraph', module).add('default', () => {
         readingValues={readingValues}
         historicModels={historicModels}
         forecastValues={forecastValues}
-      />
-      <h3>When only model values provided</h3>
-      <WxDataGraph
-        modelValues={modelValues}
-        readingValues={[]}
-        historicModels={historicModels}
-        forecastValues={[]}
+        historicForecasts={historicForecasts}
       />
     </>
   )

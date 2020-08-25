@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from 'react'
 import * as d3 from 'd3'
 
-import { HistoricModel as _HistoricModel, ModelValue } from 'api/modelAPI'
 import { ReadingValue } from 'api/readingAPI'
+import { HistoricModel as _HistoricModel, ModelValue } from 'api/modelAPI'
+import { HistoricForecast as _HistoricForecast, NoonForecastValue } from 'api/forecastAPI'
 import { formatDateInPDT } from 'utils/date'
 import { useStyles } from 'features/fireWeather/components/TempRHGraph.styles'
 import { getNearestBasedOnDate, formatDateInMonthAndDay, storeDaysLookup } from 'utils/d3'
-import { NoonForecastValue } from 'api/forecastAPI'
 
 interface WeatherValue {
   date: Date
@@ -18,26 +18,29 @@ interface WeatherValue {
   forecastRH?: number
 }
 type HistoricModel = Omit<_HistoricModel, 'datetime'> & { date: Date }
+type HistoricForecast = Omit<_HistoricForecast, 'datetime'> & { date: Date }
 
 interface Props {
   readingValues: ReadingValue[]
   modelValues: ModelValue[]
   historicModels: _HistoricModel[]
   forecastValues: NoonForecastValue[]
+  HistoricForecasts: _HistoricForecast[]
 }
 
 const TempRHGraph = ({
   readingValues: _readingValues = [],
   modelValues: _modelValues = [],
   historicModels: _historicModels = [],
-  forecastValues: _forecastValues = []
+  forecastValues: _forecastValues = [],
+  HistoricForecasts: _HistoricForecasts = []
 }: Props) => {
   const classes = useStyles()
   const svgRef = useRef(null)
 
   useEffect(() => {
     if (svgRef.current) {
-      /* Clear previous svg before rendering a new one*/
+      /* Clear previous svg before rendering a new one */
       d3.select(svgRef.current)
         .selectAll('*')
         .remove()
@@ -45,7 +48,7 @@ const TempRHGraph = ({
       /* Prepare for data */
       const daysLookup: { [k: string]: Date } = {} // will help to create the date label on x axis
       const allDates: Date[] = [] // will be used to determine x axis range
-      const readingsForecastsAndModelsLookup: { [k: string]: WeatherValue } = {}
+      const weatherValueByDatetime: { [k: string]: WeatherValue } = {}
       const readingValues = _readingValues.map(d => {
         const date = storeDaysLookup(daysLookup, d.datetime)
         const reading = {
@@ -53,7 +56,7 @@ const TempRHGraph = ({
           temp: Number(d.temperature.toFixed(2)),
           rh: Math.round(d.relative_humidity)
         }
-        readingsForecastsAndModelsLookup[d.datetime] = reading
+        weatherValueByDatetime[d.datetime] = reading
         allDates.push(date)
 
         return reading
@@ -66,8 +69,8 @@ const TempRHGraph = ({
           modelRH: Math.round(d.relative_humidity)
         }
         // combine with the existing reading value
-        readingsForecastsAndModelsLookup[d.datetime] = {
-          ...readingsForecastsAndModelsLookup[d.datetime],
+        weatherValueByDatetime[d.datetime] = {
+          ...weatherValueByDatetime[d.datetime],
           ...model
         }
         allDates.push(date)
@@ -88,17 +91,24 @@ const TempRHGraph = ({
           forecastRH: Math.round(d.relative_humidity)
         }
         // combine with existing readings and models values
-        readingsForecastsAndModelsLookup[d.datetime] = {
-          ...readingsForecastsAndModelsLookup[d.datetime],
+        weatherValueByDatetime[d.datetime] = {
+          ...weatherValueByDatetime[d.datetime],
           ...forecast
         }
         allDates.push(date)
 
         return forecast
       })
-      const readingForecastAndModelValues = Object.values(
-        readingsForecastsAndModelsLookup
-      ).sort((a, b) => a.date.valueOf() - b.date.valueOf())
+      const historicForecasts: HistoricForecast[] = _HistoricForecasts.map(d => {
+        const date = storeDaysLookup(daysLookup, d.datetime)
+        allDates.push(date)
+
+        return { ...d, date }
+      })
+      // weather values without percentile summaries
+      const weatherValues = Object.values(weatherValueByDatetime).sort(
+        (a, b) => a.date.valueOf() - b.date.valueOf()
+      )
       const minAndMaxDate = d3.extent(allDates) as [Date, Date]
       const xTickValues = Object.values(daysLookup)
         .sort((a, b) => a.valueOf() - b.valueOf()) // sort in ascending order
@@ -148,7 +158,7 @@ const TempRHGraph = ({
       svg
         .append('path')
         .datum(historicModels)
-        .attr('class', 'historicModelTempArea')
+        .attr('class', 'historicTempArea')
         .attr('d', historicModelTempArea)
         .attr('data-testid', 'historic-model-temp-area')
       svg
@@ -171,6 +181,18 @@ const TempRHGraph = ({
         .attr('cy', d => yTempScale(d.modelTemp))
         .attr('r', 1)
         .attr('data-testid', 'wx-data-model-temp-dot')
+      const historicForecastTempArea = d3
+        .area<HistoricForecast>()
+        .curve(d3.curveNatural)
+        .x(d => xScale(d.date))
+        .y0(d => yTempScale(d.tmp_90th))
+        .y1(d => yTempScale(d.tmp_5th))
+      svg
+        .append('path')
+        .datum(historicForecasts)
+        .attr('class', 'historicTempArea')
+        .attr('d', historicForecastTempArea)
+        .attr('data-testid', 'historic-forecast-temp-area')
       svg
         .selectAll('.forecastTempDot')
         .data(forecastValues)
@@ -183,17 +205,6 @@ const TempRHGraph = ({
         .attr('data-testid', 'wx-data-forecast-temp-dot')
 
       /* Render area and dots for RH */
-      const historicModelRHArea = d3
-        .area<HistoricModel>()
-        .curve(d3.curveNatural)
-        .x(d => xScale(d.date))
-        .y0(d => yRHScale(d.rh_tgl_2_90th))
-        .y1(d => yRHScale(d.rh_tgl_2_5th))
-      svg
-        .append('path')
-        .datum(historicModels)
-        .attr('class', 'historicModelRHArea')
-        .attr('d', historicModelRHArea)
       svg
         .selectAll('.readingRHDot')
         .data(readingValues)
@@ -212,6 +223,17 @@ const TempRHGraph = ({
         .attr('cx', d => xScale(d.date))
         .attr('cy', d => yRHScale(d.modelRH))
         .attr('r', 1)
+      const historicModelRHArea = d3
+        .area<HistoricModel>()
+        .curve(d3.curveNatural)
+        .x(d => xScale(d.date))
+        .y0(d => yRHScale(d.rh_tgl_2_90th))
+        .y1(d => yRHScale(d.rh_tgl_2_5th))
+      svg
+        .append('path')
+        .datum(historicModels)
+        .attr('class', 'historicRHArea')
+        .attr('d', historicModelRHArea)
       svg
         .selectAll('.forecastRHDot')
         .data(forecastValues)
@@ -221,6 +243,17 @@ const TempRHGraph = ({
         .attr('cx', d => xScale(d.date))
         .attr('cy', d => yRHScale(d.forecastRH))
         .attr('r', 1)
+      const historicForecastRHArea = d3
+        .area<HistoricForecast>()
+        .curve(d3.curveNatural)
+        .x(d => xScale(d.date))
+        .y0(d => yRHScale(d.rh_90th))
+        .y1(d => yRHScale(d.rh_5th))
+      svg
+        .append('path')
+        .datum(historicForecasts)
+        .attr('class', 'historicRHArea')
+        .attr('d', historicForecastRHArea)
 
       /* Render the current time reference line */
       const currDate = new Date()
@@ -366,11 +399,26 @@ const TempRHGraph = ({
         .attr('y2', height)
         .attr('class', 'tooltipCursor')
       const tooltip = svg.append('g')
+      const removeTooltip = () => {
+        tooltip.call(createTooltipCallout(), null)
+        tooltipCursor.style('opacity', 0)
+      }
       svg.on('touchmove mousemove', function() {
+        if (weatherValues.length === 0) return
+
         const mx = d3.mouse(this)[0]
+        // if user's mouse is not within the weather value dots range
+        if (
+          mx < xScale(weatherValues[0].date) ||
+          mx > xScale(weatherValues[weatherValues.length - 1].date)
+        ) {
+          return removeTooltip()
+        }
+
         const invertedDate = xScale.invert(mx)
-        const nearest = getNearestBasedOnDate(invertedDate, readingForecastAndModelValues)
+        const nearest = getNearestBasedOnDate(invertedDate, weatherValues)
         if (!nearest) return // couldn't find the nearest, so don't render the tooltip
+
         const nearestX = xScale(nearest.date)
         const whichDirection = width / 2 > nearestX ? 'right' : 'left'
         const tooltipText = Object.entries(nearest)
@@ -398,12 +446,16 @@ const TempRHGraph = ({
           .call(createTooltipCallout(whichDirection), tooltipText)
         tooltipCursor.attr('transform', `translate(${nearestX}, 0)`).style('opacity', 1)
       })
-      svg.on('touchend mouseleave', () => {
-        tooltip.call(createTooltipCallout(), null)
-        tooltipCursor.style('opacity', 0)
-      })
+      svg.on('touchend mouseleave', removeTooltip)
     }
-  }, [classes.root, _readingValues, _modelValues, _historicModels, _forecastValues])
+  }, [
+    classes.root,
+    _readingValues,
+    _modelValues,
+    _historicModels,
+    _forecastValues,
+    _HistoricForecasts
+  ])
 
   return (
     <div className={classes.root}>
