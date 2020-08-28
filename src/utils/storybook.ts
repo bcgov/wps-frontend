@@ -55,12 +55,10 @@ const getPastValues = () => {
             .add(length, 'hours')
             .utc()
             .format(),
-          tmp_5th: temp + Math.random() * 1,
-          tmp_median: temp + Math.random() * 2,
-          tmp_90th: temp + Math.random() * 3,
-          rh_5th: rh + Math.random() * 1,
-          rh_median: rh + Math.random() * 2,
-          rh_90th: rh + Math.random() * 3
+          tmp_min: temp + Math.random() * 1,
+          tmp_max: temp + Math.random() * 3,
+          rh_min: rh + Math.random() * 1,
+          rh_max: rh + Math.random() * 3
         })
       }
       // every 3 hour

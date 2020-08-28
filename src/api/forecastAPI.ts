@@ -43,12 +43,10 @@ export async function getNoonForecasts(stationCodes: number[]): Promise<Forecast
 
 export interface HistoricForecast {
   datetime: string
-  tmp_5th: number
-  tmp_median: number
-  tmp_90th: number
-  rh_5th: number
-  rh_median: number
-  rh_90th: number
+  tmp_min: number
+  tmp_max: number
+  rh_min: number
+  rh_max: number
 }
 
 export interface HistoricForecastSummary {

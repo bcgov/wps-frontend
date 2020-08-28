@@ -69,7 +69,7 @@ const WxDataToggles = ({
         }
         label={
           <Typography className={classes.label} variant="body2">
-            Hourly Reading
+            Reading from Station
           </Typography>
         }
       />
@@ -97,26 +97,6 @@ const WxDataToggles = ({
         className={classes.formControlLabel}
         control={
           <Switch
-            name="showHistoricModels"
-            data-testid="wx-data-historic-model-toggle"
-            checked={showHistoricModels}
-            disabled={noHistoricModels}
-            size="small"
-            onChange={(_, checked) => {
-              setShowHistoricModels(checked)
-            }}
-          />
-        }
-        label={
-          <Typography className={classes.label} variant="body2">
-            Historic Model
-          </Typography>
-        }
-      />
-      <FormControlLabel
-        className={classes.formControlLabel}
-        control={
-          <Switch
             name="showForecasts"
             data-testid="wx-data-forecast-toggle"
             checked={showForecasts}
@@ -130,6 +110,26 @@ const WxDataToggles = ({
         label={
           <Typography className={classes.label} variant="body2">
             Noon Forecast
+          </Typography>
+        }
+      />
+      <FormControlLabel
+        className={classes.formControlLabel}
+        control={
+          <Switch
+            name="showHistoricModels"
+            data-testid="wx-data-historic-model-toggle"
+            checked={showHistoricModels}
+            disabled={noHistoricModels}
+            size="small"
+            onChange={(_, checked) => {
+              setShowHistoricModels(checked)
+            }}
+          />
+        }
+        label={
+          <Typography className={classes.label} variant="body2">
+            Historic Model
           </Typography>
         }
       />

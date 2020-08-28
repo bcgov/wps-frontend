@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 import { HistoricModel, ModelValue } from 'api/modelAPI'
 import { ReadingValue } from 'api/readingAPI'
 import { NoonForecastValue, HistoricForecast } from 'api/forecastAPI'
-import TempRHGraph from 'features/fireWeather/components/TempRHGraph'
-import WxDataGraphToggles from 'features/fireWeather/components/WxDataGraphToggles'
+import TempRHGraph from 'features/fireWeather/components/graphs/TempRHGraph'
+import WxDataGraphToggles from 'features/fireWeather/components/graphs/WxDataGraphToggles'
 
 interface Props {
   readingValues: ReadingValue[] | undefined
@@ -30,8 +30,10 @@ const WxDataGraph = ({
   const [showReadings, setShowReadings] = useState<boolean>(!noReadings)
   const [showModels, setShowModels] = useState<boolean>(!noModels)
   const [showHistoricModels, setShowHistoricModels] = useState<boolean>(!noHistoricModels)
-  const [showForecasts, setShowForecasts] = useState<boolean>(false)
-  const [showHistoricForecasts, setShowHistoricForecasts] = useState<boolean>(false)
+  const [showForecasts, setShowForecasts] = useState<boolean>(!noForecasts)
+  const [showHistoricForecasts, setShowHistoricForecasts] = useState<boolean>(
+    !noHistoricForecasts
+  )
 
   if (noReadings && noModels && noHistoricModels && noForecasts && noHistoricForecasts) {
     return null

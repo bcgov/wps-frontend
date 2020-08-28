@@ -2,7 +2,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
 
-import WxDataGraph from 'features/fireWeather/components/WxDataGraph'
+import WxDataGraph from 'features/fireWeather/components/graphs/WxDataGraph'
 import {
   readingValues,
   modelValues,

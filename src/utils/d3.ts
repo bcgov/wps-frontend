@@ -1,5 +1,37 @@
 import * as d3 from 'd3'
 
+export const drawDots = <T>({
+  svg,
+  data,
+  className,
+  cx,
+  cy,
+  radius = 1,
+  testId
+}: {
+  svg: d3.Selection<SVGGElement, unknown, null, undefined>
+  data: T[]
+  className: string
+  cx: (d: T) => number
+  cy: (d: T) => number
+  radius?: number
+  testId?: string
+}) => {
+  const dots = svg // Hourly reading temp dot
+    .selectAll(`.${className}`)
+    .data(data)
+    .enter()
+    .append('circle')
+    .attr('class', className)
+    .attr('cx', cx)
+    .attr('cy', cy)
+    .attr('r', radius)
+
+  if (testId) {
+    dots.attr('data-testid', testId)
+  }
+}
+
 export const getNearestBasedOnDate = (
   invertedDate: Date,
   arr: { date: Date }[]

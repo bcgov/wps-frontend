@@ -1,5 +1,17 @@
 import { makeStyles } from '@material-ui/core/styles'
 
+const currLineColor = 'green'
+const readingTempDotColor = 'crimson'
+const readingRHDotColor = 'royalblue'
+const historicTempAreaColor = '#ff91a5'
+const historicRHAreaColor = '#87b1ff'
+const modelTempDotColor = '#fc6f03'
+const modelRHDotColor = '#03a1fc'
+const forecastTempDotColor = '#ec03fc'
+const forecastRHDotColor = '#5e03fc'
+const historicTempLineColor = '#ec03fc'
+const historicRHLineColor = '#5e03fc'
+
 export const useStyles = makeStyles({
   // Give styling through classes for svg elements
   root: {
@@ -13,12 +25,12 @@ export const useStyles = makeStyles({
     },
     '& .currLine': {
       strokeWidth: 1,
-      stroke: 'green',
+      stroke: currLineColor,
       strokeDasharray: '4,4'
     },
     '& .currLabel': {
       font: '9px sans-serif',
-      fill: 'green'
+      fill: currLineColor
     },
     '& .tooltipCursor': {
       strokeWidth: 1,
@@ -35,55 +47,54 @@ export const useStyles = makeStyles({
       }
     },
     '& .readingTempDot': {
-      stroke: 'crimson',
+      stroke: readingTempDotColor,
       fill: 'none',
       cursor: 'pointer'
     },
     '& .readingRHDot': {
-      stroke: 'royalblue',
+      stroke: readingRHDotColor,
       fill: 'none',
       cursor: 'pointer'
     },
     '& .historicTempArea': {
-      stroke: '#ff91a5',
+      stroke: historicTempAreaColor,
       strokeWidth: 1,
-      fill: '#ff91a5',
+      fill: historicTempAreaColor,
       opacity: 0.5
     },
     '& .historicRHArea': {
-      stroke: '#87b1ff',
+      stroke: historicRHAreaColor,
       strokeWidth: 1,
-      fill: '#87b1ff',
+      fill: historicRHAreaColor,
       opacity: 0.5
     },
     '& .modelTempDot': {
-      stroke: '#fc6f03',
+      stroke: modelTempDotColor,
       fill: 'none',
       cursor: 'pointer'
     },
     '& .modelRHDot': {
-      stroke: '#03a1fc',
+      stroke: modelRHDotColor,
       fill: 'none',
       cursor: 'pointer'
     },
     '& .forecastTempDot': {
-      stroke: '#ec03fc',
+      stroke: forecastTempDotColor,
       fill: 'none',
       cursor: 'pointer'
     },
     '& .forecastRHDot': {
-      stroke: '#5e03fc',
+      stroke: forecastRHDotColor,
       fill: 'none',
       cursor: 'pointer'
+    },
+    '& .historicTempLine': {
+      stroke: historicTempLineColor,
+      strokeWidth: 1.5
+    },
+    '& .historicRHLine': {
+      stroke: historicRHLineColor,
+      strokeWidth: 1.5
     }
-  },
-  title: {
-    paddingBottom: 6
-  },
-  switchWrapper: {
-    marginLeft: -5
-  },
-  switchLabel: {
-    marginLeft: 2
   }
 })
