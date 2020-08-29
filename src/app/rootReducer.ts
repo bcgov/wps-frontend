@@ -25,6 +25,7 @@ export type RootState = ReturnType<typeof rootReducer>
 
 export default rootReducer
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export const selectStations = (state: RootState) => state.stations
 export const selectPercentiles = (state: RootState) => state.percentiles
 export const selectAuthentication = (state: RootState) => state.authentication

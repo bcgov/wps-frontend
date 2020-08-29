@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Station, getStations } from 'api/stationAPI'
 import { AppThunk } from 'app/store'
 
-interface StationsState {
+interface initialState {
   loading: boolean
   error: string | null
   stations: Station[]
 }
 
-export const initialState: StationsState = {
+const initialState: initialState = {
   loading: false,
   error: null,
   stations: []
@@ -16,16 +16,16 @@ export const initialState: StationsState = {
 
 const stationsSlice = createSlice({
   name: 'stations',
-  initialState: initialState,
+  initialState,
   reducers: {
-    getStationsStart(state: StationsState) {
+    getStationsStart(state: initialState) {
       state.loading = true
     },
-    getStationsFailed(state: StationsState, action: PayloadAction<string>) {
+    getStationsFailed(state: initialState, action: PayloadAction<string>) {
       state.loading = false
       state.error = action.payload
     },
-    getStationsSuccess(state: StationsState, action: PayloadAction<Station[]>) {
+    getStationsSuccess(state: initialState, action: PayloadAction<Station[]>) {
       state.loading = false
       state.stations = action.payload
       state.error = null
