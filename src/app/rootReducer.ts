@@ -34,7 +34,7 @@ export const selectReadings = (state: RootState) => state.readings
 export const selectForecasts = (state: RootState) => state.forecasts
 export const selectHistoricModels = (state: RootState) => state.historicModels
 export const selectHistoricForecasts = (state: RootState) => state.historicForecasts
-export const selectWxDataLoading = (state: RootState) =>
+export const selectWxDataLoading = (state: RootState): boolean =>
   state.readings.loading ||
   state.models.loading ||
   state.historicModels.loading ||
