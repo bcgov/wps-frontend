@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from 'react'
 import * as d3 from 'd3'
 
+import { useStyles } from 'features/fireWeather/components/graphs/TempRHGraph.styles'
 import { ReadingValue } from 'api/readingAPI'
 import { HistoricModel as _HistoricModel, ModelValue } from 'api/modelAPI'
 import { HistoricForecast as _HistoricForecast, NoonForecastValue } from 'api/forecastAPI'
 import { formatDateInPDT } from 'utils/date'
 import * as d3Utils from 'utils/d3'
-import { useStyles } from 'features/fireWeather/components/graphs/TempRHGraph.styles'
 
 interface WeatherValue {
   date: Date
@@ -28,7 +28,7 @@ interface Props {
   HistoricForecasts: _HistoricForecast[]
 }
 
-const TempRHGraph = ({
+const TempRHGraph: React.FunctionComponent<Props> = ({
   readingValues: _readingValues = [],
   modelValues: _modelValues = [],
   historicModels: _historicModels = [],
@@ -149,18 +149,15 @@ const TempRHGraph = ({
         .range([height, 0])
 
       /* Render area and dots for temperature */
-      const historicModelTempArea = d3
-        .area<HistoricModel>()
-        .curve(d3.curveNatural)
-        .x(d => xScale(d.date))
-        .y0(d => yTempScale(d.tmp_tgl_2_90th))
-        .y1(d => yTempScale(d.tmp_tgl_2_5th))
-      svg // Historic model temp area
-        .append('path')
-        .datum(historicModels)
-        .attr('class', 'historicTempArea')
-        .attr('d', historicModelTempArea)
-        .attr('data-testid', 'historic-model-temp-area')
+      d3Utils.drawArea({
+        svg,
+        x: d => xScale(d.date),
+        y0: d => yTempScale(d.tmp_tgl_2_90th),
+        y1: d => yTempScale(d.tmp_tgl_2_5th),
+        datum: historicModels,
+        className: 'historicTempArea',
+        testId: 'historic-model-temp-area'
+      })
       d3Utils.drawDots({
         svg,
         data: readingValues,
@@ -210,17 +207,14 @@ const TempRHGraph = ({
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.modelRH)
       })
-      const historicModelRHArea = d3
-        .area<HistoricModel>()
-        .curve(d3.curveNatural)
-        .x(d => xScale(d.date))
-        .y0(d => yRHScale(d.rh_tgl_2_90th))
-        .y1(d => yRHScale(d.rh_tgl_2_5th))
-      svg
-        .append('path')
-        .datum(historicModels)
-        .attr('class', 'historicRHArea')
-        .attr('d', historicModelRHArea)
+      d3Utils.drawArea({
+        svg,
+        x: d => xScale(d.date),
+        y0: d => yRHScale(d.rh_tgl_2_90th),
+        y1: d => yRHScale(d.rh_tgl_2_5th),
+        datum: historicModels,
+        className: 'historicRHArea'
+      })
       d3Utils.drawDots({
         svg,
         data: forecastValues,
@@ -306,130 +300,31 @@ const TempRHGraph = ({
         .attr('class', 'yAxisLabel')
         .text('RH (%)')
 
-      /* Render tooltip and attach its listeners inspired by: https://observablehq.com/@d3/line-chart-with-tooltip */
-      // High order function
-      const createTooltipCallout = (dir?: 'right' | 'left') => (
-        g: typeof svg,
-        value: string
-      ) => {
-        if (!value) return g.attr('class', 'tooltip--hidden')
-
-        g.attr('class', 'tooltip')
-
-        const path = g
-          .selectAll('path')
-          .data([null])
-          .join('path')
-          .attr('fill', 'white')
-          .attr('stroke', 'black')
-
-        const text = g
-          .selectAll('text')
-          .data([null])
-          .join('text')
-          .call(txt =>
-            txt
-              .selectAll('tspan')
-              .data((value + '').split(/\n/))
-              .join('tspan')
-              .attr('x', 0)
-              .attr('y', (d, i) => `${i * 1.5}em`)
-              .text(d => d)
-          )
-
-        // Don't show the tooltip if for some reason getBBox method doesn't exist
-        if (!(text.node() as SVGSVGElement).getBBox) {
-          return g.attr('class', 'tooltip--hidden')
+      d3Utils.attachTooltip({
+        svg,
+        xScale,
+        width,
+        height,
+        data: weatherValues,
+        getInnerText: ([key, value]) => {
+          if (key === 'date') {
+            return `${formatDateInPDT(value, 'h:mm a, ddd, MMM Do')} (PDT, UTC-7)`
+          } else if (key === 'temp') {
+            return `Temp: ${value} (°C)`
+          } else if (key === 'modelTemp') {
+            return `Model Temp: ${value} (°C)`
+          } else if (key === 'forecastTemp') {
+            return `Forecast Temp: ${value} (°C)`
+          } else if (key === 'rh') {
+            return `RH: ${value} (%)`
+          } else if (key === 'modelRH') {
+            return `Model RH: ${value} (%)`
+          } else if (key === 'forecastRH') {
+            return `Forecast RH: ${value} (%)`
+          }
+          return ''
         }
-
-        const { y: textY, width: w, height: h } = (text.node() as SVGSVGElement).getBBox()
-        const padding = 8
-        const startX = 13
-        let translateX = startX
-        let HMove = startX + padding + w
-        let MPointX = startX - padding
-        const MPointY = textY - 2 * padding
-        // Render the tooltip on the left side
-        if (dir === 'left') {
-          translateX = -w - startX
-          HMove = -startX + padding
-          MPointX = -startX - padding - w
-        }
-        text.attr('transform', `translate(${translateX}, ${textY})`)
-        path.attr(
-          'd',
-          `M ${MPointX}, ${MPointY}
-           H${HMove}
-           v${h + 2 * padding}
-           h-${w + 2 * padding}
-           z
-          `
-        )
-      }
-      // Draw a rectangular that covers the whole svg space so that
-      // the listener can react to user's mouseover in anywhere within the graph
-      svg
-        .append('rect')
-        .attr('width', '100%')
-        .attr('height', '100%')
-        .attr('fill', 'transparent')
-        .attr('data-testid', 'wx-data-graph-background')
-      const tooltipCursor = svg
-        .append('line')
-        .attr('x1', 0)
-        .attr('y1', 0)
-        .attr('x2', 0)
-        .attr('y2', height)
-        .attr('class', 'tooltipCursor')
-      const tooltip = svg.append('g')
-      const removeTooltip = () => {
-        tooltip.call(createTooltipCallout(), null)
-        tooltipCursor.style('opacity', 0)
-      }
-      svg.on('touchmove mousemove', function() {
-        if (weatherValues.length === 0) return
-
-        const mx = d3.mouse(this)[0]
-        // if user's mouse is not within the weather value dots range
-        if (
-          mx < xScale(weatherValues[0].date) ||
-          mx > xScale(weatherValues[weatherValues.length - 1].date)
-        ) {
-          return removeTooltip()
-        }
-
-        const invertedDate = xScale.invert(mx)
-        const nearest = d3Utils.getNearestBasedOnDate(invertedDate, weatherValues)
-        if (!nearest) return // couldn't find the nearest, so don't render the tooltip
-
-        const nearestX = xScale(nearest.date)
-        const whichDirection = width / 2 > nearestX ? 'right' : 'left'
-        const tooltipText = Object.entries(nearest)
-          .map(([key, value]) => {
-            if (key === 'date') {
-              return `${formatDateInPDT(value, 'h:mm a, ddd, MMM Do')} (PDT, UTC-7)`
-            } else if (key === 'temp') {
-              return `Temp: ${value} (°C)`
-            } else if (key === 'modelTemp') {
-              return `Model Temp: ${value} (°C)`
-            } else if (key === 'forecastTemp') {
-              return `Forecast Temp: ${value} (°C)`
-            } else if (key === 'rh') {
-              return `RH: ${value} (%)`
-            } else if (key === 'modelRH') {
-              return `Model RH: ${value} (%)`
-            } else if (key === 'forecastRH') {
-              return `Forecast RH: ${value} (%)`
-            }
-            return ''
-          })
-          .join('\n') // new line after each text
-        tooltip
-          .attr('transform', `translate(${nearestX}, ${height / 3})`)
-          .call(createTooltipCallout(whichDirection), tooltipText)
-        tooltipCursor.attr('transform', `translate(${nearestX}, 0)`).style('opacity', 1)
       })
-      svg.on('touchend mouseleave', removeTooltip)
     }
   }, [
     classes.root,
