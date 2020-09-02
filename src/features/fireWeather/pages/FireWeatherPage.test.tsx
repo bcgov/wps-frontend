@@ -12,10 +12,12 @@ import {
   mockReadingsResponse,
   mockForecastsResponse,
   mockHistoricModelsResponse,
+  mockHistoricForecastsResponse,
   emptyModelsResponse,
   emptyReadingsResponse,
   emptyForecastsResponse,
-  emptyHistoricModelsResponse
+  emptyHistoricModelsResponse,
+  emptyHistoricForecastsResponse
 } from 'features/fireWeather/pages/FireWeatherPage.mock'
 
 const mockAxios = new MockAdapter(axios)
@@ -64,6 +66,10 @@ it('renders no data available message if there is no weather data returned', asy
   mockAxios
     .onPost('/models/GDPS/predictions/summaries/')
     .replyOnce(200, emptyHistoricModelsResponse)
+  mockAxios
+    .onPost('/noon_forecasts/summaries')
+    .replyOnce(200, emptyHistoricForecastsResponse)
+
   const { getByText, getByTestId, queryByText, queryByTestId } = renderWithRedux(
     <FireWeatherPage />
   )
@@ -101,6 +107,7 @@ it('renders error messages in response to network errors', async () => {
   mockAxios.onPost('/hourlies/').replyOnce(400)
   mockAxios.onPost('/noon_forecasts/').replyOnce(400)
   mockAxios.onPost('/models/GDPS/predictions/summaries/').replyOnce(400)
+  mockAxios.onPost('/noon_forecasts/summaries/').replyOnce(400)
 
   const { getByText, getByTestId, queryByText } = renderWithRedux(<FireWeatherPage />)
 
@@ -135,6 +142,9 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
   mockAxios
     .onPost('/models/GDPS/predictions/summaries/')
     .replyOnce(200, mockHistoricModelsResponse)
+  mockAxios
+    .onPost('/noon_forecasts/summaries/')
+    .replyOnce(200, mockHistoricForecastsResponse)
 
   const { getByText, getByTestId, getAllByTestId } = renderWithRedux(<FireWeatherPage />)
 
@@ -159,13 +169,15 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
     getByTestId('wx-data-graph'),
     getByTestId('wx-data-reading-toggle'),
     getByTestId('wx-data-model-toggle'),
-    getByTestId('wx-data-forecast-toggle')
+    getByTestId('wx-data-historic-model-toggle'),
+    getByTestId('wx-data-historic-forecast-toggle')
   ])
 
   // Check to see if some of SVG are rendered in the graph (dots, area, and tooltip)
   getAllByTestId('wx-data-model-temp-dot')
   getAllByTestId('wx-data-reading-temp-dot')
   getAllByTestId('wx-data-forecast-temp-dot')
+  getAllByTestId('wx-data-historic-temp-line')
   getByTestId('historic-model-temp-area')
   const graphBg = getByTestId('wx-data-graph-background')
   fireEvent.mouseMove(graphBg)

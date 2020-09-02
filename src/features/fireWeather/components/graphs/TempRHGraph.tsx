@@ -190,6 +190,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           .attr('x2', xScale(forecast.date))
           .attr('y2', yTempScale(forecast.tmp_max))
           .attr('class', 'historicTempLine')
+          .attr('data-testid', 'wx-data-historic-temp-line')
       })
 
       /* Render area and dots for RH */
