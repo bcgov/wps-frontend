@@ -78,7 +78,7 @@ const HourlyReadingsDisplay = ({ values }: Props) => {
                 <TableCell>Wind Spd (km/h)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {v.wind_speed.toFixed(HOURLY_VALUES_DECIMAL)}
+                    {v.wind_speed?.toFixed(HOURLY_VALUES_DECIMAL)}
                   </TableCell>
                 ))}
               </TableRow>
@@ -86,7 +86,7 @@ const HourlyReadingsDisplay = ({ values }: Props) => {
                 <TableCell>Precip (mm/cm)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {v.precipitation.toFixed(HOURLY_VALUES_DECIMAL)}
+                    {v.precipitation?.toFixed(HOURLY_VALUES_DECIMAL)}
                   </TableCell>
                 ))}
               </TableRow>
