@@ -71,7 +71,9 @@ const HourlyReadingsDisplay = ({ values }: Props) => {
               <TableRow>
                 <TableCell>Wind Dir</TableCell>
                 {values.map(v => (
-                  <TableCell key={v.datetime}>{v.wind_direction != null && Math.round(v.wind_direction)}</TableCell>
+                  <TableCell key={v.datetime}>
+                    {v.wind_direction != null && Math.round(v.wind_direction)}
+                  </TableCell>
                 ))}
               </TableRow>
               <TableRow>
