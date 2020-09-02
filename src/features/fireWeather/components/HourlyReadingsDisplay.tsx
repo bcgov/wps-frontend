@@ -56,7 +56,7 @@ const HourlyReadingsDisplay = ({ values }: Props) => {
                 <TableCell>Temp (°C)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {v.temperature.toFixed(HOURLY_VALUES_DECIMAL)}
+                    {v.temperature?.toFixed(HOURLY_VALUES_DECIMAL)}
                   </TableCell>
                 ))}
               </TableRow>
