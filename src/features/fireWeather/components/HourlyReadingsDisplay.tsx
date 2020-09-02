@@ -64,14 +64,14 @@ const HourlyReadingsDisplay = ({ values }: Props) => {
                 <TableCell>RH (%)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {Math.round(v.relative_humidity)}
+                    {v.relative_humidity != null && Math.round(v.relative_humidity)}
                   </TableCell>
                 ))}
               </TableRow>
               <TableRow>
                 <TableCell>Wind Dir</TableCell>
                 {values.map(v => (
-                  <TableCell key={v.datetime}>{Math.round(v.wind_direction)}</TableCell>
+                  <TableCell key={v.datetime}>{v.wind_direction != null && Math.round(v.wind_direction)}</TableCell>
                 ))}
               </TableRow>
               <TableRow>
