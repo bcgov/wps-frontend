@@ -77,46 +77,6 @@ const WxDataToggles = ({
         className={classes.formControlLabel}
         control={
           <Switch
-            name="showModels"
-            data-testid="wx-graph-model-toggle"
-            checked={showModels}
-            disabled={noModels}
-            size="small"
-            onChange={(_, checked) => {
-              setShowModels(checked)
-            }}
-          />
-        }
-        label={
-          <Typography className={classes.label} variant="body2">
-            Global Model
-          </Typography>
-        }
-      />
-      <FormControlLabel
-        className={classes.formControlLabel}
-        control={
-          <Switch
-            name="showForecasts"
-            data-testid="wx-graph-forecast-toggle"
-            checked={showForecasts}
-            disabled={noForecasts}
-            size="small"
-            onChange={(_, checked) => {
-              setShowForecasts(checked)
-            }}
-          />
-        }
-        label={
-          <Typography className={classes.label} variant="body2">
-            Noon Forecast
-          </Typography>
-        }
-      />
-      <FormControlLabel
-        className={classes.formControlLabel}
-        control={
-          <Switch
             name="showModelSummaries"
             data-testid="wx-graph-model-summary-toggle"
             checked={showModelSummaries}
@@ -150,6 +110,46 @@ const WxDataToggles = ({
         label={
           <Typography className={classes.label} variant="body2">
             Historic Noon Forecast
+          </Typography>
+        }
+      />
+      <FormControlLabel
+        className={classes.formControlLabel}
+        control={
+          <Switch
+            name="showModels"
+            data-testid="wx-graph-model-toggle"
+            checked={showModels}
+            disabled={noModels}
+            size="small"
+            onChange={(_, checked) => {
+              setShowModels(checked)
+            }}
+          />
+        }
+        label={
+          <Typography className={classes.label} variant="body2">
+            Global Model
+          </Typography>
+        }
+      />
+      <FormControlLabel
+        className={classes.formControlLabel}
+        control={
+          <Switch
+            name="showForecasts"
+            data-testid="wx-graph-forecast-toggle"
+            checked={showForecasts}
+            disabled={noForecasts}
+            size="small"
+            onChange={(_, checked) => {
+              setShowForecasts(checked)
+            }}
+          />
+        }
+        label={
+          <Typography className={classes.label} variant="body2">
+            Noon Forecast
           </Typography>
         }
       />

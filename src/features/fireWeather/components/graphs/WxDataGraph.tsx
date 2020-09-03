@@ -31,10 +31,10 @@ const WxDataGraph = ({
     pastForecastValues.length === 0 && forecastSummaries.length === 0
   // Show hourly readings and models initially, and let users manipulate the view
   const [showReadings, setShowReadings] = useState<boolean>(!noReadings)
-  const [showModels, setShowModels] = useState<boolean>(!noModels)
-  const [showModelSummaries, setShowModelSummaries] = useState<boolean>(!noModelSummaries)
-  const [showForecasts, setShowForecasts] = useState<boolean>(!noForecasts)
   const [showPastForecasts, setShowPastForecasts] = useState<boolean>(!noPastForecasts)
+  const [showModelSummaries, setShowModelSummaries] = useState<boolean>(!noModelSummaries)
+  const [showModels, setShowModels] = useState<boolean>(false)
+  const [showForecasts, setShowForecasts] = useState<boolean>(false)
 
   if (noReadings && noModels && noModelSummaries && noForecasts && noPastForecasts) {
     return null
