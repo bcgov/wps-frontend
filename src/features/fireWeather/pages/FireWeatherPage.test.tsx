@@ -11,12 +11,12 @@ import {
   mockModelsResponse,
   mockReadingsResponse,
   mockForecastsResponse,
-  mockHistoricModelsResponse,
+  mockModelSummariesResponse,
   mockForecastSummariesResponse,
   emptyModelsResponse,
   emptyReadingsResponse,
   emptyForecastsResponse,
-  emptyHistoricModelsResponse,
+  emptyModelSummariesResponse,
   emptyForecastSummariesResponse
 } from 'features/fireWeather/pages/FireWeatherPage.mock'
 
@@ -65,7 +65,7 @@ it('renders no data available message if there is no weather data returned', asy
   mockAxios.onPost('/noon_forecasts/').replyOnce(200, emptyForecastsResponse)
   mockAxios
     .onPost('/models/GDPS/predictions/summaries/')
-    .replyOnce(200, emptyHistoricModelsResponse)
+    .replyOnce(200, emptyModelSummariesResponse)
   mockAxios
     .onPost('/noon_forecasts/summaries')
     .replyOnce(200, emptyForecastSummariesResponse)
@@ -126,10 +126,11 @@ it('renders error messages in response to network errors', async () => {
 
   // Wait until all the error messages show up
   await waitForElement(() => [
-    queryByText(/while fetching global model data/i),
+    queryByText(/while fetching global models/i),
     queryByText(/while fetching hourly readings/i),
-    queryByText(/while fetching historic global model data/i),
+    queryByText(/while fetching global model summaries/i),
     queryByText(/while fetching noon forecasts/i),
+    queryByText(/while fetching noon forecast summaries/i),
     queryByText(/Data is not available./i)
   ])
 })
@@ -141,7 +142,7 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
   mockAxios.onPost('/noon_forecasts/').replyOnce(200, mockForecastsResponse)
   mockAxios
     .onPost('/models/GDPS/predictions/summaries/')
-    .replyOnce(200, mockHistoricModelsResponse)
+    .replyOnce(200, mockModelSummariesResponse)
   mockAxios
     .onPost('/noon_forecasts/summaries/')
     .replyOnce(200, mockForecastSummariesResponse)
@@ -169,7 +170,7 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
     getByTestId('temp-rh-graph'),
     getByTestId('wx-graph-reading-toggle'),
     getByTestId('wx-graph-model-toggle'),
-    getByTestId('wx-graph-historic-model-toggle'),
+    getByTestId('wx-graph-model-summary-toggle'),
     getByTestId('wx-graph-forecast-summary-toggle')
   ])
 
@@ -178,13 +179,13 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
   getAllByTestId('hourly-reading-temp-dot')
   getAllByTestId('forecast-temp-dot')
   getAllByTestId('forecast-summary-temp-line')
-  getByTestId('historic-model-temp-area')
+  getByTestId('model-summary-temp-area')
   const graphBg = getByTestId('temp-rh-graph-background')
   fireEvent.mouseMove(graphBg)
   fireEvent.mouseLeave(graphBg)
 
   // There should have been 5 post requests
-  // (models, hourly readings, noon forecasts, historic models, historic forecasts).
+  // (models, hourly readings, models, noon forecasts, and two summaries).
   expect(mockAxios.history.post.length).toBe(5)
   // all post requests should include station codes in the body
   mockAxios.history.post.forEach(post => {

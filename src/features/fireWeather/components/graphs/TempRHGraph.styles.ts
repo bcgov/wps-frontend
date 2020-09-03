@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 const currLineColor = 'green'
 const readingTempDotColor = 'crimson'
 const readingRHDotColor = 'royalblue'
-const historicTempAreaColor = '#ff91a5'
-const historicRHAreaColor = '#87b1ff'
+const modelSummaryTempAreaColor = '#ff91a5'
+const modelSummaryRHAreaColor = '#87b1ff'
 const modelTempDotColor = '#fc6f03'
 const modelRHDotColor = '#03a1fc'
 const forecastTempDotColor = '#ec03fc'
@@ -56,16 +56,16 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .historicTempArea': {
-      stroke: historicTempAreaColor,
+    '& .modelSummaryTempArea': {
+      stroke: modelSummaryTempAreaColor,
       strokeWidth: 1,
-      fill: historicTempAreaColor,
+      fill: modelSummaryTempAreaColor,
       opacity: 0.5
     },
-    '& .historicRHArea': {
-      stroke: historicRHAreaColor,
+    '& .modelSummaryRHArea': {
+      stroke: modelSummaryRHAreaColor,
       strokeWidth: 1,
-      fill: historicRHAreaColor,
+      fill: modelSummaryRHAreaColor,
       opacity: 0.5
     },
     '& .modelTempDot': {

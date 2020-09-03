@@ -21,15 +21,15 @@ interface Props {
   noModels: boolean
   showModels: boolean
   setShowModels: (checked: boolean) => void
-  noHistoricModels: boolean
-  showHistoricModels: boolean
-  setShowHistoricModels: (checked: boolean) => void
+  noModelSummaries: boolean
+  showModelSummaries: boolean
+  setShowModelSummaries: (checked: boolean) => void
   noForecasts: boolean
   showForecasts: boolean
   setShowForecasts: (checked: boolean) => void
-  noForecastSummaries: boolean
-  showForecastSummaries: boolean
-  setShowForecastSummaries: (checked: boolean) => void
+  noPastForecasts: boolean
+  showPastForecasts: boolean
+  setShowPastForecasts: (checked: boolean) => void
 }
 
 const WxDataToggles = ({
@@ -39,15 +39,15 @@ const WxDataToggles = ({
   noModels,
   showModels,
   setShowModels,
-  noHistoricModels,
-  showHistoricModels,
-  setShowHistoricModels,
+  noModelSummaries,
+  showModelSummaries,
+  setShowModelSummaries,
   noForecasts,
   showForecasts,
   setShowForecasts,
-  noForecastSummaries,
-  showForecastSummaries,
-  setShowForecastSummaries
+  noPastForecasts,
+  showPastForecasts,
+  setShowPastForecasts
 }: Props) => {
   const classes = useStyles()
 
@@ -89,7 +89,7 @@ const WxDataToggles = ({
         }
         label={
           <Typography className={classes.label} variant="body2">
-            Model Prediction
+            Global Model
           </Typography>
         }
       />
@@ -117,13 +117,13 @@ const WxDataToggles = ({
         className={classes.formControlLabel}
         control={
           <Switch
-            name="showHistoricModels"
-            data-testid="wx-graph-historic-model-toggle"
-            checked={showHistoricModels}
-            disabled={noHistoricModels}
+            name="showModelSummaries"
+            data-testid="wx-graph-model-summary-toggle"
+            checked={showModelSummaries}
+            disabled={noModelSummaries}
             size="small"
             onChange={(_, checked) => {
-              setShowHistoricModels(checked)
+              setShowModelSummaries(checked)
             }}
           />
         }
@@ -137,13 +137,13 @@ const WxDataToggles = ({
         className={classes.formControlLabel}
         control={
           <Switch
-            name="showForecastSummaries"
+            name="showPastForecasts"
             data-testid="wx-graph-forecast-summary-toggle"
-            checked={showForecastSummaries}
-            disabled={noForecastSummaries}
+            checked={showPastForecasts}
+            disabled={noPastForecasts}
             size="small"
             onChange={(_, checked) => {
-              setShowForecastSummaries(checked)
+              setShowPastForecasts(checked)
             }}
           />
         }

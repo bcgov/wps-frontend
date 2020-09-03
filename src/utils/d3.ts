@@ -109,7 +109,7 @@ export const drawArea = <T>({
   Render tooltip and attach its listeners inspired by: https://observablehq.com/@d3/line-chart-with-tooltip
   Note: .tooltip, .tooltip--hidden, and .tooltipCursor classes need to be defined
 */
-export const attachTooltip = <T extends { date: Date }, K extends keyof T>({
+export const addTooltipListener = <T extends { date: Date }, K extends keyof T>({
   svg,
   xScale,
   width,

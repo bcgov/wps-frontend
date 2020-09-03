@@ -6,7 +6,7 @@ import authReducer from 'features/auth/slices/authenticationSlice'
 import modelsReducer from 'features/fireWeather/slices/modelsSlice'
 import readingsReducer from 'features/fireWeather/slices/readingsSlice'
 import forecastsReducer from 'features/fireWeather/slices/forecastsSlice'
-import historicModelsReducer from 'features/fireWeather/slices/historicModelsSlice'
+import modelSummariesReducer from 'features/fireWeather/slices/modelSummariesSlice'
 import forecastSummariesReducer from 'features/fireWeather/slices/forecastSummariesSlice'
 
 const rootReducer = combineReducers({
@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   models: modelsReducer,
   readings: readingsReducer,
   forecasts: forecastsReducer,
-  historicModels: historicModelsReducer,
+  modelSummaries: modelSummariesReducer,
   forecastSummaries: forecastSummariesReducer
 })
 
@@ -33,11 +33,11 @@ export const selectToken = (state: RootState) => state.authentication.token
 export const selectModels = (state: RootState) => state.models
 export const selectReadings = (state: RootState) => state.readings
 export const selectForecasts = (state: RootState) => state.forecasts
-export const selectHistoricModels = (state: RootState) => state.historicModels
+export const selectModelSummaries = (state: RootState) => state.modelSummaries
 export const selectForecastSummaries = (state: RootState) => state.forecastSummaries
 export const selectWxDataLoading = (state: RootState): boolean =>
   state.readings.loading ||
   state.models.loading ||
-  state.historicModels.loading ||
+  state.modelSummaries.loading ||
   state.forecasts.loading ||
   state.forecastSummaries.loading

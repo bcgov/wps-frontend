@@ -28,17 +28,17 @@ const forecastsSlice = createSlice({
     },
     getForecastsSuccess(state: State, action: PayloadAction<Forecast[]>) {
       action.payload.forEach(forecast => {
-        if (forecast.station_code) {
-          const code = forecast.station_code
-          let previousDatetime: string
+        const code = forecast.station_code
+        if (code) {
+          let prevDatetime: string
           const mostRecentForecasts: NoonForecastValue[] = []
           // only add the most recent forecast for the station and datetime
           // (query returns forecasts in order for each datetime, from most recently
           // issued down to first issued)
           forecast.values.forEach(value => {
-            if (previousDatetime !== value.datetime) {
+            if (prevDatetime !== value.datetime) {
               mostRecentForecasts.push(value)
-              previousDatetime = value.datetime
+              prevDatetime = value.datetime
             }
           })
           state.noonForecastsByStation[code] = mostRecentForecasts

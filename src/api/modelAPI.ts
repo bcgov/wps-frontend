@@ -48,7 +48,7 @@ export async function getModels(stationCodes: number[]): Promise<Model[]> {
   }
 }
 
-export interface HistoricModel {
+export interface ModelSummary {
   datetime: string
   tmp_tgl_2_5th: number
   tmp_tgl_2_median: number
@@ -63,23 +63,24 @@ interface ModelInfo {
   abbrev: string
 }
 
-export interface HistoricModelSummary {
+// List of model summaries for each datetime with model & station info
+export interface ModelSummariesForStation {
   station: Station
   model: ModelInfo | null
-  values: HistoricModel[]
+  values: ModelSummary[]
 }
 
-export interface HistoricModelSummariesResponse {
-  summaries: HistoricModelSummary[]
+export interface ModelSummariesResponse {
+  summaries: ModelSummariesForStation[]
 }
 
-export async function getHistoricModels(
+export async function getModelSummaries(
   stationCodes: number[],
   model: 'GDPS'
-): Promise<HistoricModelSummary[]> {
+): Promise<ModelSummariesForStation[]> {
   const url = `/models/${model}/predictions/summaries/`
   try {
-    const { data } = await axios.post<HistoricModelSummariesResponse>(url, {
+    const { data } = await axios.post<ModelSummariesResponse>(url, {
       stations: stationCodes
     })
 

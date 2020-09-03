@@ -49,18 +49,19 @@ export interface ForecastSummary {
   rh_max: number
 }
 
-export interface ForecastSummaries {
+// List of noon forecast summaries for each datetime with station info
+export interface ForecastSummariesForStation {
   station: Station
   values: ForecastSummary[]
 }
 
 export interface ForecastSummariesResponse {
-  summaries: ForecastSummaries[]
+  summaries: ForecastSummariesForStation[]
 }
 
 export async function getForecastSummaries(
   stationCodes: number[]
-): Promise<ForecastSummaries[]> {
+): Promise<ForecastSummariesForStation[]> {
   const url = `/noon_forecasts/summaries/`
   try {
     const { data } = await axios.post<ForecastSummariesResponse>(url, {

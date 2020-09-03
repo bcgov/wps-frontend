@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 
 import { useStyles } from 'features/fireWeather/components/graphs/TempRHGraph.styles'
 import { ReadingValue } from 'api/readingAPI'
-import { HistoricModel as _HistoricModel, ModelValue } from 'api/modelAPI'
+import { ModelSummary as _ModelSummary, ModelValue } from 'api/modelAPI'
 import { ForecastSummary as _ForecastSummary, NoonForecastValue } from 'api/forecastAPI'
 import { formatDateInPDT } from 'utils/date'
 import * as d3Utils from 'utils/d3'
@@ -17,13 +17,13 @@ interface WeatherValue {
   forecastTemp?: number
   forecastRH?: number
 }
-type HistoricModel = Omit<_HistoricModel, 'datetime'> & { date: Date }
+type ModelSummary = Omit<_ModelSummary, 'datetime'> & { date: Date }
 type ForecastSummary = Omit<_ForecastSummary, 'datetime'> & { date: Date }
 
 interface Props {
   readingValues: ReadingValue[]
   modelValues: ModelValue[]
-  historicModels: _HistoricModel[]
+  modelSummaries: _ModelSummary[]
   forecastValues: NoonForecastValue[]
   forecastSummaries: _ForecastSummary[]
 }
@@ -31,7 +31,7 @@ interface Props {
 const TempRHGraph: React.FunctionComponent<Props> = ({
   readingValues: _readingValues = [],
   modelValues: _modelValues = [],
-  historicModels: _historicModels = [],
+  modelSummaries: _modelSummaries = [],
   forecastValues: _forecastValues = [],
   forecastSummaries: _forecastSummaries = []
 }: Props) => {
@@ -77,7 +77,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
         return model
       })
-      const historicModels: HistoricModel[] = _historicModels.map(d => {
+      const modelSummaries: ModelSummary[] = _modelSummaries.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
         allDates.push(date)
 
@@ -154,9 +154,9 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         x: d => xScale(d.date),
         y0: d => yTempScale(d.tmp_tgl_2_90th),
         y1: d => yTempScale(d.tmp_tgl_2_5th),
-        datum: historicModels,
-        className: 'historicTempArea',
-        testId: 'historic-model-temp-area'
+        datum: modelSummaries,
+        className: 'modelSummaryTempArea',
+        testId: 'model-summary-temp-area'
       })
       d3Utils.drawDots({
         svg,
@@ -183,7 +183,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         testId: 'forecast-temp-dot'
       })
       forecastSummaries.forEach(forecast => {
-        svg // Historic forecast temp min & max vertical lines
+        svg // Past forecasts temp min & max vertical lines
           .append('line')
           .attr('x1', xScale(forecast.date))
           .attr('y1', yTempScale(forecast.tmp_min))
@@ -213,8 +213,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         x: d => xScale(d.date),
         y0: d => yRHScale(d.rh_tgl_2_90th),
         y1: d => yRHScale(d.rh_tgl_2_5th),
-        datum: historicModels,
-        className: 'historicRHArea'
+        datum: modelSummaries,
+        className: 'modelSummaryRHArea'
       })
       d3Utils.drawDots({
         svg,
@@ -224,7 +224,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yRHScale(d.forecastRH)
       })
       forecastSummaries.forEach(forecast => {
-        svg // Historic forecast temp min & max vertical lines
+        svg // Past forecasts temp min & max vertical lines
           .append('line')
           .attr('x1', xScale(forecast.date))
           .attr('y1', yRHScale(forecast.rh_min))
@@ -301,7 +301,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .attr('class', 'yAxisLabel')
         .text('RH (%)')
 
-      d3Utils.attachTooltip({
+      d3Utils.addTooltipListener({
         svg,
         xScale,
         width,
@@ -331,7 +331,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
     classes.root,
     _readingValues,
     _modelValues,
-    _historicModels,
+    _modelSummaries,
     _forecastValues,
     _forecastSummaries
   ])

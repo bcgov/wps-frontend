@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { ForecastSummary, ForecastSummaries, getForecastSummaries } from 'api/forecastAPI'
+import {
+  ForecastSummary,
+  ForecastSummariesForStation,
+  getForecastSummaries
+} from 'api/forecastAPI'
 import { AppThunk } from 'app/store'
 
 interface State {
@@ -29,7 +33,7 @@ const forecastSummariesSlice = createSlice({
     },
     getForecastSummariesSuccess(
       state: State,
-      action: PayloadAction<ForecastSummaries[]>
+      action: PayloadAction<ForecastSummariesForStation[]>
     ) {
       state.error = null
       action.payload.forEach(summary => {

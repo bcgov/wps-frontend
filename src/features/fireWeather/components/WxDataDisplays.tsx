@@ -10,7 +10,7 @@ import { Station } from 'api/stationAPI'
 import {
   selectReadings,
   selectModels,
-  selectHistoricModels,
+  selectModelSummaries,
   selectForecasts,
   selectWxDataLoading,
   selectForecastSummaries
@@ -44,7 +44,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
 
   const { readingsByStation } = useSelector(selectReadings)
   const { noonModelsByStation, modelsByStation } = useSelector(selectModels)
-  const { historicModelsByStation } = useSelector(selectHistoricModels)
+  const { modelSummariesByStation } = useSelector(selectModelSummaries)
   const { noonForecastsByStation } = useSelector(selectForecasts)
   const { forecastSummariesByStation } = useSelector(selectForecastSummaries)
   const wxDataLoading = useSelector(selectWxDataLoading)
@@ -56,13 +56,13 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const readingValues = readingsByStation[s.code]
           const modelValues = modelsByStation[s.code]
           const noonModelValues = noonModelsByStation[s.code]
-          const historicModels = historicModelsByStation[s.code]
+          const modelSummaries = modelSummariesByStation[s.code]
           const noonForecastValues = noonForecastsByStation[s.code]
           const forecastSummaries = forecastSummariesByStation[s.code]
           const nothingToDisplay =
             !readingValues &&
             !modelValues &&
-            !historicModels &&
+            !modelSummaries &&
             !noonForecastValues &&
             !forecastSummaries
 
@@ -93,7 +93,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
               <WxDataGraph
                 modelValues={modelValues}
                 readingValues={readingValues}
-                historicModels={historicModels}
+                modelSummaries={modelSummaries}
                 forecastValues={noonForecastValues}
                 forecastSummaries={forecastSummaries}
               />
