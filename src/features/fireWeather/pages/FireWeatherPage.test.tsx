@@ -175,9 +175,7 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
   ])
 
   // Check to see if some of SVG are rendered in the graph (dots, area, and tooltip)
-  getAllByTestId('model-temp-dot')
   getAllByTestId('hourly-reading-temp-dot')
-  getAllByTestId('forecast-temp-dot')
   getAllByTestId('forecast-summary-temp-line')
   getByTestId('model-summary-temp-area')
   const graphBg = getByTestId('temp-rh-graph-background')
