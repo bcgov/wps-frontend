@@ -166,7 +166,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .domain([0, 100])
         .range([height, 0])
 
-      /* Render area and dots for temperature */
+      /* Render temp and rh model summary clouds */
       d3Utils.drawArea({
         svg,
         className: 'modelSummaryTempArea',
@@ -176,6 +176,16 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y1: d => yTempScale(d.tmp_tgl_2_5th),
         testId: 'model-summary-temp-area'
       })
+      d3Utils.drawArea({
+        svg,
+        className: 'modelSummaryRHArea',
+        datum: modelSummaries,
+        x: d => xScale(d.date),
+        y0: d => yRHScale(d.rh_tgl_2_90th),
+        y1: d => yRHScale(d.rh_tgl_2_5th)
+      })
+
+      /* Render temp and rh hourly readings */
       d3Utils.drawDots({
         svg,
         className: 'readingTempDot',
@@ -186,12 +196,30 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       d3Utils.drawDots({
         svg,
+        className: 'readingRHDot',
+        data: readingValues,
+        cx: d => xScale(d.date),
+        cy: d => yRHScale(d.rh)
+      })
+
+      /* Render temp and rh models */
+      d3Utils.drawDots({
+        svg,
         className: 'modelTempDot',
         data: modelValues,
         cx: d => xScale(d.date),
         cy: d => yTempScale(d.modelTemp),
         testId: 'model-temp-dot'
       })
+      d3Utils.drawDots({
+        svg,
+        className: 'modelRHDot',
+        data: modelValues,
+        cx: d => xScale(d.date),
+        cy: d => yRHScale(d.modelRH)
+      })
+
+      /* Render temp and rh noon forecasts */
       d3Utils.drawDots({
         svg,
         className: 'forecastTempDot',
@@ -202,7 +230,16 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       d3Utils.drawDots({
         svg,
-        className: 'forecastTempDot',
+        className: 'forecastRHDot',
+        data: forecastValues,
+        cx: d => xScale(d.date),
+        cy: d => yRHScale(d.forecastRH)
+      })
+
+      /* Render temp and rh past noon forecasts */
+      d3Utils.drawDots({
+        svg,
+        className: 'pastForecastTempDot',
         data: pastForecastValues,
         cx: d => xScale(d.date),
         cy: d => yTempScale(d.forecastTemp),
@@ -218,34 +255,10 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           .attr('class', 'forecastSummaryTempLine')
           .attr('data-testid', 'forecast-summary-temp-line')
       })
-
-      /* Render area and dots for RH */
       d3Utils.drawDots({
         svg,
-        className: 'readingRHDot',
-        data: readingValues,
-        cx: d => xScale(d.date),
-        cy: d => yRHScale(d.rh)
-      })
-      d3Utils.drawDots({
-        svg,
-        className: 'modelRHDot',
-        data: modelValues,
-        cx: d => xScale(d.date),
-        cy: d => yRHScale(d.modelRH)
-      })
-      d3Utils.drawArea({
-        svg,
-        className: 'modelSummaryRHArea',
-        datum: modelSummaries,
-        x: d => xScale(d.date),
-        y0: d => yRHScale(d.rh_tgl_2_90th),
-        y1: d => yRHScale(d.rh_tgl_2_5th)
-      })
-      d3Utils.drawDots({
-        svg,
-        className: 'forecastRHDot',
-        data: forecastValues,
+        className: 'pastForecastRHDot',
+        data: pastForecastValues,
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.forecastRH)
       })

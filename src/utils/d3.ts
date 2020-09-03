@@ -36,6 +36,9 @@ export const storeDaysLookup = (
   return date
 }
 
+/**
+ * Note: className should be unique
+ */
 export const drawDots = <T>({
   svg,
   className,
@@ -105,10 +108,10 @@ export const drawArea = <T>({
   }
 }
 
-/* 
-  Render tooltip and attach its listeners inspired by: https://observablehq.com/@d3/line-chart-with-tooltip
-  Note: .tooltip, .tooltip--hidden, and .tooltipCursor classes need to be defined
-*/
+/**
+ * Render tooltip and attach its listeners inspired by: https://observablehq.com/@d3/line-chart-with-tooltip
+ * Note: .tooltip, .tooltip--hidden, and .tooltipCursor classes need to be defined
+ */
 export const addTooltipListener = <T extends { date: Date }, K extends keyof T>({
   svg,
   xScale,
