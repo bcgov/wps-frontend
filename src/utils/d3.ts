@@ -38,16 +38,16 @@ export const storeDaysLookup = (
 
 export const drawDots = <T>({
   svg,
-  data,
   className,
+  data,
   cx,
   cy,
   radius = 1,
   testId
 }: {
   svg: d3.Selection<SVGGElement, unknown, null, undefined>
-  data: T[]
   className: string
+  data: T[]
   cx: (d: T) => number
   cy: (d: T) => number
   radius?: number
@@ -70,20 +70,20 @@ export const drawDots = <T>({
 
 export const drawArea = <T>({
   svg,
+  className,
+  datum,
   x,
   y0,
   y1,
-  datum,
-  className,
   curve = d3.curveNatural,
   testId
 }: {
   svg: d3.Selection<SVGGElement, unknown, null, undefined>
+  datum: T[]
+  className: string
   x: (d: T) => number // x accessor function
   y0: (d: T) => number // y0 accessor function
   y1: (d: T) => number // y1 accessor function
-  datum: T[]
-  className: string
   curve?: d3.CurveFactory
   testId?: string
 }): void => {

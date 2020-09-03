@@ -45,7 +45,11 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
   const { readingsByStation } = useSelector(selectReadings)
   const { noonModelsByStation, modelsByStation } = useSelector(selectModels)
   const { modelSummariesByStation } = useSelector(selectModelSummaries)
-  const { noonForecastsByStation } = useSelector(selectForecasts)
+  const {
+    noonForecastsByStation,
+    pastNoonForecastsByStation,
+    allNoonForecastsByStation
+  } = useSelector(selectForecasts)
   const { forecastSummariesByStation } = useSelector(selectForecastSummaries)
   const wxDataLoading = useSelector(selectWxDataLoading)
 
@@ -57,13 +61,15 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const modelValues = modelsByStation[s.code]
           const noonModelValues = noonModelsByStation[s.code]
           const modelSummaries = modelSummariesByStation[s.code]
-          const noonForecastValues = noonForecastsByStation[s.code]
+          const allForecasts = allNoonForecastsByStation[s.code]
+          const forecastValues = noonForecastsByStation[s.code]
+          const pastForecastValues = pastNoonForecastsByStation[s.code]
           const forecastSummaries = forecastSummariesByStation[s.code]
           const nothingToDisplay =
             !readingValues &&
             !modelValues &&
             !modelSummaries &&
-            !noonForecastValues &&
+            !allForecasts &&
             !forecastSummaries
 
           return (
@@ -88,13 +94,14 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
               <NoonForecastDisplay
                 testId={`noon-forecasts-table-${s.code}`}
                 title="Weather forecast noon values (20:00 UTC): "
-                values={noonForecastValues}
+                values={allForecasts}
               />
               <WxDataGraph
                 modelValues={modelValues}
                 readingValues={readingValues}
                 modelSummaries={modelSummaries}
-                forecastValues={noonForecastValues}
+                forecastValues={forecastValues}
+                pastForecastValues={pastForecastValues}
                 forecastSummaries={forecastSummaries}
               />
             </Paper>

@@ -25,15 +25,17 @@ interface Props {
   modelValues: ModelValue[]
   modelSummaries: _ModelSummary[]
   forecastValues: NoonForecastValue[]
+  pastForecastValues: NoonForecastValue[]
   forecastSummaries: _ForecastSummary[]
 }
 
 const TempRHGraph: React.FunctionComponent<Props> = ({
-  readingValues: _readingValues = [],
-  modelValues: _modelValues = [],
-  modelSummaries: _modelSummaries = [],
-  forecastValues: _forecastValues = [],
-  forecastSummaries: _forecastSummaries = []
+  readingValues: _readingValues,
+  modelValues: _modelValues,
+  modelSummaries: _modelSummaries,
+  forecastValues: _forecastValues,
+  pastForecastValues: _pastForecastValues,
+  forecastSummaries: _forecastSummaries
 }: Props) => {
   const classes = useStyles()
   const svgRef = useRef(null)
@@ -99,6 +101,22 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
         return forecast
       })
+      const pastForecastValues = _pastForecastValues.map(d => {
+        const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
+        const pastForecast = {
+          date,
+          forecastTemp: Number(d.temperature.toFixed(2)),
+          forecastRH: Math.round(d.relative_humidity)
+        }
+        // combine with existing readings and models values
+        weatherValueByDatetime[d.datetime] = {
+          ...weatherValueByDatetime[d.datetime],
+          ...pastForecast
+        }
+        allDates.push(date)
+
+        return pastForecast
+      })
       const forecastSummaries: ForecastSummary[] = _forecastSummaries.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
         allDates.push(date)
@@ -151,33 +169,41 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       /* Render area and dots for temperature */
       d3Utils.drawArea({
         svg,
+        className: 'modelSummaryTempArea',
+        datum: modelSummaries,
         x: d => xScale(d.date),
         y0: d => yTempScale(d.tmp_tgl_2_90th),
         y1: d => yTempScale(d.tmp_tgl_2_5th),
-        datum: modelSummaries,
-        className: 'modelSummaryTempArea',
         testId: 'model-summary-temp-area'
       })
       d3Utils.drawDots({
         svg,
-        data: readingValues,
         className: 'readingTempDot',
+        data: readingValues,
         cx: d => xScale(d.date),
         cy: d => yTempScale(d.temp),
         testId: 'hourly-reading-temp-dot'
       })
       d3Utils.drawDots({
         svg,
-        data: modelValues,
         className: 'modelTempDot',
+        data: modelValues,
         cx: d => xScale(d.date),
         cy: d => yTempScale(d.modelTemp),
         testId: 'model-temp-dot'
       })
       d3Utils.drawDots({
         svg,
-        data: forecastValues,
         className: 'forecastTempDot',
+        data: forecastValues,
+        cx: d => xScale(d.date),
+        cy: d => yTempScale(d.forecastTemp),
+        testId: 'forecast-temp-dot'
+      })
+      d3Utils.drawDots({
+        svg,
+        className: 'forecastTempDot',
+        data: pastForecastValues,
         cx: d => xScale(d.date),
         cy: d => yTempScale(d.forecastTemp),
         testId: 'forecast-temp-dot'
@@ -196,30 +222,30 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       /* Render area and dots for RH */
       d3Utils.drawDots({
         svg,
-        data: readingValues,
         className: 'readingRHDot',
+        data: readingValues,
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.rh)
       })
       d3Utils.drawDots({
         svg,
-        data: modelValues,
         className: 'modelRHDot',
+        data: modelValues,
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.modelRH)
       })
       d3Utils.drawArea({
         svg,
+        className: 'modelSummaryRHArea',
+        datum: modelSummaries,
         x: d => xScale(d.date),
         y0: d => yRHScale(d.rh_tgl_2_90th),
-        y1: d => yRHScale(d.rh_tgl_2_5th),
-        datum: modelSummaries,
-        className: 'modelSummaryRHArea'
+        y1: d => yRHScale(d.rh_tgl_2_5th)
       })
       d3Utils.drawDots({
         svg,
-        data: forecastValues,
         className: 'forecastRHDot',
+        data: forecastValues,
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.forecastRH)
       })
@@ -333,6 +359,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
     _modelValues,
     _modelSummaries,
     _forecastValues,
+    _pastForecastValues,
     _forecastSummaries
   ])
 

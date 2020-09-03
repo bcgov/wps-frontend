@@ -11,6 +11,7 @@ interface Props {
   modelValues: ModelValue[] | undefined
   modelSummaries: ModelSummary[] | undefined
   forecastValues: NoonForecastValue[] | undefined
+  pastForecastValues: NoonForecastValue[] | undefined
   forecastSummaries: ForecastSummary[] | undefined
 }
 
@@ -19,13 +20,15 @@ const WxDataGraph = ({
   modelValues = [],
   modelSummaries = [],
   forecastValues = [],
+  pastForecastValues = [],
   forecastSummaries = []
 }: Props) => {
   const noReadings = readingValues.length === 0
   const noForecasts = forecastValues.length === 0
   const noModels = modelValues.length === 0
   const noModelSummaries = modelSummaries.length === 0
-  const noPastForecasts = forecastSummaries.length === 0
+  const noPastForecasts =
+    pastForecastValues.length === 0 && forecastSummaries.length === 0
   // Show hourly readings and models initially, and let users manipulate the view
   const [showReadings, setShowReadings] = useState<boolean>(!noReadings)
   const [showModels, setShowModels] = useState<boolean>(!noModels)
@@ -62,6 +65,7 @@ const WxDataGraph = ({
         modelValues={showModels ? modelValues : []}
         modelSummaries={showModelSummaries ? modelSummaries : []}
         forecastValues={showForecasts ? forecastValues : []}
+        pastForecastValues={showPastForecasts ? pastForecastValues : []}
         forecastSummaries={showPastForecasts ? forecastSummaries : []}
       />
     </>
