@@ -57,7 +57,7 @@ const HourlyReadingsDisplay = ({ title, values }: Props) => {
                 <TableCell>Temp (°C)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {v.temperature.toFixed(HOURLY_VALUES_DECIMAL)}
+                    {v.temperature?.toFixed(HOURLY_VALUES_DECIMAL)}
                   </TableCell>
                 ))}
               </TableRow>
@@ -65,21 +65,23 @@ const HourlyReadingsDisplay = ({ title, values }: Props) => {
                 <TableCell>RH (%)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {Math.round(v.relative_humidity)}
+                    {v.relative_humidity != null && Math.round(v.relative_humidity)}
                   </TableCell>
                 ))}
               </TableRow>
               <TableRow>
                 <TableCell>Wind Dir</TableCell>
                 {values.map(v => (
-                  <TableCell key={v.datetime}>{Math.round(v.wind_direction)}</TableCell>
+                  <TableCell key={v.datetime}>
+                    {v.wind_direction != null && Math.round(v.wind_direction)}
+                  </TableCell>
                 ))}
               </TableRow>
               <TableRow>
                 <TableCell>Wind Spd (km/h)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {v.wind_speed.toFixed(HOURLY_VALUES_DECIMAL)}
+                    {v.wind_speed?.toFixed(HOURLY_VALUES_DECIMAL)}
                   </TableCell>
                 ))}
               </TableRow>
@@ -87,7 +89,7 @@ const HourlyReadingsDisplay = ({ title, values }: Props) => {
                 <TableCell>Precip (mm/cm)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {v.precipitation.toFixed(HOURLY_VALUES_DECIMAL)}
+                    {v.precipitation?.toFixed(HOURLY_VALUES_DECIMAL)}
                   </TableCell>
                 ))}
               </TableRow>
