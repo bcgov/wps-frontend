@@ -190,7 +190,7 @@ export const attachTooltip = <T extends { date: Date }, K extends keyof T>({
     .attr('width', '100%')
     .attr('height', '100%')
     .attr('fill', 'transparent')
-    .attr('data-testid', 'wx-data-graph-background')
+    .attr('data-testid', 'temp-rh-graph-background')
   const tooltipCursor = svg
     .append('line')
     .attr('x1', 0)

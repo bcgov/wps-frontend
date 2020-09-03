@@ -1,6 +1,6 @@
 import { ModelsResponse, HistoricModelSummariesResponse } from 'api/modelAPI'
 import { ReadingsResponse } from 'api/readingAPI'
-import { ForecastResponse, HistoricForecastSummariesResponse } from 'api/forecastAPI'
+import { ForecastResponse, ForecastSummariesResponse } from 'api/forecastAPI'
 import moment from 'moment'
 
 const mockNow = moment()
@@ -163,7 +163,7 @@ export const mockForecastsResponse: RecursivePartial<ForecastResponse> = {
   ]
 }
 
-export const mockHistoricForecastsResponse: RecursivePartial<HistoricForecastSummariesResponse> = {
+export const mockForecastSummariesResponse: RecursivePartial<ForecastSummariesResponse> = {
   summaries: [
     {
       station: mockStations[0],
@@ -180,6 +180,6 @@ export const mockHistoricForecastsResponse: RecursivePartial<HistoricForecastSum
   ]
 }
 
-export const emptyHistoricForecastsResponse = {
+export const emptyForecastSummariesResponse = {
   summaries: []
 }

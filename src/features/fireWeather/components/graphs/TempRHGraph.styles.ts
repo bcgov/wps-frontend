@@ -9,8 +9,8 @@ const modelTempDotColor = '#fc6f03'
 const modelRHDotColor = '#03a1fc'
 const forecastTempDotColor = '#ec03fc'
 const forecastRHDotColor = '#5e03fc'
-const historicTempLineColor = '#ec03fc'
-const historicRHLineColor = '#5e03fc'
+const forecastSummaryTempLineColor = '#ec03fc'
+const forecastSummaryRHLineColor = '#5e03fc'
 
 export const useStyles = makeStyles({
   // Give styling through classes for svg elements
@@ -88,12 +88,12 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .historicTempLine': {
-      stroke: historicTempLineColor,
+    '& .forecastSummaryTempLine': {
+      stroke: forecastSummaryTempLineColor,
       strokeWidth: 1.5
     },
-    '& .historicRHLine': {
-      stroke: historicRHLineColor,
+    '& .forecastSummaryRHLine': {
+      stroke: forecastSummaryRHLineColor,
       strokeWidth: 1.5
     }
   }

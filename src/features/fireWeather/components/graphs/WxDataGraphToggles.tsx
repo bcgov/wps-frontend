@@ -27,9 +27,9 @@ interface Props {
   noForecasts: boolean
   showForecasts: boolean
   setShowForecasts: (checked: boolean) => void
-  noHistoricForecasts: boolean
-  showHistoricForecasts: boolean
-  setShowHistoricForecasts: (checked: boolean) => void
+  noForecastSummaries: boolean
+  showForecastSummaries: boolean
+  setShowForecastSummaries: (checked: boolean) => void
 }
 
 const WxDataToggles = ({
@@ -45,9 +45,9 @@ const WxDataToggles = ({
   noForecasts,
   showForecasts,
   setShowForecasts,
-  noHistoricForecasts,
-  showHistoricForecasts,
-  setShowHistoricForecasts
+  noForecastSummaries,
+  showForecastSummaries,
+  setShowForecastSummaries
 }: Props) => {
   const classes = useStyles()
 
@@ -58,7 +58,7 @@ const WxDataToggles = ({
         control={
           <Switch
             name="showReadings"
-            data-testid="wx-data-reading-toggle"
+            data-testid="wx-graph-reading-toggle"
             checked={showReadings}
             disabled={noReadings}
             size="small"
@@ -78,7 +78,7 @@ const WxDataToggles = ({
         control={
           <Switch
             name="showModels"
-            data-testid="wx-data-model-toggle"
+            data-testid="wx-graph-model-toggle"
             checked={showModels}
             disabled={noModels}
             size="small"
@@ -98,7 +98,7 @@ const WxDataToggles = ({
         control={
           <Switch
             name="showForecasts"
-            data-testid="wx-data-forecast-toggle"
+            data-testid="wx-graph-forecast-toggle"
             checked={showForecasts}
             disabled={noForecasts}
             size="small"
@@ -118,7 +118,7 @@ const WxDataToggles = ({
         control={
           <Switch
             name="showHistoricModels"
-            data-testid="wx-data-historic-model-toggle"
+            data-testid="wx-graph-historic-model-toggle"
             checked={showHistoricModels}
             disabled={noHistoricModels}
             size="small"
@@ -137,13 +137,13 @@ const WxDataToggles = ({
         className={classes.formControlLabel}
         control={
           <Switch
-            name="showHistoricForecasts"
-            data-testid="wx-data-historic-forecast-toggle"
-            checked={showHistoricForecasts}
-            disabled={noHistoricForecasts}
+            name="showForecastSummaries"
+            data-testid="wx-graph-forecast-summary-toggle"
+            checked={showForecastSummaries}
+            disabled={noForecastSummaries}
             size="small"
             onChange={(_, checked) => {
-              setShowHistoricForecasts(checked)
+              setShowForecastSummaries(checked)
             }}
           />
         }

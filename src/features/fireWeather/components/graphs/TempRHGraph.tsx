@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 import { useStyles } from 'features/fireWeather/components/graphs/TempRHGraph.styles'
 import { ReadingValue } from 'api/readingAPI'
 import { HistoricModel as _HistoricModel, ModelValue } from 'api/modelAPI'
-import { HistoricForecast as _HistoricForecast, NoonForecastValue } from 'api/forecastAPI'
+import { ForecastSummary as _ForecastSummary, NoonForecastValue } from 'api/forecastAPI'
 import { formatDateInPDT } from 'utils/date'
 import * as d3Utils from 'utils/d3'
 
@@ -18,14 +18,14 @@ interface WeatherValue {
   forecastRH?: number
 }
 type HistoricModel = Omit<_HistoricModel, 'datetime'> & { date: Date }
-type HistoricForecast = Omit<_HistoricForecast, 'datetime'> & { date: Date }
+type ForecastSummary = Omit<_ForecastSummary, 'datetime'> & { date: Date }
 
 interface Props {
   readingValues: ReadingValue[]
   modelValues: ModelValue[]
   historicModels: _HistoricModel[]
   forecastValues: NoonForecastValue[]
-  HistoricForecasts: _HistoricForecast[]
+  forecastSummaries: _ForecastSummary[]
 }
 
 const TempRHGraph: React.FunctionComponent<Props> = ({
@@ -33,7 +33,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
   modelValues: _modelValues = [],
   historicModels: _historicModels = [],
   forecastValues: _forecastValues = [],
-  HistoricForecasts: _HistoricForecasts = []
+  forecastSummaries: _forecastSummaries = []
 }: Props) => {
   const classes = useStyles()
   const svgRef = useRef(null)
@@ -99,7 +99,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
         return forecast
       })
-      const historicForecasts: HistoricForecast[] = _HistoricForecasts.map(d => {
+      const forecastSummaries: ForecastSummary[] = _forecastSummaries.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
         allDates.push(date)
 
@@ -164,7 +164,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         className: 'readingTempDot',
         cx: d => xScale(d.date),
         cy: d => yTempScale(d.temp),
-        testId: 'wx-data-reading-temp-dot'
+        testId: 'hourly-reading-temp-dot'
       })
       d3Utils.drawDots({
         svg,
@@ -172,7 +172,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         className: 'modelTempDot',
         cx: d => xScale(d.date),
         cy: d => yTempScale(d.modelTemp),
-        testId: 'wx-data-model-temp-dot'
+        testId: 'model-temp-dot'
       })
       d3Utils.drawDots({
         svg,
@@ -180,17 +180,17 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         className: 'forecastTempDot',
         cx: d => xScale(d.date),
         cy: d => yTempScale(d.forecastTemp),
-        testId: 'wx-data-forecast-temp-dot'
+        testId: 'forecast-temp-dot'
       })
-      historicForecasts.forEach(forecast => {
+      forecastSummaries.forEach(forecast => {
         svg // Historic forecast temp min & max vertical lines
           .append('line')
           .attr('x1', xScale(forecast.date))
           .attr('y1', yTempScale(forecast.tmp_min))
           .attr('x2', xScale(forecast.date))
           .attr('y2', yTempScale(forecast.tmp_max))
-          .attr('class', 'historicTempLine')
-          .attr('data-testid', 'wx-data-historic-temp-line')
+          .attr('class', 'forecastSummaryTempLine')
+          .attr('data-testid', 'forecast-summary-temp-line')
       })
 
       /* Render area and dots for RH */
@@ -223,14 +223,14 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.forecastRH)
       })
-      historicForecasts.forEach(forecast => {
+      forecastSummaries.forEach(forecast => {
         svg // Historic forecast temp min & max vertical lines
           .append('line')
           .attr('x1', xScale(forecast.date))
           .attr('y1', yRHScale(forecast.rh_min))
           .attr('x2', xScale(forecast.date))
           .attr('y2', yRHScale(forecast.rh_max))
-          .attr('class', 'historicRHLine')
+          .attr('class', 'forecastSummaryRHLine')
       })
 
       /* Render the current time reference line */
@@ -333,12 +333,12 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
     _modelValues,
     _historicModels,
     _forecastValues,
-    _HistoricForecasts
+    _forecastSummaries
   ])
 
   return (
     <div className={classes.root}>
-      <svg data-testid="wx-data-graph" ref={svgRef} />
+      <svg data-testid="temp-rh-graph" ref={svgRef} />
     </div>
   )
 }

@@ -34,7 +34,7 @@ const getModelValues = () => {
 const getPastValues = () => {
   const _readingValues = []
   const _historicModels = []
-  const _historicForecasts = []
+  const _forecastSummaries = []
 
   const days = 3
   const first = moment()
@@ -50,7 +50,7 @@ const getPastValues = () => {
 
       // every 12 hour
       if (length % 12 === 0) {
-        _historicForecasts.push({
+        _forecastSummaries.push({
           datetime: moment(first)
             .add(length, 'hours')
             .utc()
@@ -97,7 +97,7 @@ const getPastValues = () => {
     first.add(1, 'days')
   }
 
-  return [_readingValues, _historicModels, _historicForecasts]
+  return [_readingValues, _historicModels, _forecastSummaries]
 }
 
 const getForecastValues = () => {
@@ -134,5 +134,5 @@ const getForecastValues = () => {
 }
 
 export const modelValues = getModelValues()
-export const [readingValues, historicModels, historicForecasts] = getPastValues()
+export const [readingValues, historicModels, forecastSummaries] = getPastValues()
 export const forecastValues = getForecastValues()

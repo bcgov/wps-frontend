@@ -41,7 +41,7 @@ export async function getNoonForecasts(stationCodes: number[]): Promise<Forecast
   }
 }
 
-export interface HistoricForecast {
+export interface ForecastSummary {
   datetime: string
   tmp_min: number
   tmp_max: number
@@ -49,21 +49,21 @@ export interface HistoricForecast {
   rh_max: number
 }
 
-export interface HistoricForecastSummary {
+export interface ForecastSummaries {
   station: Station
-  values: HistoricForecast[]
+  values: ForecastSummary[]
 }
 
-export interface HistoricForecastSummariesResponse {
-  summaries: HistoricForecastSummary[]
+export interface ForecastSummariesResponse {
+  summaries: ForecastSummaries[]
 }
 
-export async function getHistoricForecasts(
+export async function getForecastSummaries(
   stationCodes: number[]
-): Promise<HistoricForecastSummary[]> {
+): Promise<ForecastSummaries[]> {
   const url = `/noon_forecasts/summaries/`
   try {
-    const { data } = await axios.post<HistoricForecastSummariesResponse>(url, {
+    const { data } = await axios.post<ForecastSummariesResponse>(url, {
       stations: stationCodes
     })
 
