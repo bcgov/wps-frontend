@@ -142,7 +142,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       /* Set the dimensions and margins of the graph */
       const margin = { top: 10, right: 40, bottom: 40, left: 40 }
       const widthValue = 600
-      const heightValue = 150
+      const heightValue = 220
       const width = widthValue - margin.left - margin.right
       const height = heightValue - margin.top - margin.bottom
       const svg = d3
