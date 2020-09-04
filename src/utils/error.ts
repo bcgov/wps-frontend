@@ -1,5 +1,5 @@
 export const logError = (err: unknown): void => {
   if (process.env.NODE_ENV !== 'test') {
-    console.dir(err)
+    console.error(err)
   }
 }
