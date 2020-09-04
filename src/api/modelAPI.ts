@@ -88,3 +88,19 @@ export async function getHistoricModels(
     throw err.toString()
   }
 }
+
+export async function getMostRecentHistoricModelPredictions(
+  stationCodes: number[],
+  model: 'GDPS'
+): Promise<Model[]> {
+  const url = `/models/${model}/predictions/historic/most_recent/`
+  try {
+    const { data } = await axios.post<ModelsResponse>(url, {
+      stations: stationCodes
+    })
+
+    return data.predictions
+  } catch (err) {
+    throw err.toString()
+  }
+}

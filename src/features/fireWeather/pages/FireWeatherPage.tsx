@@ -17,6 +17,7 @@ import { fetchReadings } from 'features/fireWeather/slices/readingsSlice'
 import GetWxDataButton from '../components/GetWxDataButton'
 import { fetchForecasts } from '../slices/forecastsSlice'
 import { fetchHistoricModels } from '../slices/historicModelsSlice'
+import { fetchMostRecentHistoricModels } from '../slices/mostRecentHistoricModelsSlice'
 
 const useStyles = makeStyles({
   stationDropdown: {
@@ -60,6 +61,7 @@ const FireWeatherPage = () => {
     dispatch(fetchReadings(stationCodes))
     dispatch(fetchForecasts(stationCodes))
     dispatch(fetchHistoricModels(stationCodes))
+    dispatch(fetchMostRecentHistoricModels(stationCodes))
   }
 
   return (
