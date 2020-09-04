@@ -7,13 +7,14 @@ export const kcInitOption: KeycloakInitOptions = {
   checkLoginIframe: false
 }
 
-// Let Typescript know we are using the 'native' promise type
-const instance = window.Keycloak
-  ? window.Keycloak<'native'>({
-      url: KC_AUTH_URL,
-      realm: KC_REALM,
-      clientId: KC_CLIENT
-    })
-  : null
+let instance: Keycloak.KeycloakInstance<'native'> | undefined
+if (window.Keycloak && KC_AUTH_URL && KC_REALM && KC_CLIENT) {
+  // Let Typescript know we are using the 'native' promise type
+  instance = window.Keycloak<'native'>({
+    url: KC_AUTH_URL,
+    realm: KC_REALM,
+    clientId: KC_CLIENT
+  })
+}
 
 export default instance
