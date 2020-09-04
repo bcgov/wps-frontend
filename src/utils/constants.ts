@@ -1,3 +1,4 @@
+/* eslint-disable */
 const env = (window as { [key: string]: any })['env']
 export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || './api'
 export const HIDE_DISCLAIMER = process.env.REACT_APP_HIDE_DISCLAIMER
