@@ -71,6 +71,34 @@ export const drawDots = <T>({
   }
 }
 
+export const drawVerticalLine = ({
+  svg,
+  className,
+  x,
+  y1,
+  y2,
+  testId
+}: {
+  svg: d3.Selection<SVGGElement, unknown, null, undefined>
+  className: string
+  x: number
+  y1: number
+  y2: number
+  testId?: string
+}): void => {
+  const line = svg
+    .append('line')
+    .attr('x1', x)
+    .attr('y1', y1)
+    .attr('x2', x)
+    .attr('y2', y2)
+    .attr('class', className)
+
+  if (testId) {
+    line.attr('data-testid', testId)
+  }
+}
+
 export const drawArea = <T>({
   svg,
   className,
@@ -82,8 +110,8 @@ export const drawArea = <T>({
   testId
 }: {
   svg: d3.Selection<SVGGElement, unknown, null, undefined>
-  datum: T[]
   className: string
+  datum: T[]
   x: (d: T) => number // x accessor function
   y0: (d: T) => number // y0 accessor function
   y1: (d: T) => number // y1 accessor function

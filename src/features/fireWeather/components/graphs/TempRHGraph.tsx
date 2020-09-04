@@ -245,15 +245,16 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yTempScale(d.forecastTemp),
         testId: 'forecast-temp-dot'
       })
+      // Past forecasts temp min & max vertical lines
       forecastSummaries.forEach(forecast => {
-        svg // Past forecasts temp min & max vertical lines
-          .append('line')
-          .attr('x1', xScale(forecast.date))
-          .attr('y1', yTempScale(forecast.tmp_min))
-          .attr('x2', xScale(forecast.date))
-          .attr('y2', yTempScale(forecast.tmp_max))
-          .attr('class', 'forecastSummaryTempLine')
-          .attr('data-testid', 'forecast-summary-temp-line')
+        d3Utils.drawVerticalLine({
+          svg,
+          className: 'forecastSummaryTempLine',
+          x: xScale(forecast.date),
+          y1: yTempScale(forecast.tmp_min),
+          y2: yTempScale(forecast.tmp_max),
+          testId: 'forecast-summary-temp-line'
+        })
       })
       d3Utils.drawDots({
         svg,
@@ -262,14 +263,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.forecastRH)
       })
+      // Past forecasts rh min & max vertical lines
       forecastSummaries.forEach(forecast => {
-        svg // Past forecasts temp min & max vertical lines
-          .append('line')
-          .attr('x1', xScale(forecast.date))
-          .attr('y1', yRHScale(forecast.rh_min))
-          .attr('x2', xScale(forecast.date))
-          .attr('y2', yRHScale(forecast.rh_max))
-          .attr('class', 'forecastSummaryRHLine')
+        d3Utils.drawVerticalLine({
+          svg,
+          className: 'forecastSummaryRHLine',
+          x: xScale(forecast.date),
+          y1: yRHScale(forecast.rh_min),
+          y2: yRHScale(forecast.rh_max)
+        })
       })
 
       /* Render the current time reference line */
@@ -281,13 +283,13 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         minAndMaxDate[1].valueOf() > currDate.valueOf()
       if (isCurrDateInXAxisRange) {
         const scaledCurrDate = xScale(currDate)
-        svg
-          .append('line')
-          .attr('x1', scaledCurrDate)
-          .attr('y1', 0)
-          .attr('x2', scaledCurrDate)
-          .attr('y2', height)
-          .attr('class', 'currLine')
+        d3Utils.drawVerticalLine({
+          svg,
+          className: 'currLine',
+          x: scaledCurrDate,
+          y1: 0,
+          y2: height
+        })
         svg
           .append('text')
           .attr('y', -12)
