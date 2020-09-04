@@ -32,8 +32,8 @@ const forecastsSlice = createSlice({
     },
     getForecastsSuccess(state: State, action: PayloadAction<Forecast[]>) {
       action.payload.forEach(forecast => {
-        const code = forecast.station_code
-        if (code) {
+        const sCode = forecast.station_code
+        if (sCode) {
           const allForecasts: NoonForecastValue[] = []
 
           const currDate = new Date()
@@ -45,20 +45,22 @@ const forecastsSlice = createSlice({
           let prevDatetime: string
           const mostRecentForecasts: NoonForecastValue[] = []
           forecast.values.forEach(value => {
-            const isDifferentDatetime = prevDatetime !== value.datetime
-            if (isDifferentDatetime) {
-              if (new Date(value.datetime) >= currDate) {
+            const isDiffDatetime = prevDatetime !== value.datetime
+            if (isDiffDatetime) {
+              const isFutureForecast = new Date(value.datetime) >= currDate
+              if (isFutureForecast) {
                 mostRecentForecasts.push(value)
               } else {
                 pastForecasts.push(value)
               }
+
               allForecasts.push(value)
               prevDatetime = value.datetime
             }
           })
-          state.allNoonForecastsByStation[code] = allForecasts
-          state.pastNoonForecastsByStation[code] = pastForecasts
-          state.noonForecastsByStation[code] = mostRecentForecasts
+          state.allNoonForecastsByStation[sCode] = allForecasts
+          state.pastNoonForecastsByStation[sCode] = pastForecasts
+          state.noonForecastsByStation[sCode] = mostRecentForecasts
         }
       })
       state.loading = false
