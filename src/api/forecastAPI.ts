@@ -31,14 +31,10 @@ export interface ForecastResponse {
 export async function getNoonForecasts(stationCodes: number[]): Promise<Forecast[]> {
   const url = '/noon_forecasts/'
 
-  try {
-    const { data } = await axios.post<ForecastResponse>(url, {
-      stations: stationCodes
-    })
-    return data.noon_forecasts
-  } catch (err) {
-    throw err.toString()
-  }
+  const { data } = await axios.post<ForecastResponse>(url, {
+    stations: stationCodes
+  })
+  return data.noon_forecasts
 }
 
 export interface ForecastSummary {
@@ -63,13 +59,9 @@ export async function getForecastSummaries(
   stationCodes: number[]
 ): Promise<ForecastSummariesForStation[]> {
   const url = `/noon_forecasts/summaries/`
-  try {
-    const { data } = await axios.post<ForecastSummariesResponse>(url, {
-      stations: stationCodes
-    })
+  const { data } = await axios.post<ForecastSummariesResponse>(url, {
+    stations: stationCodes
+  })
 
-    return data.summaries
-  } catch (err) {
-    throw err.toString()
-  }
+  return data.summaries
 }

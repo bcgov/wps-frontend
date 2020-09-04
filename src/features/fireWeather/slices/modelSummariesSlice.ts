@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { ModelSummary, getModelSummaries, ModelSummariesForStation } from 'api/modelAPI'
 import { AppThunk } from 'app/store'
+import { logError } from 'utils/error'
 
 interface State {
   loading: boolean
@@ -59,6 +60,7 @@ export const fetchModelSummaries = (
     const modelSummaries = await getModelSummaries(stationCodes, 'GDPS')
     dispatch(getModelSummariesSuccess(modelSummaries))
   } catch (err) {
-    dispatch(getModelSummariesFailed(err))
+    dispatch(getModelSummariesFailed(err.toString()))
+    logError(err)
   }
 }

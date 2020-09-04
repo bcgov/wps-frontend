@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Station, getStations } from 'api/stationAPI'
 import { AppThunk } from 'app/store'
+import { logError } from 'utils/error'
 
 interface initialState {
   loading: boolean
@@ -47,6 +48,7 @@ export const fetchWxStations = (): AppThunk => async dispatch => {
     const stations = await getStations()
     dispatch(getStationsSuccess(stations))
   } catch (err) {
-    dispatch(getStationsFailed(err))
+    dispatch(getStationsFailed(err.toString()))
+    logError(err)
   }
 }

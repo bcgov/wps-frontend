@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { Forecast, getNoonForecasts, NoonForecastValue } from 'api/forecastAPI'
 import { AppThunk } from 'app/store'
+import { logError } from 'utils/error'
 
 interface State {
   loading: boolean
@@ -83,6 +84,7 @@ export const fetchForecasts = (stationCodes: number[]): AppThunk => async dispat
     const forecasts = await getNoonForecasts(stationCodes)
     dispatch(getForecastsSuccess(forecasts))
   } catch (err) {
-    dispatch(getForecastsFailed(err))
+    dispatch(getForecastsFailed(err.toString()))
+    logError(err)
   }
 }

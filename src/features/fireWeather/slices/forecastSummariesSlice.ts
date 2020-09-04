@@ -6,6 +6,7 @@ import {
   getForecastSummaries
 } from 'api/forecastAPI'
 import { AppThunk } from 'app/store'
+import { logError } from 'utils/error'
 
 interface State {
   loading: boolean
@@ -63,6 +64,7 @@ export const fetchForecastSummaries = (
     const forecastSummaries = await getForecastSummaries(stationCodes)
     dispatch(getForecastSummariesSuccess(forecastSummaries))
   } catch (err) {
-    dispatch(getForecastSummariesFailed(err))
+    dispatch(getForecastSummariesFailed(err.toString()))
+    logError(err)
   }
 }
