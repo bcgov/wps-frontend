@@ -30,6 +30,9 @@ interface Props {
   noPastForecasts: boolean
   showPastForecasts: boolean
   setShowPastForecasts: (checked: boolean) => void
+  noRecentHistoricModels: boolean
+  showRecentHistoricModels: boolean
+  setShowRecentHistoricModels: (checked: boolean) => void
 }
 
 const WxDataToggles = ({
@@ -47,7 +50,10 @@ const WxDataToggles = ({
   setShowForecasts,
   noPastForecasts,
   showPastForecasts,
-  setShowPastForecasts
+  setShowPastForecasts,
+  noRecentHistoricModels,
+  showRecentHistoricModels,
+  setShowRecentHistoricModels
 }: Props) => {
   const classes = useStyles()
 
@@ -79,11 +85,12 @@ const WxDataToggles = ({
           <Switch
             name="showModelSummaries"
             data-testid="wx-graph-model-summary-toggle"
-            checked={showModelSummaries}
-            disabled={noModelSummaries}
+            checked={showModelSummaries && showRecentHistoricModels}
+            disabled={noModelSummaries || noRecentHistoricModels}
             size="small"
             onChange={(_, checked) => {
               setShowModelSummaries(checked)
+              setShowRecentHistoricModels(checked)
             }}
           />
         }

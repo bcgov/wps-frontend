@@ -67,8 +67,18 @@ export interface ModelSummariesForStation {
   values: ModelSummary[]
 }
 
+export interface HistoricModelsForStation {
+  station: Station
+  model: ModelInfo | null
+  values: ModelValue[]
+}
+
 export interface ModelSummariesResponse {
   summaries: ModelSummariesForStation[]
+}
+
+export interface HistoricModelsResponse {
+  predictions: HistoricModelsForStation[]
 }
 
 export async function getModelSummaries(
@@ -86,10 +96,10 @@ export async function getModelSummaries(
 export async function getMostRecentHistoricModelPredictions(
   stationCodes: number[],
   model: 'GDPS'
-): Promise<Model[]> {
+): Promise<HistoricModelsForStation[]> {
   const url = `/models/${model}/predictions/historic/most_recent/`
   try {
-    const { data } = await axios.post<ModelsResponse>(url, {
+    const { data } = await axios.post<HistoricModelsResponse>(url, {
       stations: stationCodes
     })
 

@@ -35,6 +35,7 @@ const getPastValues = () => {
   const _readingValues = []
   const _modelSummaries = []
   const _forecastSummaries = []
+  const _recentHistoricModelValues = []
 
   const days = 3
   const first = moment()
@@ -75,6 +76,14 @@ const getPastValues = () => {
           rh_tgl_2_median: rh + Math.random() * 2,
           rh_tgl_2_90th: rh - Math.random() * 5
         })
+        _recentHistoricModelValues.push({
+          datetime: moment(first)
+            .add(length, 'hours')
+            .utc()
+            .format(),
+          temperature: temp,
+          relative_humidity: rh
+        })
       }
       // every hour
       _readingValues.push({
@@ -97,7 +106,7 @@ const getPastValues = () => {
     first.add(1, 'days')
   }
 
-  return [_readingValues, _modelSummaries, _forecastSummaries]
+  return [_readingValues, _modelSummaries, _forecastSummaries, _recentHistoricModelValues]
 }
 
 const getForecastValues = () => {

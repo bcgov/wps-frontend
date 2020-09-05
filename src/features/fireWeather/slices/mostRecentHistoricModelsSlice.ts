@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import {
-  Model,
+  ModelValue,
   getMostRecentHistoricModelPredictions,
-  ModelsResponse
+  HistoricModelsForStation
 } from 'api/modelAPI'
 import { AppThunk } from 'app/store'
 
 interface State {
   loading: boolean
   error: string | null
-  mostRecentHistoricModelsByStation: Record<number, Model[] | undefined>
+  mostRecentHistoricModelsByStation: Record<number, ModelValue[] | undefined>
 }
 
 const initialState: State = {
@@ -33,10 +33,15 @@ const mostRecentHistoricModelsSlice = createSlice({
     },
     getMostRecentHistoricModelsSuccess(
       state: State,
-      action: PayloadAction<ModelsResponse>
+      action: PayloadAction<HistoricModelsForStation[]>
     ) {
       state.error = null
-      console.log(action.payload)
+      action.payload.forEach(historic_model => {
+        if (historic_model.station) {
+          const code = historic_model.station.code
+          state.mostRecentHistoricModelsByStation[code] = historic_model.values
+        }
+      })
 
       state.loading = false
     }
@@ -60,10 +65,7 @@ export const fetchMostRecentHistoricModels = (
       stationCodes,
       'GDPS'
     )
-    const mostRecentHistoricModelsResponse = {
-      predictions: mostRecentHistoricModels
-    }
-    dispatch(getMostRecentHistoricModelsSuccess(mostRecentHistoricModelsResponse))
+    dispatch(getMostRecentHistoricModelsSuccess(mostRecentHistoricModels))
   } catch (err) {
     dispatch(getMostRecentHistoricModelsFailed(err))
   }

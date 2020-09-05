@@ -13,6 +13,7 @@ interface Props {
   forecastValues: NoonForecastValue[] | undefined
   pastForecastValues: NoonForecastValue[] | undefined
   forecastSummaries: ForecastSummary[] | undefined
+  recentHistoricModelValues: ModelValue[] | undefined
 }
 
 const WxDataGraph = ({
@@ -21,18 +22,23 @@ const WxDataGraph = ({
   modelSummaries = [],
   forecastValues = [],
   pastForecastValues = [],
-  forecastSummaries = []
+  forecastSummaries = [],
+  recentHistoricModelValues = []
 }: Props) => {
   const noReadings = readingValues.length === 0
   const noForecasts = forecastValues.length === 0
   const noModels = modelValues.length === 0
   const noModelSummaries = modelSummaries.length === 0
+  const noRecentHistoricModels = recentHistoricModelValues.length === 0
   const noPastForecasts =
     pastForecastValues.length === 0 && forecastSummaries.length === 0
   // Show hourly readings and models initially, and let users manipulate the view
   const [showReadings, setShowReadings] = useState<boolean>(!noReadings)
   const [showPastForecasts, setShowPastForecasts] = useState<boolean>(!noPastForecasts)
   const [showModelSummaries, setShowModelSummaries] = useState<boolean>(!noModelSummaries)
+  const [showRecentHistoricModels, setShowRecentHistoricModels] = useState<boolean>(
+    !noRecentHistoricModels
+  )
   const [showModels, setShowModels] = useState<boolean>(false)
   const [showForecasts, setShowForecasts] = useState<boolean>(false)
 
@@ -58,6 +64,9 @@ const WxDataGraph = ({
         noPastForecasts={noPastForecasts}
         showPastForecasts={showPastForecasts}
         setShowPastForecasts={setShowPastForecasts}
+        noRecentHistoricModels={noRecentHistoricModels}
+        showRecentHistoricModels={showRecentHistoricModels}
+        setShowRecentHistoricModels={setShowRecentHistoricModels}
       />
 
       <TempRHGraph
@@ -67,6 +76,9 @@ const WxDataGraph = ({
         forecastValues={showForecasts ? forecastValues : []}
         pastForecastValues={showPastForecasts ? pastForecastValues : []}
         forecastSummaries={showPastForecasts ? forecastSummaries : []}
+        recentHistoricModelValues={
+          showRecentHistoricModels ? recentHistoricModelValues : []
+        }
       />
     </>
   )
