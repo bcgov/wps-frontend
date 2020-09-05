@@ -182,9 +182,9 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
   fireEvent.mouseMove(graphBg)
   fireEvent.mouseLeave(graphBg)
 
-  // There should have been 5 post requests
-  // (models, hourly readings, models, noon forecasts, and two summaries).
-  expect(mockAxios.history.post.length).toBe(5)
+  // There should have been 6 post requests
+  // (models, hourly readings, most recent historic models, noon forecasts, and two summaries).
+  expect(mockAxios.history.post.length).toBe(6)
   // all post requests should include station codes in the body
   mockAxios.history.post.forEach(post => {
     expect(post.data).toBe(
