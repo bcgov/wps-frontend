@@ -8,7 +8,7 @@ export const kcInitOption: KeycloakInitOptions = {
 }
 
 let instance: Keycloak.KeycloakInstance<'native'> | undefined
-if (window.Keycloak && KC_AUTH_URL && KC_REALM && KC_CLIENT) {
+if (window.Keycloak) {
   // Let Typescript know we are using the 'native' promise type
   instance = window.Keycloak<'native'>({
     url: KC_AUTH_URL,

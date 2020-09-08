@@ -30,7 +30,7 @@ jobs:
         run: npm run lint
 
       - name: Tests with coverage
-        run: export $(cat .env.example | xargs) && npm run coverage:ci
+        run: npm run coverage:ci
 
       - name: Fix code coverage paths
         # Due to the way sonarscanner mounts thing when running in docker, we need to change the coverage file.

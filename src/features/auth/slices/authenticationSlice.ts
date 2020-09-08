@@ -4,7 +4,6 @@ import axios from 'api/axios'
 import { AppThunk } from 'app/store'
 import { selectToken } from 'app/rootReducer'
 import kcInstance, { kcInitOption } from 'features/auth/keycloak'
-import { logError } from 'utils/error'
 
 interface State {
   authenticating: boolean
@@ -72,9 +71,7 @@ export const authenticate = (): AppThunk => dispatch => {
 
   if (!kcInstance) {
     return dispatch(
-      authenticateError(
-        'Failed to authenticate (Unable to fetch keycloak.js or configurations).'
-      )
+      authenticateError('Failed to authenticate (Unable to fetch keycloak-js).')
     )
   }
 
@@ -84,7 +81,7 @@ export const authenticate = (): AppThunk => dispatch => {
       dispatch(authenticateFinished({ isAuthenticated, token: kcInstance?.token }))
     })
     .catch(err => {
-      logError(err)
+      console.error(err)
       dispatch(authenticateError('Failed to authenticate.'))
     })
   // Set a callback that will be triggered when the access token is expired
