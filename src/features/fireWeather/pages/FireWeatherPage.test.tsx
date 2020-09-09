@@ -41,7 +41,7 @@ it('renders fire weather page', async () => {
 })
 
 it('renders weather stations dropdown with data', async () => {
-  mockAxios.onGet('/api/stations/').replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
 
   const { getByText, getByTestId, store } = renderWithRedux(<FireWeatherPage />)
   expect(selectStations(store.getState()).stations).toEqual([])
@@ -61,18 +61,18 @@ it('renders weather stations dropdown with data', async () => {
 })
 
 it('renders no data available message if there is no weather data returned', async () => {
-  mockAxios.onGet('/api/stations/').replyOnce(200, { weather_stations: mockStations })
-  mockAxios.onPost('/api/models/GDPS/predictions/').replyOnce(200, emptyModelsResponse)
-  mockAxios.onPost('/api/hourlies/').replyOnce(200, emptyReadingsResponse)
-  mockAxios.onPost('/api/noon_forecasts/').replyOnce(200, emptyForecastsResponse)
+  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onPost('/models/GDPS/predictions/').replyOnce(200, emptyModelsResponse)
+  mockAxios.onPost('/hourlies/').replyOnce(200, emptyReadingsResponse)
+  mockAxios.onPost('/noon_forecasts/').replyOnce(200, emptyForecastsResponse)
   mockAxios
-    .onPost('/api/models/GDPS/predictions/summaries/')
+    .onPost('/models/GDPS/predictions/summaries/')
     .replyOnce(200, emptyModelSummariesResponse)
   mockAxios
-    .onPost('/api/noon_forecasts/summaries')
+    .onPost('/noon_forecasts/summaries')
     .replyOnce(200, emptyForecastSummariesResponse)
   mockAxios
-    .onPost('/api/models/GDPS/predictions/historic/most_recent/')
+    .onPost('/models/GDPS/predictions/historic/most_recent/')
     .replyOnce(200, emptyRecentHistoricModelsResponse)
 
   const { getByText, getByTestId, queryByText, queryByTestId } = renderWithRedux(
@@ -107,13 +107,13 @@ it('renders no data available message if there is no weather data returned', asy
 })
 
 it('renders error messages in response to network errors', async () => {
-  mockAxios.onGet('/api/stations/').replyOnce(200, { weather_stations: mockStations })
-  mockAxios.onPost('/api/models/GDPS/predictions/').replyOnce(400)
-  mockAxios.onPost('/api/hourlies/').replyOnce(400)
-  mockAxios.onPost('/api/noon_forecasts/').replyOnce(400)
-  mockAxios.onPost('/api/models/GDPS/predictions/summaries/').replyOnce(400)
-  mockAxios.onPost('/api/noon_forecasts/summaries/').replyOnce(400)
-  mockAxios.onPost('/api/models/GDPS/predictions/historic/most_recent/').replyOnce(400)
+  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onPost('/models/GDPS/predictions/').replyOnce(400)
+  mockAxios.onPost('/hourlies/').replyOnce(400)
+  mockAxios.onPost('/noon_forecasts/').replyOnce(400)
+  mockAxios.onPost('/models/GDPS/predictions/summaries/').replyOnce(400)
+  mockAxios.onPost('/noon_forecasts/summaries/').replyOnce(400)
+  mockAxios.onPost('/models/GDPS/predictions/historic/most_recent/').replyOnce(400)
 
   const { getByText, getByTestId, queryByText } = renderWithRedux(<FireWeatherPage />)
 
@@ -142,18 +142,18 @@ it('renders error messages in response to network errors', async () => {
 })
 
 it('renders daily model, forecast, and hourly values in response to user inputs', async () => {
-  mockAxios.onGet('/api/stations/').replyOnce(200, { weather_stations: mockStations })
-  mockAxios.onPost('/api/models/GDPS/predictions/').replyOnce(200, mockModelsResponse)
-  mockAxios.onPost('/api/hourlies/').replyOnce(200, mockReadingsResponse)
-  mockAxios.onPost('/api/noon_forecasts/').replyOnce(200, mockForecastsResponse)
+  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onPost('/models/GDPS/predictions/').replyOnce(200, mockModelsResponse)
+  mockAxios.onPost('/hourlies/').replyOnce(200, mockReadingsResponse)
+  mockAxios.onPost('/noon_forecasts/').replyOnce(200, mockForecastsResponse)
   mockAxios
-    .onPost('/api/models/GDPS/predictions/summaries/')
+    .onPost('/models/GDPS/predictions/summaries/')
     .replyOnce(200, mockModelSummariesResponse)
   mockAxios
-    .onPost('/api/noon_forecasts/summaries/')
+    .onPost('/noon_forecasts/summaries/')
     .replyOnce(200, mockForecastSummariesResponse)
   mockAxios
-    .onPost('/api/models/GDPS/predictions/historic/most_recent')
+    .onPost('/models/GDPS/predictions/historic/most_recent')
     .replyOnce(200, mockRecentHistoricModelsResponse)
 
   const { getByText, getByTestId, getAllByTestId } = renderWithRedux(<FireWeatherPage />)

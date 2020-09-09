@@ -36,7 +36,7 @@ export interface ModelsResponse {
 }
 
 export async function getModels(stationCodes: number[]): Promise<Model[]> {
-  const url = '/api/models/GDPS/predictions/'
+  const url = '/models/GDPS/predictions/'
 
   const { data } = await axios.post<ModelsResponse>(url, {
     stations: stationCodes
@@ -85,7 +85,7 @@ export async function getModelSummaries(
   stationCodes: number[],
   model: 'GDPS'
 ): Promise<ModelSummariesForStation[]> {
-  const url = `/api/models/${model}/predictions/summaries/`
+  const url = `/models/${model}/predictions/summaries/`
   const { data } = await axios.post<ModelSummariesResponse>(url, {
     stations: stationCodes
   })
@@ -97,7 +97,7 @@ export async function getMostRecentHistoricModelPredictions(
   stationCodes: number[],
   model: 'GDPS'
 ): Promise<HistoricModelsForStation[]> {
-  const url = `/api/models/${model}/predictions/historic/most_recent/`
+  const url = `/models/${model}/predictions/historic/most_recent/`
   try {
     const { data } = await axios.post<HistoricModelsResponse>(url, {
       stations: stationCodes

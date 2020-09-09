@@ -41,7 +41,7 @@ export async function getPercentiles(
   percentile: number,
   yearRange: YearRange
 ): Promise<PercentilesResponse> {
-  const url = '/api/percentiles/'
+  const url = '/percentiles/'
   const { data } = await axios.post(url, {
     stations: stationCodes,
     percentile,

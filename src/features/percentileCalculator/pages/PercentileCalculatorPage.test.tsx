@@ -45,7 +45,7 @@ it('renders FWI calculator page', async () => {
 })
 
 it('renders weather stations dropdown with data', async () => {
-  mockAxios.onGet('/api/stations/').replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
 
   const { getByText, getByTestId, store } = renderWithRedux(<PercentileCalculatorPage />)
 
@@ -62,7 +62,7 @@ it('renders weather stations dropdown with data', async () => {
 })
 
 it('renders error message when fetching stations failed', async () => {
-  mockAxios.onGet('/api/stations/').replyOnce(404)
+  mockAxios.onGet('/stations/').replyOnce(404)
 
   const { getByText, queryByText, store } = renderWithRedux(<PercentileCalculatorPage />)
 
@@ -87,8 +87,8 @@ it('renders time range slider with selecting the range', async () => {
 })
 
 it('renders percentiles result in response to user inputs', async () => {
-  mockAxios.onGet('/api/stations/').replyOnce(200, { weather_stations: mockStations })
-  mockAxios.onPost('/api/percentiles/').replyOnce(200, mockPercentilesResponse)
+  mockAxios.onGet('/stations/').replyOnce(200, { weather_stations: mockStations })
+  mockAxios.onPost('/percentiles/').replyOnce(200, mockPercentilesResponse)
 
   const { store, getByText, getByTestId, queryByTestId } = renderWithRedux(
     <PercentileCalculatorPage />
@@ -142,7 +142,7 @@ it('renders percentiles result in response to user inputs', async () => {
   getByTestId('percentile-documentation-card')
 
   // Test for the case where mean values are null
-  mockAxios.onPost('/api/percentiles/').replyOnce(200, mockNullPercentilesResponse)
+  mockAxios.onPost('/percentiles/').replyOnce(200, mockNullPercentilesResponse)
   fireEvent.click(getByTestId('calculate-percentiles-button'))
   await waitForElement(() => getByTestId('percentile-result-tables'))
   expect(getByTestId('percentile-mean-result-ffmc').textContent).toBe(NOT_AVAILABLE)
@@ -150,7 +150,7 @@ it('renders percentiles result in response to user inputs', async () => {
   expect(getByTestId('percentile-mean-result-isi').textContent).toBe(NOT_AVAILABLE)
 
   // Test for the case where network error occurs
-  mockAxios.onPost('/api/percentiles/').replyOnce(404)
+  mockAxios.onPost('/percentiles/').replyOnce(404)
   fireEvent.click(getByTestId('calculate-percentiles-button'))
   await waitForElementToBeRemoved(() => queryByTestId('percentile-result-tables'))
 })
