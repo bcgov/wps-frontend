@@ -153,7 +153,7 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
     .onPost('/noon_forecasts/summaries/')
     .replyOnce(200, mockForecastSummariesResponse)
   mockAxios
-    .onPost('/models/GDPS/predictions/historic/most_recent')
+    .onPost('/models/GDPS/predictions/historic/most_recent/')
     .replyOnce(200, mockRecentHistoricModelsResponse)
 
   const { getByText, getByTestId, getAllByTestId } = renderWithRedux(<FireWeatherPage />)
@@ -187,6 +187,7 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
   getAllByTestId('hourly-reading-temp-dot')
   getAllByTestId('forecast-summary-temp-line')
   getByTestId('model-summary-temp-area')
+  getAllByTestId('historic-model-temp-dot')
   const graphBg = getByTestId('temp-rh-graph-background')
   fireEvent.mouseMove(graphBg)
   fireEvent.mouseLeave(graphBg)

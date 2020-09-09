@@ -184,16 +184,17 @@ export const emptyForecastSummariesResponse = {
   summaries: []
 }
 
+const modelRun = {
+  datetime: mockPast.format(),
+  name: 'Global Deterministic Prediction System',
+  abbreviation: 'GDPS',
+  projection: 'latlon.15x.15'
+}
 export const mockRecentHistoricModelsResponse = {
   predictions: [
     {
       station: mockStations[0],
-      model_run: {
-        datetime: mockPast.format(),
-        name: 'Global Deterministic Prediction System',
-        abbreviation: 'GDPS',
-        projection: 'latlon.15x.15'
-      },
+      model_run: modelRun,
       values: [
         {
           datetime: mockPast.format(),
@@ -204,15 +205,10 @@ export const mockRecentHistoricModelsResponse = {
     },
     {
       station: mockStations[0],
-      model_run: {
-        datetime: mockPast.format(),
-        name: 'Global Deterministic Prediction System',
-        abbreviation: 'GDPS',
-        projection: 'latlon.15x.15'
-      },
+      model_run: modelRun,
       values: [
         {
-          datetime: mockNow.format(),
+          datetime: mockPast.add(3, 'hours').format(),
           temperature: 17,
           relative_humidity: 60
         }
