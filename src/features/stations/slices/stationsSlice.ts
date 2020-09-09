@@ -3,6 +3,7 @@ import { Station, getStations } from 'api/stationAPI'
 import { AppThunk } from 'app/store'
 import { logError } from 'utils/error'
 
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 interface initialState {
   loading: boolean
   error: string | null
