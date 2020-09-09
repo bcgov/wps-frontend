@@ -183,3 +183,44 @@ export const mockForecastSummariesResponse: RecursivePartial<ForecastSummariesRe
 export const emptyForecastSummariesResponse = {
   summaries: []
 }
+
+export const mockRecentHistoricModelsResponse = {
+  predictions: [
+    {
+      station: mockStations[0],
+      model_run: {
+        datetime: mockPast.format(),
+        name: 'Global Deterministic Prediction System',
+        abbreviation: 'GDPS',
+        projection: 'latlon.15x.15'
+      },
+      values: [
+        {
+          datetime: mockPast.format(),
+          temperature: 20,
+          relative_humidity: 45
+        }
+      ]
+    },
+    {
+      station: mockStations[0],
+      model_run: {
+        datetime: mockPast.format(),
+        name: 'Global Deterministic Prediction System',
+        abbreviation: 'GDPS',
+        projection: 'latlon.15x.15'
+      },
+      values: [
+        {
+          datetime: mockNow.format(),
+          temperature: 17,
+          relative_humidity: 60
+        }
+      ]
+    }
+  ]
+}
+
+export const emptyRecentHistoricModelsResponse = {
+  predictions: []
+}

@@ -111,10 +111,6 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
                 forecastSummaries={forecastSummaries}
                 recentHistoricModelValues={recentHistoricModels}
               />
-              <Typography>{(recentHistoricModels || []).length}</Typography>
-              <Typography>
-                {(mostRecentHistoricModelsByStation[s.code] || []).length}
-              </Typography>
             </Paper>
           )
         })}
