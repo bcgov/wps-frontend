@@ -39,7 +39,11 @@ const mostRecentHistoricModelsSlice = createSlice({
       action.payload.forEach(historic_model => {
         if (historic_model.station) {
           const code = historic_model.station.code
-          state.mostRecentHistoricModelsByStation[code] = historic_model.values
+          if (state.mostRecentHistoricModelsByStation[code]) {
+            state.mostRecentHistoricModelsByStation[code]?.push(historic_model.values[0])
+          } else {
+            state.mostRecentHistoricModelsByStation[code] = [historic_model.values[0]]
+          }
         }
       })
 

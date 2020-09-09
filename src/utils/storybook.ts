@@ -143,5 +143,10 @@ const getForecastValues = () => {
 }
 
 export const modelValues = getModelValues()
-export const [readingValues, modelSummaries, forecastSummaries] = getPastValues()
+export const [
+  readingValues,
+  modelSummaries,
+  forecastSummaries,
+  recentHistoricModelValues
+] = getPastValues()
 export const forecastValues = getForecastValues()

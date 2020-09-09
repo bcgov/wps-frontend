@@ -68,12 +68,12 @@ export const useStyles = makeStyles({
       fill: modelSummaryRHAreaColor,
       opacity: 0.5
     },
-    '& .modelTempDot, &.historicModelTempDot': {
+    '& .modelTempDot, & .historicModelTempDot': {
       stroke: modelTempDotColor,
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .modelRHDot, &.historicModelRHDot': {
+    '& .modelRHDot, & .historicModelRHDot': {
       stroke: modelRHDotColor,
       fill: 'none',
       cursor: 'pointer'
