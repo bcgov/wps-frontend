@@ -106,7 +106,12 @@ const getPastValues = () => {
     first.add(1, 'days')
   }
 
-  return [_readingValues, _modelSummaries, _pastForecastValues, _forecastSummaries]
+  return {
+    readingValues: _readingValues,
+    modelSummaries: _modelSummaries,
+    pastForecastValues: _pastForecastValues,
+    forecastSummaries: _forecastSummaries
+  }
 }
 
 const getForecastValues = () => {
@@ -132,10 +137,10 @@ const getForecastValues = () => {
 }
 
 export const modelValues = getModelValues()
-export const [
+export const {
   readingValues,
   modelSummaries,
   pastForecastValues,
   forecastSummaries
-] = getPastValues()
+} = getPastValues()
 export const forecastValues = getForecastValues()
