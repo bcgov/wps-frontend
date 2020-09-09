@@ -360,7 +360,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         text: 'Reading RH',
         color: styles.readingRHDotColor,
         fill: 'none',
-        shapeX: legendX += 83,
+        shapeX: legendX += 78,
         shapeY: legendY,
         textX: legendX += 7,
         textY: legendY + 3
@@ -369,7 +369,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         svg,
         text: 'Forecast Temp',
         color: styles.forecastTempDotColor,
-        shapeX: legendX += 71,
+        shapeX: legendX += 67,
         shapeY: legendY,
         textX: legendX += 7,
         textY: legendY + 3
@@ -378,7 +378,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         svg,
         text: 'Forecast RH',
         color: styles.forecastRHDotColor,
-        shapeX: legendX += 85,
+        shapeX: legendX += 80,
         shapeY: legendY,
         textX: legendX += 7,
         textY: legendY + 3
@@ -388,7 +388,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         text: 'Model Temp',
         color: styles.modelTempDotColor,
         fill: 'none',
-        shapeX: legendX += 74,
+        shapeX: legendX += 69,
         shapeY: legendY,
         textX: legendX += 7,
         textY: legendY + 3
@@ -398,7 +398,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         text: 'Model RH',
         color: styles.modelRHDotColor,
         fill: 'none',
-        shapeX: legendX += 75,
+        shapeX: legendX += 70,
         shapeY: legendY,
         textX: legendX += 7,
         textY: legendY + 3
@@ -421,7 +421,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         shape: 'rect',
         text: 'Model RH 5th - 90th percentiles',
         color: styles.modelSummaryRHAreaColor,
-        shapeX: legendX += 177,
+        shapeX: legendX += 166,
         shapeY: legendY - 4,
         textX: legendX += 13,
         textY: legendY + 3

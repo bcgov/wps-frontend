@@ -184,7 +184,7 @@ export const addLegend = ({
     .attr('x', textX)
     .attr('y', textY)
     .text(text)
-    .style('font-size', '10px')
+    .style('font-size', '9px')
     .style('fill', color)
 }
 
