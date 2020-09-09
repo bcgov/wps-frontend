@@ -1,8 +1,8 @@
 import { makeStyles } from '@material-ui/core/styles'
 
 const currLineColor = 'green'
-export const readingTempDotColor = '#ff758f'
-export const readingRHDotColor = '#73a4ff'
+export const readingTempDotColor = '#ff6984'
+export const readingRHDotColor = '#6198ff'
 export const modelSummaryTempAreaColor = '#ff96aa'
 export const modelSummaryRHAreaColor = '#94b9ff'
 export const modelTempDotColor = '#ff143f'

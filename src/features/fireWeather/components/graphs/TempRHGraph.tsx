@@ -409,7 +409,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       d3Utils.addLegend({
         svg,
         shape: 'rect',
-        text: 'Model Temp Summary',
+        text: 'Model Temp 5th - 90th percentiles',
         color: styles.modelSummaryTempAreaColor,
         shapeX: legendX - 2,
         shapeY: legendY - 4,
@@ -419,9 +419,9 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       d3Utils.addLegend({
         svg,
         shape: 'rect',
-        text: 'Model RH Summary',
+        text: 'Model RH 5th - 90th percentiles',
         color: styles.modelSummaryRHAreaColor,
-        shapeX: legendX += 120,
+        shapeX: legendX += 177,
         shapeY: legendY - 4,
         textX: legendX += 13,
         textY: legendY + 3
