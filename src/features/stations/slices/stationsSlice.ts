@@ -3,14 +3,13 @@ import { Station, getStations } from 'api/stationAPI'
 import { AppThunk } from 'app/store'
 import { logError } from 'utils/error'
 
-// eslint-disable-next-line @typescript-eslint/class-name-casing
-interface initialState {
+interface State {
   loading: boolean
   error: string | null
   stations: Station[]
 }
 
-const initialState: initialState = {
+const initialState: State = {
   loading: false,
   error: null,
   stations: []
@@ -20,14 +19,14 @@ const stationsSlice = createSlice({
   name: 'stations',
   initialState,
   reducers: {
-    getStationsStart(state: initialState) {
+    getStationsStart(state: State) {
       state.loading = true
     },
-    getStationsFailed(state: initialState, action: PayloadAction<string>) {
+    getStationsFailed(state: State, action: PayloadAction<string>) {
       state.loading = false
       state.error = action.payload
     },
-    getStationsSuccess(state: initialState, action: PayloadAction<Station[]>) {
+    getStationsSuccess(state: State, action: PayloadAction<Station[]>) {
       state.loading = false
       state.stations = action.payload
       state.error = null
