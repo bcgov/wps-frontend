@@ -89,8 +89,8 @@ const getPastValues = () => {
             .add(length, 'hours')
             .utc()
             .format(),
-          temperature: temp,
-          relative_humidity: rh
+          temperature: temp + Math.random() * 3,
+          relative_humidity: rh + +Math.random() * 3
         })
       }
       // every hour

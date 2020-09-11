@@ -21,18 +21,15 @@ interface Props {
   noModels: boolean
   showModels: boolean
   setShowModels: (checked: boolean) => void
-  noModelSummaries: boolean
-  showModelSummaries: boolean
-  setShowModelSummaries: (checked: boolean) => void
+  noHistoricModels: boolean
+  showHistoricModels: boolean
+  setShowHistoricModels: (checked: boolean) => void
   noForecasts: boolean
   showForecasts: boolean
   setShowForecasts: (checked: boolean) => void
   noPastForecasts: boolean
   showPastForecasts: boolean
   setShowPastForecasts: (checked: boolean) => void
-  noRecentHistoricModels: boolean
-  showRecentHistoricModels: boolean
-  setShowRecentHistoricModels: (checked: boolean) => void
 }
 
 const WxDataToggles = ({
@@ -42,18 +39,15 @@ const WxDataToggles = ({
   noModels,
   showModels,
   setShowModels,
-  noModelSummaries,
-  showModelSummaries,
-  setShowModelSummaries,
+  noHistoricModels,
+  showHistoricModels,
+  setShowHistoricModels,
   noForecasts,
   showForecasts,
   setShowForecasts,
   noPastForecasts,
   showPastForecasts,
-  setShowPastForecasts,
-  noRecentHistoricModels,
-  showRecentHistoricModels,
-  setShowRecentHistoricModels
+  setShowPastForecasts
 }: Props) => {
   const classes = useStyles()
 
@@ -75,7 +69,7 @@ const WxDataToggles = ({
         }
         label={
           <Typography className={classes.label} variant="body2">
-            Reading from Station
+            Actual Readings
           </Typography>
         }
       />
@@ -83,20 +77,19 @@ const WxDataToggles = ({
         className={classes.formControlLabel}
         control={
           <Switch
-            name="showModelSummaries"
+            name="showHistoricModels"
             data-testid="wx-graph-model-summary-toggle"
-            checked={showModelSummaries && showRecentHistoricModels}
-            disabled={noModelSummaries || noRecentHistoricModels}
+            checked={showHistoricModels}
+            disabled={noHistoricModels}
             size="small"
             onChange={(_, checked) => {
-              setShowModelSummaries(checked)
-              setShowRecentHistoricModels(checked)
+              setShowHistoricModels(checked)
             }}
           />
         }
         label={
           <Typography className={classes.label} variant="body2">
-            Historic Model
+            Historic Models
           </Typography>
         }
       />
@@ -116,7 +109,7 @@ const WxDataToggles = ({
         }
         label={
           <Typography className={classes.label} variant="body2">
-            Historic Noon Forecast
+            Historic Noon Forecasts
           </Typography>
         }
       />
@@ -136,7 +129,7 @@ const WxDataToggles = ({
         }
         label={
           <Typography className={classes.label} variant="body2">
-            Global Model
+            Models
           </Typography>
         }
       />
@@ -156,7 +149,7 @@ const WxDataToggles = ({
         }
         label={
           <Typography className={classes.label} variant="body2">
-            Noon Forecast
+            Noon Forecasts
           </Typography>
         }
       />
