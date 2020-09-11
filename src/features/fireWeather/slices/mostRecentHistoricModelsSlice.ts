@@ -6,6 +6,7 @@ import {
   HistoricModelsForStation
 } from 'api/modelAPI'
 import { AppThunk } from 'app/store'
+import { logError } from 'utils/error'
 
 interface State {
   loading: boolean
@@ -71,6 +72,7 @@ export const fetchMostRecentHistoricModels = (
     )
     dispatch(getMostRecentHistoricModelsSuccess(mostRecentHistoricModels))
   } catch (err) {
-    dispatch(getMostRecentHistoricModelsFailed(err))
+    dispatch(getMostRecentHistoricModelsFailed(err.toString()))
+    logError(err)
   }
 }

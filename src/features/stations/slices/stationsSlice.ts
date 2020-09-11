@@ -27,9 +27,9 @@ const stationsSlice = createSlice({
       state.error = action.payload
     },
     getStationsSuccess(state: State, action: PayloadAction<Station[]>) {
-      state.loading = false
-      state.stations = action.payload
       state.error = null
+      state.stations = action.payload
+      state.loading = false
     }
   }
 })
