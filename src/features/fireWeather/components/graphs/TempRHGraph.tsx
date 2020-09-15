@@ -89,11 +89,13 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
         return { ...d, date }
       })
-      const recentHistoricModelValues = _recentHistoricModelValues.map(d => {
+      const recentHistoricModelValues = _recentHistoricModelValues.filter(d => {
+        return d.temperature !== null
+      }).map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
         const historicModel = {
           date,
-          historicModelTemp: Number(d.temperature.toFixed(2)),
+          historicModelTemp: Number(d.temperature === null ? undefined : d.temperature.toFixed(2)),
           historicModelRH: Math.round(d.relative_humidity)
         }
         // combine with existing weather values
