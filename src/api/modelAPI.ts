@@ -4,7 +4,9 @@ import { Station } from 'api/stationAPI'
 export interface ModelValue {
   datetime: string
   temperature: number
+  bias_adjusted_temperature: number
   relative_humidity: number
+  bias_adjusted_relative_humidity: number
   wind_direction: number
   wind_speed: number
   total_precipitation: number
@@ -73,11 +75,21 @@ export interface HistoricModelsForStation {
   values: ModelValue[]
 }
 
+export interface BiasAdjustedModelsForStation {
+  station: Station
+  model: ModelInfo | null
+  values: ModelValue[]
+}
+
 export interface ModelSummariesResponse {
   summaries: ModelSummariesForStation[]
 }
 
 export interface HistoricModelsResponse {
+  predictions: HistoricModelsForStation[]
+}
+
+export interface BiasAdjustedModelResponse {
   predictions: HistoricModelsForStation[]
 }
 
@@ -99,6 +111,18 @@ export async function getMostRecentHistoricModelPredictions(
 ): Promise<HistoricModelsForStation[]> {
   const url = `/models/${model}/predictions/historic/most_recent/`
   const { data } = await axios.post<HistoricModelsResponse>(url, {
+    stations: stationCodes
+  })
+
+  return data.predictions
+}
+
+export async function getBiasAdjustedModelPredictions(
+  stationCodes: number[],
+  model: 'GDPS'
+): Promise<BiasAdjustedModelsForStation[]> {
+  const url = `/models/${model}/predictions/most_recent/`
+  const { data } = await axios.post<BiasAdjustedModelResponse>(url, {
     stations: stationCodes
   })
 
