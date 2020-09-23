@@ -2,17 +2,20 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Station, getStations } from 'api/stationAPI'
 import { AppThunk } from 'app/store'
 import { logError } from 'utils/error'
+import { FeatureCollection } from 'geojson'
 
 interface State {
   loading: boolean
   error: string | null
   stations: Station[]
+  stationsGeoJSON: FeatureCollection | null
 }
 
 const initialState: State = {
   loading: false,
   error: null,
-  stations: []
+  stations: [],
+  stationsGeoJSON: null
 }
 
 const stationsSlice = createSlice({
@@ -27,9 +30,21 @@ const stationsSlice = createSlice({
       state.error = action.payload
     },
     getStationsSuccess(state: State, action: PayloadAction<Station[]>) {
-      state.error = null
-      state.stations = action.payload
       state.loading = false
+      state.stations = action.payload
+      state.stationsGeoJSON = {
+        type: 'FeatureCollection',
+        features: action.payload.map(station => {
+          return {
+            type: 'Feature' as const,
+            geometry: {
+              type: 'Point' as const,
+              coordinates: [station.long, station.lat]
+            },
+            properties: station
+          }
+        })
+      }
     }
   }
 })
