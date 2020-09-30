@@ -91,42 +91,52 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
         return { ...d, date }
       })
-      const recentHistoricModelValues = _recentHistoricModelValues.filter(d => {
-        return d.temperature !== null
-      }).map(d => {
-        const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
-        const historicModel = {
-          date,
-          historicModelTemp: Number(d.temperature === null ? undefined : d.temperature.toFixed(2)),
-          historicModelRH: Math.round(d.relative_humidity)
-        }
-        // combine with existing weather values
-        weatherValueByDatetime[d.datetime] = {
-          ...weatherValueByDatetime[d.datetime],
-          ...historicModel
-        }
-        allDates.push(date)
+      const recentHistoricModelValues = _recentHistoricModelValues
+        .filter(d => {
+          return d.temperature !== null
+        })
+        .map(d => {
+          const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
+          const historicModel = {
+            date,
+            historicModelTemp: Number(
+              d.temperature === null ? undefined : d.temperature.toFixed(2)
+            ),
+            historicModelRH: Math.round(d.relative_humidity)
+          }
+          // combine with existing weather values
+          weatherValueByDatetime[d.datetime] = {
+            ...weatherValueByDatetime[d.datetime],
+            ...historicModel
+          }
+          allDates.push(date)
 
-        return historicModel
-      })
-      const biasAdjustedModelValues = _biasAdjustedModelValues.filter(d => {
-        return d.bias_adjusted_temperature !== null
-      }).map(d => {
-        const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
-        const biasAdjustedModel = {
-          date,
-          biasAdjustedModelTemp: Number(d.bias_adjusted_temperature === null ? undefined : d.bias_adjusted_temperature.toFixed(2)),
-          biasAdjustedModelRH: Math.round(d.bias_adjusted_relative_humidity)
-        }
-        // combines with existing weather values
-        weatherValueByDatetime[d.datetime] = {
-          ...weatherValueByDatetime[d.datetime],
-          ...biasAdjustedModel
-        }
-        allDates.push(date)
+          return historicModel
+        })
+      const biasAdjustedModelValues = _biasAdjustedModelValues
+        .filter(d => {
+          return d.bias_adjusted_temperature !== null
+        })
+        .map(d => {
+          const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
+          const biasAdjustedModel = {
+            date,
+            biasAdjustedModelTemp: Number(
+              d.bias_adjusted_temperature === null
+                ? undefined
+                : d.bias_adjusted_temperature.toFixed(2)
+            ),
+            biasAdjustedModelRH: Math.round(d.bias_adjusted_relative_humidity)
+          }
+          // combines with existing weather values
+          weatherValueByDatetime[d.datetime] = {
+            ...weatherValueByDatetime[d.datetime],
+            ...biasAdjustedModel
+          }
+          allDates.push(date)
 
-        return biasAdjustedModel
-      })
+          return biasAdjustedModel
+        })
       const forecastValues = _forecastValues.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
         const forecast = {
@@ -531,7 +541,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         textY: legendY + 3,
         radius: 0.5
       })
-
 
       /* Attach tooltip listener */
       d3Utils.addTooltipListener({

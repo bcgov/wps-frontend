@@ -12,7 +12,7 @@ export const getNearestBasedOnDate = (
   // Get the nearest value from the user's mouse position
   const value =
     b &&
-      invertedDate.valueOf() - a.date.valueOf() > b.date.valueOf() - invertedDate.valueOf()
+    invertedDate.valueOf() - a.date.valueOf() > b.date.valueOf() - invertedDate.valueOf()
       ? b
       : a
 
@@ -286,7 +286,7 @@ export const addTooltipListener = <T extends { date: Date }, K extends keyof T>(
     tooltip.call(createTooltipCallout(), null)
     tooltipCursor.style('opacity', 0)
   }
-  svg.on('touchmove mousemove', function () {
+  svg.on('touchmove mousemove', function() {
     if (data.length === 0) return
 
     const mx = d3.mouse(this)[0]

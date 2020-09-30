@@ -43,7 +43,9 @@ const WxDataGraph = ({
   )
   const [showModels, setShowModels] = useState<boolean>(false)
   const [showForecasts, setShowForecasts] = useState<boolean>(false)
-  const [showBiasAdjustedPredictions, setShowBiasAdjustedPredictions] = useState<boolean>(false)
+  const [showBiasAdjustedPredictions, setShowBiasAdjustedPredictions] = useState<boolean>(
+    false
+  )
 
   if (
     noReadings &&
@@ -88,7 +90,9 @@ const WxDataGraph = ({
         pastForecastValues={showPastForecasts ? pastForecastValues : []}
         forecastSummaries={showPastForecasts ? forecastSummaries : []}
         recentHistoricModelValues={showHistoricModels ? recentHistoricModelValues : []}
-        biasAdjustedModelValues={showBiasAdjustedPredictions ? biasAdjustedModelValues : []}
+        biasAdjustedModelValues={
+          showBiasAdjustedPredictions ? biasAdjustedModelValues : []
+        }
       />
     </>
   )
