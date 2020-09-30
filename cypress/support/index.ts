@@ -16,9 +16,15 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
-
 Cypress.Commands.add('getByTestId', value => {
   return cy.get(`[data-testid=${value}]`)
+})
+
+Cypress.Commands.add('selectStationByCode', code => {
+  return cy
+    .getByTestId('weather-station-dropdown')
+    .click()
+    .get('li')
+    .contains(code)
+    .click()
 })

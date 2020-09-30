@@ -1,5 +1,21 @@
 import { NOT_AVAILABLE } from '../../src/utils/strings'
 
+const selectYearAndCheckValue = (year: number | string, value: number) => {
+  cy.get('.MuiSlider-markLabel')
+    .contains(year)
+    .click()
+  cy.getByTestId('time-range-slider')
+    .find('[type=hidden]')
+    .should('have.value', value)
+}
+
+const requestPercentilesAndCheckRequestBody = (alias: string, body: {}) => {
+  cy.getByTestId('calculate-percentiles-button').click()
+  cy.wait(alias).then(xhr => {
+    expect(xhr.requestBody).to.eql(body)
+  })
+}
+
 describe('Percentile Calculator Page', () => {
   beforeEach(() => {
     cy.server()
@@ -19,27 +35,14 @@ describe('Percentile Calculator Page', () => {
       cy.wait('@getStations')
 
       // Select the first station in the dropdown list
-      cy.getByTestId('weather-station-dropdown')
-        .click()
-        .get('li')
-        .first()
-        .click()
+      cy.selectStationByCode(1275)
 
       // Deselect the station that's previously selected
       cy.get('.MuiChip-deleteIcon').click()
 
       // Select two stations in the dropdown
-      cy.getByTestId('weather-station-dropdown')
-        .click()
-        .get('li')
-        .eq(1) // second station in the list
-        .click()
-
-      cy.getByTestId('weather-station-dropdown')
-        .click()
-        .get('li')
-        .last() // last station in the list
-        .click()
+      cy.selectStationByCode(322)
+      cy.selectStationByCode(209)
 
       // Check if two stations were actually selected
       cy.get('.MuiChip-deletable').should('have.length', 2)
@@ -48,6 +51,8 @@ describe('Percentile Calculator Page', () => {
 
   describe('Other inputs', () => {
     it('Time range slider can select the range between 10 and 50', () => {
+      cy.route('GET', 'api/stations/', 'fixture:weather-stations.json').as('getStations')
+      cy.route('POST', 'api/percentiles/').as('getPercentiles')
       cy.visit('/percentile-calculator/')
 
       cy.getByTestId('time-range-slider')
@@ -55,22 +60,22 @@ describe('Percentile Calculator Page', () => {
         .should('have.value', 10) // default value
 
       // Select 20 year and check if reflected
-      cy.get('.MuiSlider-markLabel').contains(20).click() // prettier-ignore
-      cy.getByTestId('time-range-slider')
-        .find('[type=hidden]')
-        .should('have.value', 20)
+      selectYearAndCheckValue(20, 20)
 
       // Select Full year and check if reflected
-      cy.get('.MuiSlider-markLabel').contains('Full').click() // prettier-ignore
-      cy.getByTestId('time-range-slider')
-        .find('[type=hidden]')
-        .should('have.value', 50)
+      selectYearAndCheckValue('Full', 50)
 
       // Should do nothing if 0 was selected
-      cy.get('.MuiSlider-markLabel').contains(0).click() // prettier-ignore
-      cy.getByTestId('time-range-slider')
-        .find('[type=hidden]')
-        .should('have.value', 50)
+      selectYearAndCheckValue(0, 50)
+
+      const stationCode = 838
+      cy.selectStationByCode(stationCode)
+
+      requestPercentilesAndCheckRequestBody('@getPercentiles', {
+        stations: [stationCode],
+        year_range: { start: 1970, end: 2019 },
+        percentile: 90
+      })
     })
 
     it('Percentile textfield should have a value of 90', () => {
@@ -92,11 +97,7 @@ describe('Percentile Calculator Page', () => {
       // Calculate button should be disabled if no stations selected
       cy.getByTestId('calculate-percentiles-button').should('be.disabled')
 
-      cy.getByTestId('weather-station-dropdown')
-        .click()
-        .get('li')
-        .first()
-        .click()
+      cy.selectStationByCode(0)
 
       // Check if the error message showed up
       cy.getByTestId('calculate-percentiles-button').should('not.be.disabled').click() // prettier-ignore
@@ -106,24 +107,16 @@ describe('Percentile Calculator Page', () => {
     it('successful with one station', () => {
       const stationCode = 838
       cy.route('GET', 'api/stations/', 'fixture:weather-stations.json').as('getStations')
-      cy.route('POST', 'api/percentiles/', 'fixture:percentile-result.json').as('getPercentiles')
+      cy.route('POST', 'api/percentiles/', 'fixture:percentiles/percentile-result.json').as('getPercentiles')
       cy.visit('/percentile-calculator/')
 
       // Select a station
-      cy.getByTestId('weather-station-dropdown')
-        .click()
-        .get('li')
-        .contains(stationCode)
-        .click()
+      cy.selectStationByCode(stationCode)
 
-      // Request for the percentile and check the request body
-      cy.getByTestId('calculate-percentiles-button').click()
-      cy.wait('@getPercentiles').then(xhr => {
-        expect(xhr.requestBody).to.eql({
-          stations: [stationCode],
-          year_range: { start: 2010, end: 2019 },
-          percentile: 90
-        })
+      requestPercentilesAndCheckRequestBody('@getPercentiles', {
+        stations: [stationCode],
+        year_range: { start: 2010, end: 2019 },
+        percentile: 90
       })
 
       // Mean table shouldn't be shown
@@ -142,29 +135,17 @@ describe('Percentile Calculator Page', () => {
     it('successful with two stations', () => {
       const stationCodes = [322, 1275]
       cy.route('GET', 'api/stations/', 'fixture:weather-stations.json').as('getStations')
-      cy.route('POST', 'api/percentiles/', 'fixture:two-percentiles-result.json').as('getPercentiles')
+      cy.route('POST', 'api/percentiles/', 'fixture:percentiles/two-percentiles-result.json').as('getPercentiles')
       cy.visit('/percentile-calculator/')
 
       // Select two weather stations
-      cy.getByTestId('weather-station-dropdown')
-        .click()
-        .get('li')
-        .contains(stationCodes[0])
-        .click()
-      cy.getByTestId('weather-station-dropdown')
-        .click()
-        .get('li')
-        .contains(stationCodes[1])
-        .click()
+      cy.selectStationByCode(stationCodes[0])
+      cy.selectStationByCode(stationCodes[1])
 
-      // Request for the percentiles and check the request body
-      cy.getByTestId('calculate-percentiles-button').click()
-      cy.wait('@getPercentiles').then(xhr => {
-        expect(xhr.requestBody).to.eql({
-          stations: stationCodes,
-          year_range: { start: 2010, end: 2019 },
-          percentile: 90
-        })
+      requestPercentilesAndCheckRequestBody('@getPercentiles', {
+        stations: stationCodes,
+        year_range: { start: 2010, end: 2019 },
+        percentile: 90
       })
 
       // Mean table & two percentile tables should be shown

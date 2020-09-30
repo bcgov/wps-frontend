@@ -26,12 +26,23 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-declare namespace Cypress {
-  interface Chainable {
-    /**
-     * Custom command to select DOM element by data-cy attribute.
-     * @example cy.dataCy('greeting')
-     */
-    getByTestId(value: string): Chainable<Element>
+import 'cypress-keycloak-commands'
+
+// add new command to the existing Cypress interface
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Custom command to select DOM element by data-testid attribute.
+       * @example cy.getByTestId('error-message')
+       */
+      getByTestId(value: string): Chainable<Element>
+
+      /**
+       * Custom command to select a wx station by its code in the dropdown.
+       * @example cy.selectStationByCode(322)
+       */
+      selectStationByCode(code: number): Chainable<Element>
+    }
   }
 }
