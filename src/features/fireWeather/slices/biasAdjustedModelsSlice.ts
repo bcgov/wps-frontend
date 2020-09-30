@@ -39,7 +39,6 @@ const biasAdjustedModelsSlice = createSlice({
       state.error = null
       action.payload.forEach(models => {
         const code = models.station.code
-        console.log(models)
         if (models.station && models.model_runs) {
           models.model_runs.forEach(model_run => {
             if (state.biasAdjustedModelsByStation[code]) {
