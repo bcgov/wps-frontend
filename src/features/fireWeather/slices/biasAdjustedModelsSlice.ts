@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import {
   ModelValue,
   getBiasAdjustedModelPredictions,
-  BiasAdjustedModelsForStation
+  ModelsForStation
 } from 'api/modelAPI'
 import { AppThunk } from 'app/store'
 import { logError } from 'utils/error'
@@ -34,17 +34,20 @@ const biasAdjustedModelsSlice = createSlice({
     },
     getBiasAdjustedModelsSuccess(
       state: State,
-      action: PayloadAction<BiasAdjustedModelsForStation[]>
+      action: PayloadAction<ModelsForStation[]>
     ) {
       state.error = null
-      action.payload.forEach(bias_adjusted_model => {
-        if (bias_adjusted_model.station) {
-          const code = bias_adjusted_model.station.code
-          if (state.biasAdjustedModelsByStation[code]) {
-            state.biasAdjustedModelsByStation[code]?.push(bias_adjusted_model.values[0])
-          } else {
-            state.biasAdjustedModelsByStation[code] = [bias_adjusted_model.values[0]]
-          }
+      action.payload.forEach(models => {
+        const code = models.station.code
+        console.log(models)
+        if (models.station && models.model_runs) {
+          models.model_runs.forEach(model_run => {
+            if (state.biasAdjustedModelsByStation[code]) {
+              state.biasAdjustedModelsByStation[code]?.push(...model_run.values)
+            } else {
+              state.biasAdjustedModelsByStation[code] = model_run.values
+            }
+          })
         }
       })
 

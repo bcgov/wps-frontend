@@ -62,6 +62,12 @@ interface ModelInfo {
   abbrev: string
 }
 
+interface ModelRunInfo {
+  datetime: string
+  name: string
+  abbreviation: string
+}
+
 // List of model summaries for each datetime with model & station info
 export interface ModelSummariesForStation {
   station: Station
@@ -69,13 +75,17 @@ export interface ModelSummariesForStation {
   values: ModelSummary[]
 }
 
-export interface HistoricModelsForStation {
-  station: Station
-  model: ModelInfo | null
+export interface ModelRun {
+  model_run: ModelRunInfo
   values: ModelValue[]
 }
 
-export interface BiasAdjustedModelsForStation {
+export interface ModelsForStation {
+  station: Station
+  model_runs: ModelRun[]
+}
+
+export interface HistoricModelsForStation {
   station: Station
   model: ModelInfo | null
   values: ModelValue[]
@@ -90,7 +100,7 @@ export interface HistoricModelsResponse {
 }
 
 export interface BiasAdjustedModelResponse {
-  predictions: HistoricModelsForStation[]
+  stations: ModelsForStation[]
 }
 
 export async function getModelSummaries(
@@ -120,11 +130,11 @@ export async function getMostRecentHistoricModelPredictions(
 export async function getBiasAdjustedModelPredictions(
   stationCodes: number[],
   model: 'GDPS'
-): Promise<BiasAdjustedModelsForStation[]> {
+): Promise<ModelsForStation[]> {
   const url = `/models/${model}/predictions/most_recent/`
   const { data } = await axios.post<BiasAdjustedModelResponse>(url, {
     stations: stationCodes
   })
 
-  return data.predictions
+  return data.stations
 }
