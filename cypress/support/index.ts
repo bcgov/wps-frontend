@@ -18,3 +18,7 @@ import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+Cypress.Commands.add('getByTestId', value => {
+  return cy.get(`[data-testid=${value}]`)
+})
