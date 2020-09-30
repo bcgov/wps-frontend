@@ -490,7 +490,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         fill: 'none',
         shapeX: legendX += 70,
         shapeY: legendY,
-        textX: legendX += 7,
+        textX: legendX + 7,
         textY: legendY + 3
       })
       // New line
@@ -513,7 +513,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         color: styles.modelSummaryRHAreaColor,
         shapeX: legendX += 166,
         shapeY: legendY - 4,
-        textX: legendX += 13,
+        textX: legendX + 13,
         textY: legendY + 3
       })
       // New line
@@ -537,7 +537,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         fill: 'none',
         shapeX: legendX += 88,
         shapeY: legendY,
-        textX: legendX += 7,
+        textX: legendX + 7,
         textY: legendY + 3,
         radius: 0.5
       })
