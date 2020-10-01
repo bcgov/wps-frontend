@@ -29,6 +29,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Cypress tests
+        run: npm run cypress:ci
+
       - name: Tests with coverage
         run: npm run coverage:ci
 

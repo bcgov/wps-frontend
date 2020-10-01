@@ -151,6 +151,11 @@ describe('Percentile Calculator Page', () => {
       // Mean table & two percentile tables should be shown
       cy.getByTestId('percentile-mean-result-table')
       cy.getByTestId('percentile-station-result-table').should('have.length', 2)
+
+      // Results should disappear after clicking the reset button
+      cy.getByTestId('reset-percentiles-button').click()
+      cy.getByTestId('percentile-mean-result-table').should('not.exist')
+      cy.getByTestId('percentile-station-result-table').should('not.exist')
     })
   })
 })

@@ -15,6 +15,7 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import '@cypress/code-coverage/support'
 
 Cypress.Commands.add('getByTestId', value => {
   return cy.get(`[data-testid=${value}]`)
