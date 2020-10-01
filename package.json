@@ -46,7 +46,7 @@
     "coverage": "npm test -- --coverage --watchAll=false",
     "coverage:ci": "CI=true npm test -- --coverage --watchAll=false",
     "cy:open": "cypress open",
-    "cy:run": "cypress run",
+    "cy:run": "cypress run --config pageLoadTimeout=100000,watchForFileChanges=false",
     "cypress:open": "start-server-and-test start:cypress 3030 cy:open",
     "cypress:ci": "start-server-and-test start:cypress 3030 cy:run",
     "eject": "react-scripts eject",
