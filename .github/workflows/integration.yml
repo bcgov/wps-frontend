@@ -26,11 +26,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm start:cypress
+          # quote the url to be safe against YML parsing surprises
+          wait-on: 'http://localhost:3030'
+          browser: chrome
+          headless: true
+          spec: cypress/integration/percentileCalculatorPage.spec.ts
+
       - name: Lint
         run: npm run lint
-
-      - name: Cypress tests
-        run: npm run cypress:ci
 
       - name: Tests with coverage
         run: npm run coverage:ci

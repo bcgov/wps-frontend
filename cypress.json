@@ -1,5 +1,8 @@
 {
   "baseUrl": "http://localhost:3030",
   "screenshotOnRunFailure": false,
-  "video": false
+  "video": false,
+  "env": {
+    "auth_base_url": "https://sso-dev.pathfinder.gov.bc.ca/auth"
+  }
 }
