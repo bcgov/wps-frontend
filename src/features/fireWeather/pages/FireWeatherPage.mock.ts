@@ -226,24 +226,14 @@ export const mockRecentModelsResponse = {
           model_run: modelRun,
           values: [
             {
-              datetime: mockPast.add(3, 'hours').format(),
-              bias_adjusted_temperature: 18,
-              bias_adjusted_relative_humidity: 70
-            }
-          ]
-        }
-      ]
-    },
-    {
-      station: mockStations[0],
-      model_runs: [
-        {
-          model_run: modelRun,
-          values: [
-            {
               datetime: mockPast.format(),
-              bias_adjusted_temperature: 13,
-              bias_adjusted_relative_humidity: 40
+              bias_adjusted_temperature: 30,
+              bias_adjusted_relative_humidity: 55
+            },
+            {
+              datetime: mockPast.add(3, 'hours').format(),
+              bias_adjusted_temperature: 28,
+              bias_adjusted_relative_humidity: 80
             }
           ]
         }
