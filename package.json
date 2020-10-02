@@ -39,7 +39,7 @@
   },
   "scripts": {
     "start": "CI=true react-scripts start",
-    "start:cypress": "BROWSER=none PORT=3030 react-scripts -r @cypress/instrument-cra start",
+    "start:cypress": "BROWSER=none PORT=3030 REACT_APP_HIDE_DISCLAIMER=false react-scripts -r @cypress/instrument-cra start",
     "build": "react-scripts build",
     "test": "DEBUG_PRINT_LIMIT=5000 react-scripts test",
     "test:ci": "CI=true npm test",
