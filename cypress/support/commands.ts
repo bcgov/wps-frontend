@@ -36,13 +36,25 @@ declare global {
        * Custom command to select DOM element by data-testid attribute.
        * @example cy.getByTestId('error-message')
        */
-      getByTestId(value: string): Chainable<Element>
+      getByTestId(id: string): Chainable<Element>
 
       /**
        * Custom command to select a wx station by its code in the dropdown.
        * @example cy.selectStationByCode(322)
        */
       selectStationByCode(code: number): Chainable<Element>
+
+      /**
+       * Custom command to select ErrorMessage component and check the message.
+       * @example cy.checkErrorMessage('Error occurred (while getting the calculation result).')
+       */
+      checkErrorMessage(msg: string): void
+
+      /**
+       * Custom command to visit a protected page by bypassing Keycloak login
+       * @example cy.visitProtectedPage('/fire-weather')
+       */
+      visitProtectedPage(visitUrl: string): void
     }
   }
 }

@@ -29,6 +29,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # "Error: ENOSPC: System limit for number of file watchers reached" can be addressed
+      # with this: https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers#the-technical-details
+      # It seems unnecessary at the moment because tests pass anyway
       - name: Cypress tests
         run: npm run cypress:ci
         env:
@@ -38,8 +41,8 @@ jobs:
           REACT_APP_KEYCLOAK_REALM: 8wl6x4cp
           REACT_APP_KEYCLOAK_CLIENT: wps-web
 
-      # - name: Tests with coverage
-      #   run: npm run coverage:ci
+      - name: Tests with coverage
+        run: npm run test:ci
 
       - name: Fix code coverage paths
         # Due to the way sonarscanner mounts thing when running in docker, we need to change the coverage file.

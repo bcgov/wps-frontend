@@ -10,7 +10,7 @@ describe('Percentile Calculator Page', () => {
       cy.route({ method: 'GET', url: 'api/stations/', status: 400, response: {} })
       cy.visit('/percentile-calculator/')
       cy.getByTestId('disclaimer-accept-button').click()
-      cy.getByTestId('error-message').should('contain', 'Error occurred (while fetching weather stations).')
+      cy.checkErrorMessage('Error occurred (while fetching weather stations).')
     })
 
     it('can select & deselect stations if successfully received stations', () => {
@@ -35,12 +35,14 @@ describe('Percentile Calculator Page', () => {
   })
 
   describe('Other inputs', () => {
-    it('Time range slider can select the range between 10 and 50', () => {
-      cy.route('GET', 'api/stations/', 'fixture:weather-stations.json').as('getStations')
+    beforeEach(() => {
+      cy.route('GET', 'api/stations/', 'fixture:weather-stations.json')
       cy.route('POST', 'api/percentiles/').as('getPercentiles')
       cy.visit('/percentile-calculator/')
       cy.getByTestId('disclaimer-accept-button').click()
+    })
 
+    it('Time range slider can select the range between 10 and 50', () => {
       cy.getByTestId('time-range-slider')
         .find('[type=hidden]')
         .should('have.value', 10) // default value
@@ -65,9 +67,6 @@ describe('Percentile Calculator Page', () => {
     })
 
     it('Percentile textfield should have a value of 90', () => {
-      cy.visit('/percentile-calculator/')
-      cy.getByTestId('disclaimer-accept-button').click()
-
       cy.getByTestId('percentile-textfield')
         .find('[type=text]')
         .should('have.value', 90)
@@ -76,11 +75,14 @@ describe('Percentile Calculator Page', () => {
   })
 
   describe('Calculation result', () => {
-    it('failed due to network error', () => {
+    beforeEach(() => {
       cy.route('GET', 'api/stations/', 'fixture:weather-stations.json').as('getStations')
-      cy.route({ method: 'POST', url: 'api/percentiles/', status: 400, response: {} })
       cy.visit('/percentile-calculator/')
       cy.getByTestId('disclaimer-accept-button').click()
+    })
+
+    it('failed due to network error', () => {
+      cy.route({ method: 'POST', url: 'api/percentiles/', status: 400, response: {} })
 
       // Calculate button should be disabled if no stations selected
       cy.getByTestId('calculate-percentiles-button').should('be.disabled')
@@ -89,15 +91,12 @@ describe('Percentile Calculator Page', () => {
 
       // Check if the error message showed up
       cy.getByTestId('calculate-percentiles-button').should('not.be.disabled').click() // prettier-ignore
-      cy.getByTestId('error-message').should('contain', 'Error occurred (while getting the calculation result).')
+      cy.checkErrorMessage('Error occurred (while getting the calculation result).')
     })
 
     it('successful with one station', () => {
       const stationCode = 838
-      cy.route('GET', 'api/stations/', 'fixture:weather-stations.json').as('getStations')
       cy.route('POST', 'api/percentiles/', 'fixture:percentiles/percentile-result.json').as('getPercentiles')
-      cy.visit('/percentile-calculator/')
-      cy.getByTestId('disclaimer-accept-button').click()
 
       // Select a station
       cy.selectStationByCode(stationCode)
@@ -123,10 +122,7 @@ describe('Percentile Calculator Page', () => {
 
     it('successful with two stations', () => {
       const stationCodes = [322, 1275]
-      cy.route('GET', 'api/stations/', 'fixture:weather-stations.json').as('getStations')
       cy.route('POST', 'api/percentiles/', 'fixture:percentiles/two-percentiles-result.json').as('getPercentiles')
-      cy.visit('/percentile-calculator/')
-      cy.getByTestId('disclaimer-accept-button').click()
 
       // Select two weather stations
       cy.selectStationByCode(stationCodes[0])
