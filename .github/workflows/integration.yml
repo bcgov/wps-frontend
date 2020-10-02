@@ -33,13 +33,10 @@ jobs:
         run: npm run cypress:ci
         env:
           REACT_APP_API_BASE_URL: http://localhost:8080/api
-          REACT_APP_HIDE_DISCLAIMER: true
           REACT_APP_FIDER_LINK: https://psufiderdev.pathfinder.gov.bc.ca/
           REACT_APP_KEYCLOAK_AUTH_URL: https://sso-dev.pathfinder.gov.bc.ca/auth
-          REACT_APP_KEYCLOAK_REALM: ${{ secrets.KEYCLOAK_DEV_REALM }}
-          REACT_APP_KEYCLOAK_CLIENT: ${{ secrets.KEYCLOAK_DEV_CLIENT }}
-          cypress_auth_realm: ${{ secrets.KEYCLOAK_DEV_REALM }}
-          cypress_auth_client_id: ${{ secrets.KEYCLOAK_DEV_CLIENT }}
+          REACT_APP_KEYCLOAK_REALM: 8wl6x4cp
+          REACT_APP_KEYCLOAK_CLIENT: wps-web
 
       # - name: Tests with coverage
       #   run: npm run coverage:ci
