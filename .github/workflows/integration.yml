@@ -18,9 +18,6 @@ jobs:
           # For sonar-scanner to work properly we can't use a shallow fetch.
           fetch-depth: 0
 
-      # - name: Setup kernel for Cypress, increase watchers
-      # run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -44,8 +41,8 @@ jobs:
           cypress_auth_realm: ${{ secrets.KEYCLOAK_DEV_REALM }}
           cypress_auth_client_id: ${{ secrets.KEYCLOAK_DEV_CLIENT }}
 
-      - name: Tests with coverage
-        run: npm run coverage:ci
+      # - name: Tests with coverage
+      #   run: npm run coverage:ci
 
       - name: Fix code coverage paths
         # Due to the way sonarscanner mounts thing when running in docker, we need to change the coverage file.
