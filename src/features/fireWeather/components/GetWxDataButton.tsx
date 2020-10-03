@@ -9,7 +9,8 @@ import {
   selectModelSummaries,
   selectForecasts,
   selectWxDataLoading,
-  selectForecastSummaries
+  selectForecastSummaries,
+  selectMostRecentHistoricModels
 } from 'app/rootReducer'
 
 interface Props {
@@ -23,15 +24,18 @@ const GetWxDataButton = ({ onBtnClick, selectedStations }: Props) => {
   const { error: errFetchingModelSummaries } = useSelector(selectModelSummaries)
   const { error: errFetchingForecasts } = useSelector(selectForecasts)
   const { error: errFetchingForecastSummaries } = useSelector(selectForecastSummaries)
+  const { error: errFetchingMostRecentHistoricModels } = useSelector(
+    selectMostRecentHistoricModels
+  )
   const wxDataLoading = useSelector(selectWxDataLoading)
-  const isBtnDisabled = selectedStations.length === 0
+  const shouldBtnDisabled = selectedStations.length === 0
 
   return (
     <>
       <Button
         data-testid="get-wx-data-button"
         onClick={onBtnClick}
-        disabled={isBtnDisabled}
+        disabled={shouldBtnDisabled}
         loading={wxDataLoading}
         variant="contained"
         color="primary"
@@ -75,6 +79,14 @@ const GetWxDataButton = ({ onBtnClick, selectedStations }: Props) => {
         <ErrorMessage
           error={errFetchingForecastSummaries}
           context="while fetching noon forecast summaries"
+          marginTop={5}
+        />
+      )}
+
+      {errFetchingMostRecentHistoricModels && (
+        <ErrorMessage
+          error={errFetchingMostRecentHistoricModels}
+          context="while fetching most recent historic models"
           marginTop={5}
         />
       )}

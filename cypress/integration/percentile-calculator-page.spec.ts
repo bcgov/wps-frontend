@@ -7,7 +7,6 @@ describe('Percentile Calculator Page', () => {
 
   describe('Weather station dropdown', () => {
     it('renders error message when fetching stations failed', () => {
-      cy.route({ method: 'GET', url: 'api/stations/', status: 400, response: {} })
       cy.visit('/percentile-calculator/')
       cy.getByTestId('disclaimer-accept-button').click()
       cy.checkErrorMessage('Error occurred (while fetching weather stations).')
@@ -82,8 +81,6 @@ describe('Percentile Calculator Page', () => {
     })
 
     it('failed due to network error', () => {
-      cy.route({ method: 'POST', url: 'api/percentiles/', status: 400, response: {} })
-
       // Calculate button should be disabled if no stations selected
       cy.getByTestId('calculate-percentiles-button').should('be.disabled')
 
