@@ -253,8 +253,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         className: 'historicModelRHDot',
         data: recentHistoricModelValues,
         cx: d => xScale(d.date),
-        cy: d => yRHScale(d.historicModelRH),
-        testId: 'historic-model-rh-dot'
+        cy: d => yRHScale(d.historicModelRH)
       })
 
       /* Render temp and rh noon forecasts */
@@ -493,7 +492,9 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
             return `Last issued Model RH: ${value} (%)`
           }
           return ''
-        }
+        },
+        textTestId: 'temp-rh-tooltip-text',
+        bgdTestId: 'temp-rh-graph-background'
       })
     }
   }, [
