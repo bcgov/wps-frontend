@@ -10,7 +10,8 @@ import {
   selectForecasts,
   selectWxDataLoading,
   selectForecastSummaries,
-  selectMostRecentHistoricModels
+  selectMostRecentHistoricModels,
+  selectBiasAdjustedModels
 } from 'app/rootReducer'
 
 interface Props {
@@ -27,6 +28,7 @@ const GetWxDataButton = ({ onBtnClick, selectedStations }: Props) => {
   const { error: errFetchingMostRecentHistoricModels } = useSelector(
     selectMostRecentHistoricModels
   )
+  const { error: errFetcingBiasAdjustedModels } = useSelector(selectBiasAdjustedModels)
   const wxDataLoading = useSelector(selectWxDataLoading)
   const shouldBtnDisabled = selectedStations.length === 0
 
@@ -87,6 +89,14 @@ const GetWxDataButton = ({ onBtnClick, selectedStations }: Props) => {
         <ErrorMessage
           error={errFetchingMostRecentHistoricModels}
           context="while fetching most recent historic models"
+          marginTop={5}
+        />
+      )}
+
+      {errFetcingBiasAdjustedModels && (
+        <ErrorMessage
+          error={errFetcingBiasAdjustedModels}
+          context="while fetching bias-adjusted models"
           marginTop={5}
         />
       )}
