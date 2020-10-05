@@ -18,6 +18,7 @@ describe('MoreCast Page', () => {
     cy.checkErrorMessage('Error occurred (while fetching global model summaries).')
     cy.checkErrorMessage('Error occurred (while fetching noon forecasts).')
     cy.checkErrorMessage('Error occurred (while fetching noon forecast summaries).')
+    cy.checkErrorMessage('Error occurred (while fetching bias-adjusted models).')
   })
 
   it('if all the weather data were successfully fetched', () => {
