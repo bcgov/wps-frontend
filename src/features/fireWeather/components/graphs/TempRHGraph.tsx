@@ -93,15 +93,13 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       const recentHistoricModelValues = _recentHistoricModelValues
         .filter(d => {
-          return d.temperature !== null
+          return d.temperature != null
         })
         .map(d => {
           const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
           const historicModel = {
             date,
-            historicModelTemp: Number(
-              d.temperature === null ? undefined : d.temperature.toFixed(2)
-            ),
+            historicModelTemp: Number(d.temperature.toFixed(2)),
             historicModelRH: Math.round(d.relative_humidity)
           }
           // combine with existing weather values
@@ -115,17 +113,13 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         })
       const biasAdjustedModelValues = _biasAdjustedModelValues
         .filter(d => {
-          return d.bias_adjusted_temperature !== null
+          return d.bias_adjusted_temperature != null
         })
         .map(d => {
           const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
           const biasAdjustedModel = {
             date,
-            biasAdjustedModelTemp: Number(
-              d.bias_adjusted_temperature === null
-                ? undefined
-                : d.bias_adjusted_temperature.toFixed(2)
-            ),
+            biasAdjustedModelTemp: Number(d.bias_adjusted_temperature.toFixed(2)),
             biasAdjustedModelRH: Math.round(d.bias_adjusted_relative_humidity)
           }
           // combines with existing weather values
@@ -521,7 +515,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       legendY += 16
       d3Utils.addLegend({
         svg,
-        text: 'Bias Model Temp',
+        text: 'Bias Adjusted Model Temp',
         color: styles.biasModelTempDotColor,
         fill: 'none',
         shapeX: legendX,
