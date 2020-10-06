@@ -41,15 +41,17 @@ describe('MoreCast Page', () => {
     cy.getByTestId('forecast-temp-dot')
     cy.getByTestId('forecast-summary-temp-line')
 
-    // Test the attached tooltip
+    // Test one of the toggle buttons
+    cy.getByTestId('wx-graph-model-toggle').click()
+    cy.getByTestId('model-temp-dot')
+    cy.getByTestId('wx-graph-model-toggle').click()
+    cy.getByTestId('model-temp-dot').should('not.exist')
+
+    // Test the graph tooltip
     cy.getByTestId('temp-rh-graph-background').trigger('mousemove')
     cy.getByTestId('temp-rh-tooltip-text')
       .should('contain', '10:00 pm, Thu, Oct 1st (PDT, UTC-7)')
       .and('contain', 'Temp: 9 (°C)')
       .and('contain', 'RH: 97 (%)')
-
-    // Test one of toggle buttons
-    cy.getByTestId('wx-graph-model-toggle').click()
-    cy.getByTestId('model-temp-dot')
   })
 })

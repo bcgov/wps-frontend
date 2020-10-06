@@ -524,7 +524,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         text: 'Bias Adjusted Model RH',
         color: styles.biasModelRHDotColor,
         fill: 'none',
-        shapeX: legendX += 125,
+        shapeX: legendX += 130,
         shapeY: legendY,
         textX: legendX + 7,
         textY: legendY + 3,
