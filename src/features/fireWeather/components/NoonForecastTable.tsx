@@ -35,7 +35,7 @@ interface Props {
   title: string
 }
 
-const NoonForecastDisplay = ({ values, testId, title }: Props) => {
+const NoonForecastTable = ({ values, testId, title }: Props) => {
   const classes = useStyles()
 
   if (!values) {
@@ -105,4 +105,4 @@ const NoonForecastDisplay = ({ values, testId, title }: Props) => {
   )
 }
 
-export default React.memo(NoonForecastDisplay)
+export default React.memo(NoonForecastTable)
