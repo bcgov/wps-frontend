@@ -538,39 +538,41 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         width,
         height,
         data: weatherValues,
-        getInnerText: ([key, v]) => {
-          let value = String(v)
-          const isValueNotAvailable = typeof v === 'number' && isNaN(v)
-          if (isValueNotAvailable) {
-            value = '-'
-          }
-          if (key === 'date') {
+        textTestId: 'temp-rh-tooltip-text',
+        bgdTestId: 'temp-rh-graph-background',
+        getInnerText: ([key, value]) => {
+          if (key === 'date' && typeof value === 'object') {
             return `${formatDateInPDT(value, 'h:mm a, ddd, MMM Do')} (PDT, UTC-7)`
-          } else if (key === 'temp') {
-            return `Temp: ${value} (°C)`
-          } else if (key === 'modelTemp') {
-            return `Model Temp: ${value} (°C)`
-          } else if (key === 'forecastTemp') {
-            return `Forecast Temp: ${value} (°C)`
-          } else if (key === 'rh') {
-            return `RH: ${value} (%)`
-          } else if (key === 'modelRH') {
-            return `Model RH: ${value} (%)`
-          } else if (key === 'forecastRH') {
-            return `Forecast RH: ${value} (%)`
-          } else if (key === 'historicModelTemp') {
-            return `Last issued Model Temp: ${value} (°C)`
-          } else if (key === 'historicModelRH') {
-            return `Last issued Model RH: ${value} (%)`
-          } else if (key === 'biasAdjustedModelTemp') {
-            return `Bias adjusted Temp: ${value} (°C)`
-          } else if (key === 'biasAdjustedModelRH') {
-            return `Bias adjusted Model RH: ${value} (%)`
+          } else if (typeof value === 'number') {
+            let weatherValue: number | string = value
+            if (isNaN(weatherValue)) {
+              weatherValue = '-'
+            }
+
+            if (key === 'temp') {
+              return `Temp: ${weatherValue} (°C)`
+            } else if (key === 'modelTemp') {
+              return `Model Temp: ${weatherValue} (°C)`
+            } else if (key === 'forecastTemp') {
+              return `Forecast Temp: ${weatherValue} (°C)`
+            } else if (key === 'rh') {
+              return `RH: ${weatherValue} (%)`
+            } else if (key === 'modelRH') {
+              return `Model RH: ${weatherValue} (%)`
+            } else if (key === 'forecastRH') {
+              return `Forecast RH: ${weatherValue} (%)`
+            } else if (key === 'historicModelTemp') {
+              return `Last issued Model Temp: ${weatherValue} (°C)`
+            } else if (key === 'historicModelRH') {
+              return `Last issued Model RH: ${weatherValue} (%)`
+            } else if (key === 'biasAdjustedModelTemp') {
+              return `Bias adjusted Temp: ${weatherValue} (°C)`
+            } else if (key === 'biasAdjustedModelRH') {
+              return `Bias adjusted Model RH: ${weatherValue} (%)`
+            }
           }
           return ''
-        },
-        textTestId: 'temp-rh-tooltip-text',
-        bgdTestId: 'temp-rh-graph-background'
+        }
       })
     }
   }, [
