@@ -61,8 +61,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
         const reading = {
           date,
-          temp: Number(d.temperature.toFixed(2)),
-          rh: Math.round(d.relative_humidity)
+          temp: d.temperature ? Number(d.temperature.toFixed(2)) : NaN,
+          rh: d.relative_humidity ? Math.round(d.relative_humidity) : NaN
         }
         weatherValueByDatetime[d.datetime] = reading
         allDates.push(date)
@@ -73,8 +73,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
         const model = {
           date,
-          modelTemp: Number(d.temperature.toFixed(2)),
-          modelRH: Math.round(d.relative_humidity)
+          modelTemp: d.temperature ? Number(d.temperature.toFixed(2)) : NaN,
+          modelRH: d.relative_humidity ? Math.round(d.relative_humidity) : NaN
         }
         // combine with the existing reading value
         weatherValueByDatetime[d.datetime] = {
@@ -91,46 +91,42 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
         return { ...d, date }
       })
-      const recentHistoricModelValues = _recentHistoricModelValues
-        .filter(d => {
-          return d.temperature != null
-        })
-        .map(d => {
-          const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
-          const historicModel = {
-            date,
-            historicModelTemp: Number(d.temperature.toFixed(2)),
-            historicModelRH: Math.round(d.relative_humidity)
-          }
-          // combine with existing weather values
-          weatherValueByDatetime[d.datetime] = {
-            ...weatherValueByDatetime[d.datetime],
-            ...historicModel
-          }
-          allDates.push(date)
+      const recentHistoricModelValues = _recentHistoricModelValues.map(d => {
+        const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
+        const historicModel = {
+          date,
+          historicModelTemp: d.temperature ? Number(d.temperature.toFixed(2)) : NaN,
+          historicModelRH: d.relative_humidity ? Math.round(d.relative_humidity) : NaN
+        }
+        // combine with existing weather values
+        weatherValueByDatetime[d.datetime] = {
+          ...weatherValueByDatetime[d.datetime],
+          ...historicModel
+        }
+        allDates.push(date)
 
-          return historicModel
-        })
-      const biasAdjustedModelValues = _biasAdjustedModelValues
-        .filter(d => {
-          return d.bias_adjusted_temperature != null
-        })
-        .map(d => {
-          const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
-          const biasAdjustedModel = {
-            date,
-            biasAdjustedModelTemp: Number(d.bias_adjusted_temperature.toFixed(2)),
-            biasAdjustedModelRH: Math.round(d.bias_adjusted_relative_humidity)
-          }
-          // combines with existing weather values
-          weatherValueByDatetime[d.datetime] = {
-            ...weatherValueByDatetime[d.datetime],
-            ...biasAdjustedModel
-          }
-          allDates.push(date)
+        return historicModel
+      })
+      const biasAdjustedModelValues = _biasAdjustedModelValues.map(d => {
+        const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
+        const biasAdjustedModel = {
+          date,
+          biasAdjustedModelTemp: d.bias_adjusted_temperature
+            ? Number(d.bias_adjusted_temperature.toFixed(2))
+            : NaN,
+          biasAdjustedModelRH: d.bias_adjusted_relative_humidity
+            ? Math.round(d.bias_adjusted_relative_humidity)
+            : NaN
+        }
+        // combines with existing weather values
+        weatherValueByDatetime[d.datetime] = {
+          ...weatherValueByDatetime[d.datetime],
+          ...biasAdjustedModel
+        }
+        allDates.push(date)
 
-          return biasAdjustedModel
-        })
+        return biasAdjustedModel
+      })
       const forecastValues = _forecastValues.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
         const forecast = {
@@ -542,7 +538,12 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         width,
         height,
         data: weatherValues,
-        getInnerText: ([key, value]) => {
+        getInnerText: ([key, v]) => {
+          let value = String(v)
+          const isValueNotAvailable = typeof v === 'number' && isNaN(v)
+          if (isValueNotAvailable) {
+            value = '-'
+          }
           if (key === 'date') {
             return `${formatDateInPDT(value, 'h:mm a, ddd, MMM Do')} (PDT, UTC-7)`
           } else if (key === 'temp') {

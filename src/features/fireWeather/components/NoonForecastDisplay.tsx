@@ -61,7 +61,7 @@ const NoonForecastDisplay = ({ values, testId, title }: Props) => {
                 <TableCell>Temp (°C)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {v.temperature.toFixed(MODEL_VALUE_DECIMAL)}
+                    {v.temperature && v.temperature.toFixed(MODEL_VALUE_DECIMAL)}
                   </TableCell>
                 ))}
               </TableRow>
@@ -69,7 +69,7 @@ const NoonForecastDisplay = ({ values, testId, title }: Props) => {
                 <TableCell>RH (%)</TableCell>
                 {values.map(v => (
                   <TableCell key={v.datetime}>
-                    {Math.round(v.relative_humidity)}
+                    {v.relative_humidity && Math.round(v.relative_humidity)}
                   </TableCell>
                 ))}
               </TableRow>
