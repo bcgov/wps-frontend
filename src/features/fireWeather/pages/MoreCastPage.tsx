@@ -28,7 +28,7 @@ const useStyles = makeStyles({
 })
 
 // TODO: Separate authentication part from this later
-const MorecastPage = () => {
+const MoreCastPage = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const [selectedStations, setStations] = useState<Station[]>([])
@@ -68,7 +68,7 @@ const MorecastPage = () => {
   return (
     <main>
       <PageHeader title="Predictive Services Unit" />
-      <PageTitle title="Morecast - Weather Forecast Validation Tool" />
+      <PageTitle title="MoreCast - Weather Forecast Validation Tool" />
       <Container>
         <WxStationDropdown
           className={classes.stationDropdown}
@@ -82,4 +82,4 @@ const MorecastPage = () => {
   )
 }
 
-export default React.memo(MorecastPage)
+export default React.memo(MoreCastPage)
