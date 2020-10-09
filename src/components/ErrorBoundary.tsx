@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { Component } from 'react'
 
 interface Props {
@@ -12,6 +13,7 @@ interface ErrorBoundaryState {
 export class ErrorBoundary extends Component<Props, ErrorBoundaryState> {
   state: ErrorBoundaryState = { hasError: false, errorInfo: undefined }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static getDerivedStateFromError(error: Error) {
     return { hasError: true }
   }
