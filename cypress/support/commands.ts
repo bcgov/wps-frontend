@@ -59,25 +59,25 @@ declare global {
   }
 }
 
-/* Use this when wanting to slow down the test speed */
-// const COMMAND_DELAY = 1000
+/* Increase this if needed to slow down the test speed */
+const COMMAND_DELAY = 0
 
-// for (const command of [
-//   'visit',
-//   'click',
-//   'trigger',
-//   'type',
-//   'clear',
-//   'reload',
-//   'contains'
-// ]) {
-//   Cypress.Commands.overwrite(command, (originalFn, ...args) => {
-//     const origVal = originalFn(...args)
+for (const command of [
+  'visit',
+  'click',
+  'trigger',
+  'type',
+  'clear',
+  'reload',
+  'contains'
+]) {
+  Cypress.Commands.overwrite(command, (originalFn, ...args) => {
+    const origVal = originalFn(...args)
 
-//     return new Promise(resolve => {
-//       setTimeout(() => {
-//         resolve(origVal)
-//       }, COMMAND_DELAY)
-//     })
-//   })
-// }
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(origVal)
+      }, COMMAND_DELAY)
+    })
+  })
+}

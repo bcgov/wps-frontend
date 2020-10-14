@@ -32,7 +32,8 @@
 }
 
 /*
-  Disable React error overlay in development mode (probably not the best way, but this is a temporary solution)
+  Disable React error overlay in development mode so that users won't see it 
+  (probably not the best way, but this is a temporary solution)
   TODO: Remove this when finally deploying the FE in production mode
 */
 iframe {

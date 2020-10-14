@@ -7,11 +7,11 @@ interface Props {
 
 interface ErrorBoundaryState {
   hasError: boolean
-  errorInfo: React.ErrorInfo | undefined
+  errorInfo?: React.ErrorInfo
 }
 
 export class ErrorBoundary extends Component<Props, ErrorBoundaryState> {
-  state: ErrorBoundaryState = { hasError: false, errorInfo: undefined }
+  state: ErrorBoundaryState = { hasError: false }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static getDerivedStateFromError(error: Error) {
@@ -37,8 +37,8 @@ export class ErrorBoundary extends Component<Props, ErrorBoundaryState> {
           }}
         >
           <span>
-            Unexpected error occurred. You may want to try using a different feature of
-            the app or reloading and trying again.&nbsp;
+            Unexpected error occurred. You may want to reload the page and try it
+            again.&nbsp;
             <span
               style={{ cursor: 'pointer', color: '#0077FF' }}
               onClick={() => {
@@ -51,7 +51,7 @@ export class ErrorBoundary extends Component<Props, ErrorBoundaryState> {
           {errorInfo && (
             <div style={{ marginLeft: '2px', marginTop: '7px' }}>
               <details>
-                <summary>Click for error details</summary>
+                <summary>Click for error details (developers use only)</summary>
                 <code style={{ whiteSpace: 'pre' }}>{errorInfo.componentStack}</code>
               </details>
             </div>
