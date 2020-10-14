@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import React, { Component } from 'react'
+import WarningSharp from '@material-ui/icons/WarningSharp'
 
 interface Props {
   children: React.ReactNode
@@ -13,17 +14,12 @@ interface ErrorBoundaryState {
 export class ErrorBoundary extends Component<Props, ErrorBoundaryState> {
   state: ErrorBoundaryState = { hasError: false }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static getDerivedStateFromError(error: Error) {
+  static getDerivedStateFromError() {
     return { hasError: true }
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    this.setState({ errorInfo })
-  }
-
   render() {
-    const { hasError, errorInfo } = this.state
+    const { hasError } = this.state
 
     if (hasError) {
       // Render fallback UI
@@ -33,12 +29,15 @@ export class ErrorBoundary extends Component<Props, ErrorBoundaryState> {
             border: '1px solid crimson',
             borderRadius: '7px',
             padding: '12px',
-            color: 'crimson'
+            color: 'crimson',
+            display: 'flex',
+            alignItems: 'center'
           }}
         >
+          <WarningSharp style={{ marginRight: '6px' }} fontSize="default" />
           <span>
-            Unexpected error occurred. You may want to reload the page and try it
-            again.&nbsp;
+            Unexpected error occurred in this section. You may want to reload the page and
+            try it again.&nbsp;
             <span
               style={{ cursor: 'pointer', color: '#0077FF' }}
               onClick={() => {
@@ -48,14 +47,6 @@ export class ErrorBoundary extends Component<Props, ErrorBoundaryState> {
               Reload
             </span>
           </span>
-          {errorInfo && (
-            <div style={{ marginLeft: '2px', marginTop: '7px' }}>
-              <details>
-                <summary>Click for error details (developers use only)</summary>
-                <code style={{ whiteSpace: 'pre' }}>{errorInfo.componentStack}</code>
-              </details>
-            </div>
-          )}
         </div>
       )
     }
