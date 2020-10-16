@@ -290,7 +290,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         className: 'readingRHDot',
         data: readingRHValues,
         cx: d => xScale(d.date),
-        cy: d => yRHScale(d.rh)
+        cy: d => yRHScale(d.rh),
+        testId: 'hourly-reading-rh-dot'
       })
 
       /* Render temp and rh models */
