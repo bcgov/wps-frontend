@@ -22,6 +22,7 @@ interface Props {
   forecastSummaries: ForecastSummary[] | undefined
   recentHistoricModelValues: ModelValue[] | undefined
   biasAdjustedModelValues: ModelValue[] | undefined
+  highResModelValues: ModelValue[] | undefined
 }
 
 const WxDataGraph = ({
@@ -32,7 +33,8 @@ const WxDataGraph = ({
   pastForecastValues = [],
   forecastSummaries = [],
   recentHistoricModelValues = [],
-  biasAdjustedModelValues = []
+  biasAdjustedModelValues = [],
+  highResModelValues = []
 }: Props) => {
   const classes = useStyles()
   const noReadings = readingValues.length === 0

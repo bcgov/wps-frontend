@@ -23,12 +23,13 @@ describe('MoreCast Page', () => {
     cy.contains('Data is not available.')
   })
 
-  it('if all the weather data were successfully fetched', () => {
+  it.only('if all the weather data were successfully fetched', () => {
     cy.route('POST', 'api/hourlies/', 'fixture:weather-data/observed-actuals')
     cy.route('POST', 'api/models/GDPS/predictions/', 'fixture:weather-data/future-models')
     cy.route('POST', 'api/models/GDPS/predictions/historic/most_recent/', 'fixture:weather-data/past-most-recent-models') // prettier-ignore
-    cy.route('POST', 'api/models/GDPS/predictions/most_recent', 'fixture:weather-data/past-most-recent-models-with-biased-adjusted') // prettier-ignore
     cy.route('POST', 'api/models/GDPS/predictions/summaries/', 'fixture:weather-data/past-model-summaries')
+    cy.route('POST', 'api/models/GDPS/predictions/most_recent', 'fixture:weather-data/models-with-biased-adjusted') // prettier-ignore
+    cy.route('POST', 'api/models/HRDPS/predictions/most_recent', 'fixture:weather-data/hr-models-with-biased-adjusted') // prettier-ignore
     cy.route('POST', 'api/noon_forecasts/', 'fixture:weather-data/forecasts')
     cy.route('POST', 'api/noon_forecasts/summaries/', 'fixture:weather-data/past-forecast-variations')
 

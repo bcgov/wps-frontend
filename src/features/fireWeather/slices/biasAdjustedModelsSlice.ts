@@ -1,10 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import {
-  ModelValue,
-  getBiasAdjustedModelPredictions,
-  ModelsForStation
-} from 'api/modelAPI'
+import { ModelValue, getModelsWithBiasAdjusted, ModelsForStation } from 'api/modelAPI'
 import { AppThunk } from 'app/store'
 import { logError } from 'utils/error'
 
@@ -37,10 +33,10 @@ const biasAdjustedModelsSlice = createSlice({
       action: PayloadAction<ModelsForStation[]>
     ) {
       state.error = null
-      action.payload.forEach(models => {
-        if (models.station && models.model_runs) {
-          const code = models.station.code
-          state.biasAdjustedModelsByStation[code] = models.model_runs.reduce(
+      action.payload.forEach(({ station, model_runs }) => {
+        if (station && model_runs) {
+          const code = station.code
+          state.biasAdjustedModelsByStation[code] = model_runs.reduce(
             (modelValues: ModelValue[], modelRun) => modelValues.concat(modelRun.values),
             []
           )
@@ -59,16 +55,13 @@ export const {
 
 export default biasAdjustedModelsSlice.reducer
 
-export const fetchBiasAdjustedModels = (
-  stationCodes: number[]
+export const fetchMostRecentModelsWithBiasAdjusted = (
+  codes: number[]
 ): AppThunk => async dispatch => {
   try {
     dispatch(getBiasAdjustedModelsStart())
-    const biasAdjustedModelPredictions = await getBiasAdjustedModelPredictions(
-      stationCodes,
-      'GDPS'
-    )
-    dispatch(getBiasAdjustedModelsSuccess(biasAdjustedModelPredictions))
+    const modelsForStations = await getModelsWithBiasAdjusted(codes, 'GDPS')
+    dispatch(getBiasAdjustedModelsSuccess(modelsForStations))
   } catch (err) {
     dispatch(getBiasAdjustedModelsFailed(err.toString()))
     logError(err)

@@ -16,7 +16,8 @@ import {
   selectWxDataLoading,
   selectForecastSummaries,
   selectMostRecentHistoricModels,
-  selectBiasAdjustedModels
+  selectBiasAdjustedModels,
+  selectHighResModels
 } from 'app/rootReducer'
 
 const useStyles = makeStyles({
@@ -58,6 +59,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
     selectMostRecentHistoricModels
   )
   const { biasAdjustedModelsByStation } = useSelector(selectBiasAdjustedModels)
+  const { highResModelsByStation } = useSelector(selectHighResModels)
   const wxDataLoading = useSelector(selectWxDataLoading)
 
   return (
@@ -74,6 +76,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const pastForecastValues = pastNoonForecastsByStation[s.code]
           const forecastSummaries = forecastSummariesByStation[s.code]
           const biasAdjustedModelValues = biasAdjustedModelsByStation[s.code]
+          const highResModelValues = highResModelsByStation[s.code]
           const nothingToDisplay =
             !readingValues &&
             !modelValues &&
@@ -123,6 +126,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
                   forecastSummaries={forecastSummaries}
                   recentHistoricModelValues={recentHistoricModels}
                   biasAdjustedModelValues={biasAdjustedModelValues}
+                  highResModelValues={highResModelValues}
                 />
               </ErrorBoundary>
             </Paper>
