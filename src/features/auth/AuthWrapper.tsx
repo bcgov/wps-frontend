@@ -39,4 +39,4 @@ const AuthWrapper = ({ children, shouldAuthenticate }: Props) => {
   return children
 }
 
-export default AuthWrapper
+export default React.memo(AuthWrapper)

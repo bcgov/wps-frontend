@@ -23,6 +23,7 @@ import {
   emptyRecentHistoricModelsResponse,
   emptyRecentModelsResponse
 } from 'features/fireWeather/pages/MoreCastPage.mock'
+import AuthWrapper from 'features/auth/AuthWrapper'
 
 const mockAxios = new MockAdapter(axios)
 
@@ -32,7 +33,11 @@ afterEach(() => {
 })
 
 it('renders fire weather page', async () => {
-  const { getByText, getByTestId } = renderWithRedux(<MoreCastPage />)
+  const { getByText, getByTestId } = renderWithRedux(
+    <AuthWrapper shouldAuthenticate>
+      <MoreCastPage />
+    </AuthWrapper>
+  )
   // before authenticated
   expect(getByText(/Signing in/i)).toBeInTheDocument()
 
@@ -203,10 +208,10 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
   fireEvent.mouseMove(graphBg)
   fireEvent.mouseLeave(graphBg)
 
-  // There should have been 7 post requests
+  // There should have been 8 post requests
   // (models, hourly readings, most recent historic models, most recent models, noon forecasts,
-  // and two summaries).
-  expect(mockAxios.history.post.length).toBe(7)
+  // high res models, and two summaries).
+  expect(mockAxios.history.post.length).toBe(8)
   // all post requests should include station codes in the body
   mockAxios.history.post.forEach(post => {
     expect(post.data).toBe(

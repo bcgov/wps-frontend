@@ -1,12 +1,12 @@
 import { makeStyles } from '@material-ui/core/styles'
 
 const currLineColor = 'green'
-export const readingTempDotColor = '#ff6984'
-export const readingRHDotColor = '#6198ff'
-export const modelTempDotColor = '#ff0d39'
+export const readingTempDotColor = '#ff0d39'
+export const readingRHDotColor = '#1467ff'
+export const modelTempDotColor = '#ff6984'
+export const modelRHDotColor = '#6198ff'
 export const biasModelTempDotColor = '#aa0000'
 export const biasModelRHDotColor = '#0000aa'
-export const modelRHDotColor = '#1467ff'
 export const modelSummaryTempAreaColor = '#ff96aa'
 export const modelSummaryRHAreaColor = '#94b9ff'
 export const forecastTempDotColor = '#f23bff'
@@ -71,7 +71,7 @@ export const useStyles = makeStyles({
       fill: modelSummaryRHAreaColor,
       opacity: 0.5
     },
-    '& .modelTempDot, & .historicModelTempDot': {
+    '& .modelTempDot, .historicModelTempDot': {
       stroke: modelTempDotColor,
       fill: 'none',
       cursor: 'pointer'
@@ -86,17 +86,17 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .modelRHDot, & .historicModelRHDot': {
+    '& .modelRHDot, .historicModelRHDot': {
       stroke: modelRHDotColor,
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .forecastTempDot, & .pastForecastTempDot': {
+    '& .forecastTempDot, .pastForecastTempDot': {
       stroke: forecastTempDotColor,
       fill: forecastTempDotColor,
       cursor: 'pointer'
     },
-    '& .forecastRHDot, & .pastForecastRHDot': {
+    '& .forecastRHDot, .pastForecastRHDot': {
       stroke: forecastRHDotColor,
       fill: forecastRHDotColor,
       cursor: 'pointer'

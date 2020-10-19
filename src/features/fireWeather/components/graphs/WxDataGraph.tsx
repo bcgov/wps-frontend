@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { ModelSummary, ModelValue } from 'api/modelAPI'
@@ -6,6 +6,7 @@ import { ReadingValue } from 'api/readingAPI'
 import { NoonForecastValue, ForecastSummary } from 'api/forecastAPI'
 import TempRHGraph from 'features/fireWeather/components/graphs/TempRHGraph'
 import WxDataGraphToggles from 'features/fireWeather/components/graphs/WxDataGraphToggles'
+import { useGraphToggles } from 'features/fireWeather/components/graphs/useGraphToggles'
 
 const useStyles = makeStyles({
   display: {
@@ -37,6 +38,7 @@ const WxDataGraph = ({
   highResModelValues = []
 }: Props) => {
   const classes = useStyles()
+
   const noReadings = readingValues.length === 0
   const noForecasts = forecastValues.length === 0
   const noModels = modelValues.length === 0
@@ -45,17 +47,17 @@ const WxDataGraph = ({
   const noPastForecasts =
     pastForecastValues.length === 0 && forecastSummaries.length === 0
   const noBiasAdjustedPredictions = biasAdjustedModelValues.length === 0
-  // Show hourly readings and models initially, and let users manipulate the view
-  const [showReadings, setShowReadings] = useState<boolean>(!noReadings)
-  const [showPastForecasts, setShowPastForecasts] = useState<boolean>(!noPastForecasts)
-  const [showHistoricModels, setShowHistoricModels] = useState<boolean>(
-    !noModelSummaries || !noRecentHistoricModels
-  )
-  const [showModels, setShowModels] = useState<boolean>(false)
-  const [showForecasts, setShowForecasts] = useState<boolean>(false)
-  const [showBiasAdjustedPredictions, setShowBiasAdjustedPredictions] = useState<boolean>(
-    false
-  )
+  const noHighResModels = highResModelValues.length === 0
+
+  const [toggleValues, setToggleValues] = useGraphToggles({
+    showReadings: !noReadings,
+    showPastForecasts: false,
+    showPastModels: false, //!noModelSummaries || !noRecentHistoricModels,
+    showModels: false,
+    showForecasts: false,
+    showBiasAdjustedPredictions: false,
+    showHighResModels: false
+  })
 
   if (
     noReadings &&
@@ -72,37 +74,31 @@ const WxDataGraph = ({
   return (
     <div className={classes.display}>
       <WxDataGraphToggles
+        toggleValues={toggleValues}
+        setToggleValues={setToggleValues}
         noReadings={noReadings}
-        showReadings={showReadings}
-        setShowReadings={setShowReadings}
         noModels={noModels}
-        showModels={showModels}
-        setShowModels={setShowModels}
         noHistoricModels={noModelSummaries && noRecentHistoricModels}
-        showHistoricModels={showHistoricModels}
-        setShowHistoricModels={setShowHistoricModels}
         noForecasts={noForecasts}
-        showForecasts={showForecasts}
-        setShowForecasts={setShowForecasts}
         noPastForecasts={noPastForecasts}
-        showPastForecasts={showPastForecasts}
-        setShowPastForecasts={setShowPastForecasts}
         noBiasAdjustedPredictions={noBiasAdjustedPredictions}
-        showBiasAdjustedPredictions={showBiasAdjustedPredictions}
-        setShowBiasAdjustedPredictions={setShowBiasAdjustedPredictions}
+        noHighResModels={noHighResModels}
       />
 
       <TempRHGraph
-        readingValues={showReadings ? readingValues : []}
-        modelValues={showModels ? modelValues : []}
-        modelSummaries={showHistoricModels ? modelSummaries : []}
-        forecastValues={showForecasts ? forecastValues : []}
-        pastForecastValues={showPastForecasts ? pastForecastValues : []}
-        forecastSummaries={showPastForecasts ? forecastSummaries : []}
-        recentHistoricModelValues={showHistoricModels ? recentHistoricModelValues : []}
-        biasAdjustedModelValues={
-          showBiasAdjustedPredictions ? biasAdjustedModelValues : []
+        readingValues={toggleValues.showReadings ? readingValues : []}
+        modelValues={toggleValues.showModels ? modelValues : []}
+        modelSummaries={toggleValues.showPastModels ? modelSummaries : []}
+        forecastValues={toggleValues.showForecasts ? forecastValues : []}
+        pastForecastValues={toggleValues.showPastForecasts ? pastForecastValues : []}
+        forecastSummaries={toggleValues.showPastForecasts ? forecastSummaries : []}
+        recentHistoricModelValues={
+          toggleValues.showPastModels ? recentHistoricModelValues : []
         }
+        biasAdjustedModelValues={
+          toggleValues.showBiasAdjustedPredictions ? biasAdjustedModelValues : []
+        }
+        highResModelValues={toggleValues.showHighResModels ? highResModelValues : []}
       />
     </div>
   )

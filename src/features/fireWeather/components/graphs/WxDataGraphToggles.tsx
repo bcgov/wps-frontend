@@ -5,6 +5,11 @@ import FormGroup from '@material-ui/core/FormGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 
+import {
+  ToggleValues,
+  SetToggleValues
+} from 'features/fireWeather/components/graphs/useGraphToggles'
+
 const useStyles = makeStyles({
   formControlLabel: {
     marginLeft: -5
@@ -15,45 +20,27 @@ const useStyles = makeStyles({
 })
 
 interface Props {
+  toggleValues: ToggleValues
+  setToggleValues: SetToggleValues
   noReadings: boolean
-  showReadings: boolean
-  setShowReadings: (checked: boolean) => void
   noModels: boolean
-  showModels: boolean
-  setShowModels: (checked: boolean) => void
   noHistoricModels: boolean
-  showHistoricModels: boolean
-  setShowHistoricModels: (checked: boolean) => void
   noForecasts: boolean
-  showForecasts: boolean
-  setShowForecasts: (checked: boolean) => void
   noPastForecasts: boolean
-  showPastForecasts: boolean
-  setShowPastForecasts: (checked: boolean) => void
   noBiasAdjustedPredictions: boolean
-  showBiasAdjustedPredictions: boolean
-  setShowBiasAdjustedPredictions: (checked: boolean) => void
+  noHighResModels: boolean
 }
 
 const WxDataToggles = ({
+  toggleValues,
+  setToggleValues,
   noReadings,
-  showReadings,
-  setShowReadings,
   noModels,
-  showModels,
-  setShowModels,
   noHistoricModels,
-  showHistoricModels,
-  setShowHistoricModels,
   noForecasts,
-  showForecasts,
-  setShowForecasts,
   noPastForecasts,
-  showPastForecasts,
-  setShowPastForecasts,
   noBiasAdjustedPredictions,
-  showBiasAdjustedPredictions,
-  setShowBiasAdjustedPredictions
+  noHighResModels
 }: Props) => {
   const classes = useStyles()
 
@@ -65,17 +52,17 @@ const WxDataToggles = ({
           <Switch
             name="showReadings"
             data-testid="wx-graph-reading-toggle"
-            checked={showReadings}
+            checked={toggleValues.showReadings}
             disabled={noReadings}
             size="small"
-            onChange={(_, checked) => {
-              setShowReadings(checked)
+            onChange={(e, checked) => {
+              setToggleValues(e.target.name as 'showReadings', checked)
             }}
           />
         }
         label={
           <Typography className={classes.label} variant="body2">
-            Actual Readings
+            Observations
           </Typography>
         }
       />
@@ -83,13 +70,13 @@ const WxDataToggles = ({
         className={classes.formControlLabel}
         control={
           <Switch
-            name="showHistoricModels"
+            name="showPastModels"
             data-testid="wx-graph-model-summary-toggle"
-            checked={showHistoricModels}
+            checked={toggleValues.showPastModels}
             disabled={noHistoricModels}
             size="small"
-            onChange={(_, checked) => {
-              setShowHistoricModels(checked)
+            onChange={(e, checked) => {
+              setToggleValues(e.target.name as 'showPastModels', checked)
             }}
           />
         }
@@ -105,11 +92,11 @@ const WxDataToggles = ({
           <Switch
             name="showPastForecasts"
             data-testid="wx-graph-forecast-summary-toggle"
-            checked={showPastForecasts}
+            checked={toggleValues.showPastForecasts}
             disabled={noPastForecasts}
             size="small"
-            onChange={(_, checked) => {
-              setShowPastForecasts(checked)
+            onChange={(e, checked) => {
+              setToggleValues(e.target.name as 'showPastForecasts', checked)
             }}
           />
         }
@@ -125,11 +112,11 @@ const WxDataToggles = ({
           <Switch
             name="showModels"
             data-testid="wx-graph-model-toggle"
-            checked={showModels}
+            checked={toggleValues.showModels}
             disabled={noModels}
             size="small"
-            onChange={(_, checked) => {
-              setShowModels(checked)
+            onChange={(e, checked) => {
+              setToggleValues(e.target.name as 'showModels', checked)
             }}
           />
         }
@@ -145,11 +132,11 @@ const WxDataToggles = ({
           <Switch
             name="showForecasts"
             data-testid="wx-graph-forecast-toggle"
-            checked={showForecasts}
+            checked={toggleValues.showForecasts}
             disabled={noForecasts}
             size="small"
-            onChange={(_, checked) => {
-              setShowForecasts(checked)
+            onChange={(e, checked) => {
+              setToggleValues(e.target.name as 'showForecasts', checked)
             }}
           />
         }
@@ -165,17 +152,37 @@ const WxDataToggles = ({
           <Switch
             name="showBiasAdjustedPredictions"
             data-testid="wx-graph-bias-toggle"
-            checked={showBiasAdjustedPredictions}
+            checked={toggleValues.showBiasAdjustedPredictions}
             disabled={noBiasAdjustedPredictions}
             size="small"
-            onChange={(_, checked) => {
-              setShowBiasAdjustedPredictions(checked)
+            onChange={(e, checked) => {
+              setToggleValues(e.target.name as 'showBiasAdjustedPredictions', checked)
             }}
           />
         }
         label={
           <Typography className={classes.label} variant="body2">
             Bias Adjusted Models
+          </Typography>
+        }
+      />
+      <FormControlLabel
+        className={classes.formControlLabel}
+        control={
+          <Switch
+            name="showHighResModels"
+            data-testid="wx-graph-high-res-model-toggle"
+            checked={toggleValues.showHighResModels}
+            disabled={noHighResModels}
+            size="small"
+            onChange={(e, checked) => {
+              setToggleValues(e.target.name as 'showHighResModels', checked)
+            }}
+          />
+        }
+        label={
+          <Typography className={classes.label} variant="body2">
+            High Resolution Models
           </Typography>
         }
       />
