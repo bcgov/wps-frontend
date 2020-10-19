@@ -4,7 +4,7 @@ describe('MoreCast Page', () => {
   beforeEach(() => {
     cy.server()
     cy.route('GET', 'api/stations/', 'fixture:weather-stations.json').as('getStations')
-    cy.visitProtectedPage('/morecast/')
+    cy.visit('/morecast/')
   })
 
   it('if network errors occurred', () => {

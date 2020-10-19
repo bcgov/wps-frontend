@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { Station } from 'api/stationAPI'
-import { selectAuthentication } from 'app/rootReducer'
 import { PageHeader, PageTitle, Container } from 'components'
 import WxStationDropdown from 'features/stations/components/WxStationDropdown'
 import WxDataDisplays from 'features/fireWeather/components/WxDataDisplays'
-import {
-  authenticate,
-  setAxiosRequestInterceptors
-} from 'features/auth/slices/authenticationSlice'
+import { setAxiosRequestInterceptors } from 'features/auth/slices/authenticationSlice'
 import { fetchWxStations } from 'features/stations/slices/stationsSlice'
 import { fetchModels } from 'features/fireWeather/slices/modelsSlice'
 import { fetchReadings } from 'features/fireWeather/slices/readingsSlice'
@@ -28,31 +24,16 @@ const useStyles = makeStyles({
   }
 })
 
-// TODO: Separate authentication part from this later
 const MoreCastPage = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const [selectedStations, setStations] = useState<Station[]>([])
   const [requestedStations, setRequestedStations] = useState<Station[]>([])
-  const { isAuthenticated, authenticating, error } = useSelector(selectAuthentication)
 
   useEffect(() => {
-    dispatch(authenticate())
     dispatch(setAxiosRequestInterceptors())
     dispatch(fetchWxStations())
   }, [dispatch])
-
-  if (error) {
-    return <div>{error}</div>
-  }
-
-  if (authenticating) {
-    return <div>Signing in...</div>
-  }
-
-  if (!isAuthenticated) {
-    return <div>You are not authenticated!</div>
-  }
 
   const onSubmitClick = () => {
     setRequestedStations(selectedStations)
