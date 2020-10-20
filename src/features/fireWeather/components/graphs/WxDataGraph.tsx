@@ -16,59 +16,81 @@ const useStyles = makeStyles({
 
 interface Props {
   readingValues: ReadingValue[] | undefined
+  allModelValues: ModelValue[] | undefined
+  pastModelValues: ModelValue[] | undefined
   modelValues: ModelValue[] | undefined
   modelSummaries: ModelSummary[] | undefined
-  forecastValues: NoonForecastValue[] | undefined
   pastForecastValues: NoonForecastValue[] | undefined
+  forecastValues: NoonForecastValue[] | undefined
+  allForecasts: NoonForecastValue[] | undefined
   forecastSummaries: ForecastSummary[] | undefined
-  recentHistoricModelValues: ModelValue[] | undefined
-  biasAdjustedModelValues: ModelValue[] | undefined
+  pastHighResModelValues: ModelValue[] | undefined
   highResModelValues: ModelValue[] | undefined
+  allHighResModelValues: ModelValue[] | undefined
 }
 
 const WxDataGraph = ({
   readingValues = [],
+  pastModelValues = [],
   modelValues = [],
+  allModelValues = [],
   modelSummaries = [],
-  forecastValues = [],
   pastForecastValues = [],
+  forecastValues = [],
+  allForecasts = [],
   forecastSummaries = [],
-  recentHistoricModelValues = [],
-  biasAdjustedModelValues = [],
-  highResModelValues = []
+  pastHighResModelValues = [],
+  highResModelValues = [],
+  allHighResModelValues = []
 }: Props) => {
   const classes = useStyles()
 
   const noReadings = readingValues.length === 0
-  const noForecasts = forecastValues.length === 0
-  const noModels = modelValues.length === 0
-  const noModelSummaries = modelSummaries.length === 0
-  const noRecentHistoricModels = recentHistoricModelValues.length === 0
-  const noPastForecasts =
-    pastForecastValues.length === 0 && forecastSummaries.length === 0
-  const noBiasAdjustedPredictions = biasAdjustedModelValues.length === 0
-  const noHighResModels = highResModelValues.length === 0
+  const noModels = allModelValues.length === 0 && modelSummaries.length === 0
+  const noForecasts = allForecasts.length === 0 && forecastSummaries.length === 0
+  const noBiasAdjustedModels = allModelValues.length === 0
+  const noHighResModels = allHighResModelValues.length === 0
 
   const [toggleValues, setToggleValues] = useGraphToggles({
     showReadings: !noReadings,
-    showPastForecasts: false,
-    showPastModels: false, //!noModelSummaries || !noRecentHistoricModels,
     showModels: false,
     showForecasts: false,
-    showBiasAdjustedPredictions: false,
-    showHighResModels: false
+    showBiasAdjustedModels: false,
+    showHighResModels: false,
+    timeOfInterest: 'past'
   })
 
-  if (
-    noReadings &&
-    noForecasts &&
-    noPastForecasts &&
-    noModels &&
-    noModelSummaries &&
-    noRecentHistoricModels &&
-    noBiasAdjustedPredictions
-  ) {
+  if (noReadings && noForecasts && noModels && noBiasAdjustedModels && noHighResModels) {
     return null
+  }
+
+  const {
+    showReadings,
+    showModels,
+    showForecasts,
+    showBiasAdjustedModels,
+    showHighResModels,
+    timeOfInterest
+  } = toggleValues
+  let askedModelValues = []
+  let askedForecastValues = []
+  let askedHighResModelValues = []
+  let askedBiasAdjModelValues = []
+  if (timeOfInterest === 'past') {
+    askedModelValues = pastModelValues
+    askedForecastValues = pastForecastValues
+    askedHighResModelValues = pastHighResModelValues
+    askedBiasAdjModelValues = pastModelValues
+  } else if (timeOfInterest === 'future') {
+    askedModelValues = modelValues
+    askedForecastValues = forecastValues
+    askedHighResModelValues = highResModelValues
+    askedBiasAdjModelValues = modelValues
+  } else {
+    askedModelValues = allModelValues
+    askedForecastValues = allForecasts
+    askedHighResModelValues = allHighResModelValues
+    askedBiasAdjModelValues = allModelValues
   }
 
   return (
@@ -77,28 +99,22 @@ const WxDataGraph = ({
         toggleValues={toggleValues}
         setToggleValues={setToggleValues}
         noReadings={noReadings}
-        noModels={noModels}
-        noHistoricModels={noModelSummaries && noRecentHistoricModels}
         noForecasts={noForecasts}
-        noPastForecasts={noPastForecasts}
-        noBiasAdjustedPredictions={noBiasAdjustedPredictions}
+        noModels={noModels}
+        noBiasAdjustedModels={noBiasAdjustedModels}
         noHighResModels={noHighResModels}
       />
 
       <TempRHGraph
-        readingValues={toggleValues.showReadings ? readingValues : []}
-        modelValues={toggleValues.showModels ? modelValues : []}
-        modelSummaries={toggleValues.showPastModels ? modelSummaries : []}
-        forecastValues={toggleValues.showForecasts ? forecastValues : []}
-        pastForecastValues={toggleValues.showPastForecasts ? pastForecastValues : []}
-        forecastSummaries={toggleValues.showPastForecasts ? forecastSummaries : []}
-        recentHistoricModelValues={
-          toggleValues.showPastModels ? recentHistoricModelValues : []
+        readingValues={showReadings && timeOfInterest !== 'future' ? readingValues : []}
+        modelValues={showModels ? askedModelValues : []}
+        modelSummaries={showModels && timeOfInterest !== 'future' ? modelSummaries : []}
+        forecastValues={showForecasts ? askedForecastValues : []}
+        forecastSummaries={
+          showForecasts && timeOfInterest !== 'future' ? forecastSummaries : []
         }
-        biasAdjustedModelValues={
-          toggleValues.showBiasAdjustedPredictions ? biasAdjustedModelValues : []
-        }
-        highResModelValues={toggleValues.showHighResModels ? highResModelValues : []}
+        highResModelValues={showHighResModels ? askedHighResModelValues : []}
+        biasAdjustedModelValues={showBiasAdjustedModels ? askedBiasAdjModelValues : []}
       />
     </div>
   )

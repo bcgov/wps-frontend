@@ -1,14 +1,16 @@
 import { makeStyles } from '@material-ui/core/styles'
 
 const currLineColor = 'green'
-export const readingTempDotColor = '#ff0d39'
-export const readingRHDotColor = '#1467ff'
+export const readingTempDotColor = '#ff1212'
+export const readingRHDotColor = '#196aff'
 export const modelTempDotColor = '#ff6984'
 export const modelRHDotColor = '#6198ff'
 export const biasModelTempDotColor = '#aa0000'
 export const biasModelRHDotColor = '#0000aa'
 export const modelSummaryTempAreaColor = '#ff96aa'
 export const modelSummaryRHAreaColor = '#94b9ff'
+export const highResModelTempDotColor = '#ff2b52'
+export const highResModelRHDotColor = '#3079ff'
 export const forecastTempDotColor = '#f23bff'
 export const forecastRHDotColor = '#7a2eff'
 const forecastSummaryTempLineColor = forecastTempDotColor
@@ -51,12 +53,12 @@ export const useStyles = makeStyles({
     },
     '& .readingTempDot': {
       stroke: readingTempDotColor,
-      fill: 'none',
+      fill: readingTempDotColor,
       cursor: 'pointer'
     },
     '& .readingRHDot': {
       stroke: readingRHDotColor,
-      fill: 'none',
+      fill: readingTempDotColor,
       cursor: 'pointer'
     },
     '& .modelSummaryTempArea': {
@@ -76,6 +78,11 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
+    '& .modelRHDot, .historicModelRHDot': {
+      stroke: modelRHDotColor,
+      fill: 'none',
+      cursor: 'pointer'
+    },
     '& .biasAdjustedModelTempDot': {
       stroke: biasModelTempDotColor,
       fill: 'none',
@@ -86,19 +93,24 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .modelRHDot, .historicModelRHDot': {
-      stroke: modelRHDotColor,
+    '& .highResModelTempDot': {
+      stroke: highResModelTempDotColor,
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .forecastTempDot, .pastForecastTempDot': {
-      stroke: forecastTempDotColor,
-      fill: forecastTempDotColor,
+    '& .highResModelRHDot': {
+      stroke: highResModelRHDotColor,
+      fill: 'none',
       cursor: 'pointer'
     },
-    '& .forecastRHDot, .pastForecastRHDot': {
+    '& .forecastTempDot': {
+      stroke: forecastTempDotColor,
+      fill: 'none',
+      cursor: 'pointer'
+    },
+    '& .forecastRHDot': {
       stroke: forecastRHDotColor,
-      fill: forecastRHDotColor,
+      fill: 'none',
       cursor: 'pointer'
     },
     '& .forecastSummaryTempLine': {

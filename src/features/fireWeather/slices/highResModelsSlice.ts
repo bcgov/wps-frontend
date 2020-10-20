@@ -7,12 +7,16 @@ import { logError } from 'utils/error'
 interface State {
   loading: boolean
   error: string | null
+  allHighResModelsByStation: Record<number, ModelValue[] | undefined>
+  pastHighResModelsByStation: Record<number, ModelValue[] | undefined>
   highResModelsByStation: Record<number, ModelValue[] | undefined>
 }
 
 const initialState: State = {
   loading: false,
   error: null,
+  allHighResModelsByStation: {},
+  pastHighResModelsByStation: {},
   highResModelsByStation: {}
 }
 
@@ -33,10 +37,24 @@ const highResModelsSlice = createSlice({
       action.payload.forEach(({ station, model_runs }) => {
         if (station && model_runs) {
           const code = station.code
-          state.highResModelsByStation[code] = model_runs.reduce(
+          const pastModelValues: ModelValue[] = []
+          const modelValues: ModelValue[] = []
+          const allModelValues = model_runs.reduce(
             (modelValues: ModelValue[], modelRun) => modelValues.concat(modelRun.values),
             []
           )
+          const currDate = new Date()
+          allModelValues.forEach(v => {
+            const isFutureModel = new Date(v.datetime) >= currDate
+            if (isFutureModel) {
+              modelValues.push(v)
+            } else {
+              pastModelValues.push(v)
+            }
+          })
+          state.pastHighResModelsByStation[code] = pastModelValues
+          state.highResModelsByStation[code] = modelValues
+          state.allHighResModelsByStation[code] = allModelValues
         }
       })
       state.loading = false

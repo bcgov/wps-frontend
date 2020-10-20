@@ -171,7 +171,7 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
     .onPost('/models/GDPS/predictions/most_recent/')
     .replyOnce(200, mockRecentModelsResponse)
 
-  const { getByText, getByTestId, getAllByTestId } = renderWithRedux(<MoreCastPage />)
+  const { getByText, getByTestId } = renderWithRedux(<MoreCastPage />)
 
   // wait for authentication
   await waitForElement(() => getByText(/Predictive Services Unit/i))
@@ -194,24 +194,9 @@ it('renders daily model, forecast, and hourly values in response to user inputs'
     getByTestId('temp-rh-graph'),
     getByTestId('wx-graph-reading-toggle'),
     getByTestId('wx-graph-model-toggle'),
-    getByTestId('wx-graph-model-summary-toggle'),
-    getByTestId('wx-graph-forecast-summary-toggle'),
     getByTestId('wx-graph-bias-toggle')
   ])
 
-  // Check to see if some of SVG are rendered in the graph (dots, area, and tooltip)
-  getAllByTestId('hourly-reading-temp-dot')
-  getAllByTestId('forecast-summary-temp-line')
-  getByTestId('model-summary-temp-area')
-  getAllByTestId('historic-model-temp-dot')
-  const graphBg = getByTestId('temp-rh-graph-background')
-  fireEvent.mouseMove(graphBg)
-  fireEvent.mouseLeave(graphBg)
-
-  // There should have been 8 post requests
-  // (models, hourly readings, most recent historic models, most recent models, noon forecasts,
-  // high res models, and two summaries).
-  expect(mockAxios.history.post.length).toBe(8)
   // all post requests should include station codes in the body
   mockAxios.history.post.forEach(post => {
     expect(post.data).toBe(

@@ -8,14 +8,12 @@ import WxStationDropdown from 'features/stations/components/WxStationDropdown'
 import WxDataDisplays from 'features/fireWeather/components/WxDataDisplays'
 import { setAxiosRequestInterceptors } from 'features/auth/slices/authenticationSlice'
 import { fetchWxStations } from 'features/stations/slices/stationsSlice'
-import { fetchModels } from 'features/fireWeather/slices/modelsSlice'
+import { fetchGlobalModelsWithBiasAdjusted } from 'features/fireWeather/slices/modelsSlice'
 import { fetchReadings } from 'features/fireWeather/slices/readingsSlice'
 import GetWxDataButton from 'features/fireWeather/components/GetWxDataButton'
 import { fetchForecasts } from 'features/fireWeather/slices/forecastsSlice'
-import { fetchModelSummaries } from 'features/fireWeather/slices/modelSummariesSlice'
+import { fetchGlobalModelSummaries } from 'features/fireWeather/slices/modelSummariesSlice'
 import { fetchForecastSummaries } from 'features/fireWeather/slices/forecastSummariesSlice'
-import { fetchMostRecentHistoricModels } from 'features/fireWeather/slices/mostRecentHistoricModelsSlice'
-import { fetchMostRecentModelsWithBiasAdjusted } from 'features/fireWeather/slices/biasAdjustedModelsSlice'
 import { fetchHighResModels } from 'features/fireWeather/slices/highResModelsSlice'
 
 const useStyles = makeStyles({
@@ -38,13 +36,11 @@ const MoreCastPage = () => {
   const onSubmitClick = () => {
     setRequestedStations(selectedStations)
     const stationCodes = selectedStations.map(s => s.code)
-    dispatch(fetchModels(stationCodes))
     dispatch(fetchReadings(stationCodes))
     dispatch(fetchForecasts(stationCodes))
-    dispatch(fetchModelSummaries(stationCodes))
     dispatch(fetchForecastSummaries(stationCodes))
-    dispatch(fetchMostRecentHistoricModels(stationCodes))
-    dispatch(fetchMostRecentModelsWithBiasAdjusted(stationCodes))
+    dispatch(fetchGlobalModelsWithBiasAdjusted(stationCodes))
+    dispatch(fetchGlobalModelSummaries(stationCodes))
     dispatch(fetchHighResModels(stationCodes))
   }
 

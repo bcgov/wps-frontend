@@ -10,8 +10,7 @@ import {
   selectForecasts,
   selectWxDataLoading,
   selectForecastSummaries,
-  selectMostRecentHistoricModels,
-  selectBiasAdjustedModels
+  selectHighResModels
 } from 'app/rootReducer'
 
 interface Props {
@@ -25,10 +24,7 @@ const GetWxDataButton = ({ onBtnClick, selectedStations }: Props) => {
   const { error: errFetchingModelSummaries } = useSelector(selectModelSummaries)
   const { error: errFetchingForecasts } = useSelector(selectForecasts)
   const { error: errFetchingForecastSummaries } = useSelector(selectForecastSummaries)
-  const { error: errFetchingMostRecentHistoricModels } = useSelector(
-    selectMostRecentHistoricModels
-  )
-  const { error: errFetcingBiasAdjustedModels } = useSelector(selectBiasAdjustedModels)
+  const { error: errFetchingHighResModels } = useSelector(selectHighResModels)
   const wxDataLoading = useSelector(selectWxDataLoading)
   const shouldBtnDisabled = selectedStations.length === 0
 
@@ -45,18 +41,18 @@ const GetWxDataButton = ({ onBtnClick, selectedStations }: Props) => {
         Get Weather Data
       </Button>
 
-      {errFetchingModels && (
-        <ErrorMessage
-          error={errFetchingModels}
-          context="while fetching global models"
-          marginTop={5}
-        />
-      )}
-
       {errFetchingReadings && (
         <ErrorMessage
           error={errFetchingReadings}
           context="while fetching hourly readings"
+          marginTop={5}
+        />
+      )}
+
+      {errFetchingModels && (
+        <ErrorMessage
+          error={errFetchingModels}
+          context="while fetching global models"
           marginTop={5}
         />
       )}
@@ -85,18 +81,10 @@ const GetWxDataButton = ({ onBtnClick, selectedStations }: Props) => {
         />
       )}
 
-      {errFetchingMostRecentHistoricModels && (
+      {errFetchingHighResModels && (
         <ErrorMessage
-          error={errFetchingMostRecentHistoricModels}
-          context="while fetching most recent historic models"
-          marginTop={5}
-        />
-      )}
-
-      {errFetcingBiasAdjustedModels && (
-        <ErrorMessage
-          error={errFetcingBiasAdjustedModels}
-          context="while fetching bias-adjusted models"
+          error={errFetchingHighResModels}
+          context="while fetching high resolution models"
           marginTop={5}
         />
       )}

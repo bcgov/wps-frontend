@@ -4,18 +4,25 @@ import { makeStyles } from '@material-ui/core/styles'
 import FormGroup from '@material-ui/core/FormGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
 
 import {
   ToggleValues,
-  SetToggleValues
+  SetToggleValues,
+  GraphTimeOption
 } from 'features/fireWeather/components/graphs/useGraphToggles'
 
 const useStyles = makeStyles({
-  formControlLabel: {
+  switchControl: {
     marginLeft: -5
   },
-  label: {
+  switchLabel: {
     marginLeft: 2
+  },
+  selectControl: {
+    minWidth: 85,
+    marginRight: 15
   }
 })
 
@@ -24,10 +31,8 @@ interface Props {
   setToggleValues: SetToggleValues
   noReadings: boolean
   noModels: boolean
-  noHistoricModels: boolean
   noForecasts: boolean
-  noPastForecasts: boolean
-  noBiasAdjustedPredictions: boolean
+  noBiasAdjustedModels: boolean
   noHighResModels: boolean
 }
 
@@ -36,18 +41,37 @@ const WxDataToggles = ({
   setToggleValues,
   noReadings,
   noModels,
-  noHistoricModels,
   noForecasts,
-  noPastForecasts,
-  noBiasAdjustedPredictions,
+  noBiasAdjustedModels,
   noHighResModels
 }: Props) => {
   const classes = useStyles()
+  const handleSwitch = (e: React.ChangeEvent<{ name: string }>, checked: boolean) => {
+    setToggleValues(e.target.name as keyof ToggleValues, checked)
+  }
+  const handleSelect = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+    const { name, value } = e.target
+    setToggleValues(name as 'timeOfInterest', value as GraphTimeOption)
+  }
 
   return (
     <FormGroup row>
+      <FormControl className={classes.selectControl}>
+        <Select
+          name="timeOfInterest"
+          value={toggleValues.timeOfInterest}
+          onChange={handleSelect}
+          native
+          inputProps={{ 'aria-label': 'Without label' }}
+        >
+          <option value="past">Past</option>
+          <option value="future">Future</option>
+          <option value="all">All</option>
+        </Select>
+      </FormControl>
+
       <FormControlLabel
-        className={classes.formControlLabel}
+        className={classes.switchControl}
         control={
           <Switch
             name="showReadings"
@@ -55,79 +79,18 @@ const WxDataToggles = ({
             checked={toggleValues.showReadings}
             disabled={noReadings}
             size="small"
-            onChange={(e, checked) => {
-              setToggleValues(e.target.name as 'showReadings', checked)
-            }}
+            onChange={handleSwitch}
           />
         }
         label={
-          <Typography className={classes.label} variant="body2">
+          <Typography className={classes.switchLabel} variant="body2">
             Observations
           </Typography>
         }
       />
+
       <FormControlLabel
-        className={classes.formControlLabel}
-        control={
-          <Switch
-            name="showPastModels"
-            data-testid="wx-graph-model-summary-toggle"
-            checked={toggleValues.showPastModels}
-            disabled={noHistoricModels}
-            size="small"
-            onChange={(e, checked) => {
-              setToggleValues(e.target.name as 'showPastModels', checked)
-            }}
-          />
-        }
-        label={
-          <Typography className={classes.label} variant="body2">
-            Historic Models
-          </Typography>
-        }
-      />
-      <FormControlLabel
-        className={classes.formControlLabel}
-        control={
-          <Switch
-            name="showPastForecasts"
-            data-testid="wx-graph-forecast-summary-toggle"
-            checked={toggleValues.showPastForecasts}
-            disabled={noPastForecasts}
-            size="small"
-            onChange={(e, checked) => {
-              setToggleValues(e.target.name as 'showPastForecasts', checked)
-            }}
-          />
-        }
-        label={
-          <Typography className={classes.label} variant="body2">
-            Historic Noon Forecasts
-          </Typography>
-        }
-      />
-      <FormControlLabel
-        className={classes.formControlLabel}
-        control={
-          <Switch
-            name="showModels"
-            data-testid="wx-graph-model-toggle"
-            checked={toggleValues.showModels}
-            disabled={noModels}
-            size="small"
-            onChange={(e, checked) => {
-              setToggleValues(e.target.name as 'showModels', checked)
-            }}
-          />
-        }
-        label={
-          <Typography className={classes.label} variant="body2">
-            Models
-          </Typography>
-        }
-      />
-      <FormControlLabel
-        className={classes.formControlLabel}
+        className={classes.switchControl}
         control={
           <Switch
             name="showForecasts"
@@ -135,39 +98,56 @@ const WxDataToggles = ({
             checked={toggleValues.showForecasts}
             disabled={noForecasts}
             size="small"
-            onChange={(e, checked) => {
-              setToggleValues(e.target.name as 'showForecasts', checked)
-            }}
+            onChange={handleSwitch}
           />
         }
         label={
-          <Typography className={classes.label} variant="body2">
+          <Typography className={classes.switchLabel} variant="body2">
             Noon Forecasts
           </Typography>
         }
       />
+
       <FormControlLabel
-        className={classes.formControlLabel}
+        className={classes.switchControl}
         control={
           <Switch
-            name="showBiasAdjustedPredictions"
-            data-testid="wx-graph-bias-toggle"
-            checked={toggleValues.showBiasAdjustedPredictions}
-            disabled={noBiasAdjustedPredictions}
+            name="showModels"
+            data-testid="wx-graph-model-toggle"
+            checked={toggleValues.showModels}
+            disabled={noModels}
             size="small"
-            onChange={(e, checked) => {
-              setToggleValues(e.target.name as 'showBiasAdjustedPredictions', checked)
-            }}
+            onChange={handleSwitch}
           />
         }
         label={
-          <Typography className={classes.label} variant="body2">
+          <Typography className={classes.switchLabel} variant="body2">
+            Global Models
+          </Typography>
+        }
+      />
+
+      <FormControlLabel
+        className={classes.switchControl}
+        control={
+          <Switch
+            name="showBiasAdjustedModels"
+            data-testid="wx-graph-bias-toggle"
+            checked={toggleValues.showBiasAdjustedModels}
+            disabled={noBiasAdjustedModels}
+            size="small"
+            onChange={handleSwitch}
+          />
+        }
+        label={
+          <Typography className={classes.switchLabel} variant="body2">
             Bias Adjusted Models
           </Typography>
         }
       />
+
       <FormControlLabel
-        className={classes.formControlLabel}
+        className={classes.switchControl}
         control={
           <Switch
             name="showHighResModels"
@@ -181,8 +161,8 @@ const WxDataToggles = ({
           />
         }
         label={
-          <Typography className={classes.label} variant="body2">
-            High Resolution Models
+          <Typography className={classes.switchLabel} variant="body2">
+            High Res Models
           </Typography>
         }
       />

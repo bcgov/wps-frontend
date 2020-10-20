@@ -8,21 +8,17 @@ import readingsReducer from 'features/fireWeather/slices/readingsSlice'
 import forecastsReducer from 'features/fireWeather/slices/forecastsSlice'
 import modelSummariesReducer from 'features/fireWeather/slices/modelSummariesSlice'
 import forecastSummariesReducer from 'features/fireWeather/slices/forecastSummariesSlice'
-import mostRecentHistoricModelsReducer from 'features/fireWeather/slices/mostRecentHistoricModelsSlice'
-import biasAdjustedModelsReducer from 'features/fireWeather/slices/biasAdjustedModelsSlice'
 import highResModelsReducer from 'features/fireWeather/slices/highResModelsSlice'
 
 const rootReducer = combineReducers({
   stations: stationsReducer,
   percentiles: percentilesReducer,
   authentication: authReducer,
-  models: modelsReducer,
   readings: readingsReducer,
-  forecasts: forecastsReducer,
+  models: modelsReducer,
   modelSummaries: modelSummariesReducer,
+  forecasts: forecastsReducer,
   forecastSummaries: forecastSummariesReducer,
-  mostRecentHistoricModels: mostRecentHistoricModelsReducer,
-  biasAdjustedModels: biasAdjustedModelsReducer,
   highResModels: highResModelsReducer
 })
 
@@ -41,9 +37,6 @@ export const selectReadings = (state: RootState) => state.readings
 export const selectForecasts = (state: RootState) => state.forecasts
 export const selectModelSummaries = (state: RootState) => state.modelSummaries
 export const selectForecastSummaries = (state: RootState) => state.forecastSummaries
-export const selectMostRecentHistoricModels = (state: RootState) =>
-  state.mostRecentHistoricModels
-export const selectBiasAdjustedModels = (state: RootState) => state.biasAdjustedModels
 export const selectHighResModels = (state: RootState) => state.highResModels
 export const selectWxDataLoading = (state: RootState): boolean =>
   state.readings.loading ||
@@ -51,6 +44,4 @@ export const selectWxDataLoading = (state: RootState): boolean =>
   state.modelSummaries.loading ||
   state.forecasts.loading ||
   state.forecastSummaries.loading ||
-  state.mostRecentHistoricModels.loading ||
-  state.biasAdjustedModels.loading ||
   state.highResModels.loading
