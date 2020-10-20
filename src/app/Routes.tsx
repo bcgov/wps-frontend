@@ -12,7 +12,7 @@ const shouldAuthenticate =
 
 const NoMatch = () => <div>Page not found.</div>
 
-export const Routes: React.FunctionComponent = () => {
+const Routes: React.FunctionComponent = () => {
   return (
     <Router>
       <Switch>
@@ -36,3 +36,5 @@ export const Routes: React.FunctionComponent = () => {
     </Router>
   )
 }
+
+export default React.memo(Routes)
