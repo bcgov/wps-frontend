@@ -44,7 +44,7 @@ const modelsSlice = createSlice({
           const modelValues: ModelValue[] = []
           const noonModelValues: ModelValue[] = []
           const allModelValues = model_runs.reduce(
-            (modelValues: ModelValue[], modelRun) => modelValues.concat(modelRun.values),
+            (values: ModelValue[], modelRun) => values.concat(modelRun.values),
             []
           )
           const currDate = new Date()

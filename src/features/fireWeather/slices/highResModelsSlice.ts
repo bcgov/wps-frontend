@@ -40,7 +40,7 @@ const highResModelsSlice = createSlice({
           const pastModelValues: ModelValue[] = []
           const modelValues: ModelValue[] = []
           const allModelValues = model_runs.reduce(
-            (modelValues: ModelValue[], modelRun) => modelValues.concat(modelRun.values),
+            (values: ModelValue[], modelRun) => values.concat(modelRun.values),
             []
           )
           const currDate = new Date()
