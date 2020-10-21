@@ -470,6 +470,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .text('RH (%)')
 
       /* Render legends */
+      // TODO: We're going to have to look at using layouts moving forward to achieve the placement of objects. https://www.d3indepth.com/layouts/
       let legendY = height + margin.bottom - 45
       let legendX = 0
       d3Utils.addLegend({
