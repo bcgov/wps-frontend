@@ -30,8 +30,9 @@ interface Props {
   modelSummaries: _ModelSummary[]
   forecastValues: NoonForecastValue[]
   forecastSummaries: _ForecastSummary[]
-  highResModelValues: ModelValue[]
   biasAdjustedModelValues: ModelValue[]
+  highResModelValues: ModelValue[]
+  highResModelSummaries: _ModelSummary[]
 }
 
 const TempRHGraph: React.FunctionComponent<Props> = ({
@@ -40,8 +41,9 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
   modelSummaries: _modelSummaries,
   forecastValues: _forecastValues,
   forecastSummaries: _forecastSummaries,
+  biasAdjustedModelValues: _biasAdjustedModelValues,
   highResModelValues: _highResModelValues,
-  biasAdjustedModelValues: _biasAdjustedModelValues
+  highResModelSummaries: _highResModelSummaries
 }: Props) => {
   const classes = styles.useStyles()
   const svgRef = useRef(null)
@@ -78,6 +80,30 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           readingRHValues.push(reading)
         }
         weatherValueByDatetime[v.datetime] = reading
+      })
+
+      const forecastValues = _forecastValues.map(d => {
+        const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
+        const forecast = {
+          date,
+          forecastTemp: Number(d.temperature.toFixed(2)),
+          forecastRH: Math.round(d.relative_humidity)
+        }
+        // combine with existing readings and models values
+        weatherValueByDatetime[d.datetime] = {
+          ...weatherValueByDatetime[d.datetime],
+          ...forecast
+        }
+        allDates.push(date)
+
+        return forecast
+      })
+
+      const forecastSummaries: ForecastSummary[] = _forecastSummaries.map(d => {
+        const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
+        allDates.push(date)
+
+        return { ...d, date }
       })
 
       const modelTempValues: { date: Date; modelTemp: number }[] = []
@@ -176,25 +202,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           ...hrModel
         }
       })
-
-      const forecastValues = _forecastValues.map(d => {
-        const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
-        const forecast = {
-          date,
-          forecastTemp: Number(d.temperature.toFixed(2)),
-          forecastRH: Math.round(d.relative_humidity)
-        }
-        // combine with existing readings and models values
-        weatherValueByDatetime[d.datetime] = {
-          ...weatherValueByDatetime[d.datetime],
-          ...forecast
-        }
-        allDates.push(date)
-
-        return forecast
-      })
-
-      const forecastSummaries: ForecastSummary[] = _forecastSummaries.map(d => {
+      const highResModelSummaries: ModelSummary[] = _highResModelSummaries.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
         allDates.push(date)
 
@@ -263,22 +271,45 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y1: d => yRHScale(d.rh_tgl_2_5th)
       })
 
-      /* Render temp and rh hourly readings */
-      d3Utils.drawDots({
+      /* Render high resolution model temp and rh summary clouds */
+      d3Utils.drawArea({
         svg,
-        className: 'readingTempDot',
-        data: readingTempValues,
-        cx: d => xScale(d.date),
-        cy: d => yTempScale(d.temp),
-        testId: 'hourly-reading-temp-dot'
+        className: 'highResModelSummaryTempArea',
+        datum: highResModelSummaries,
+        x: d => xScale(d.date),
+        y0: d => yTempScale(d.tmp_tgl_2_90th),
+        y1: d => yTempScale(d.tmp_tgl_2_5th),
+        testId: 'high-res-model-summary-temp-area'
       })
-      d3Utils.drawDots({
+      d3Utils.drawArea({
         svg,
-        className: 'readingRHDot',
-        data: readingRHValues,
-        cx: d => xScale(d.date),
-        cy: d => yRHScale(d.rh),
-        testId: 'hourly-reading-rh-dot'
+        className: 'highResModelSummaryRHArea',
+        datum: highResModelSummaries,
+        x: d => xScale(d.date),
+        y0: d => yRHScale(d.rh_tgl_2_90th),
+        y1: d => yRHScale(d.rh_tgl_2_5th)
+      })
+
+      // Past forecasts temp min & max vertical lines
+      forecastSummaries.forEach(forecast => {
+        d3Utils.drawVerticalLine({
+          svg,
+          className: 'forecastSummaryTempLine',
+          x: xScale(forecast.date),
+          y1: yTempScale(forecast.tmp_min),
+          y2: yTempScale(forecast.tmp_max),
+          testId: 'forecast-summary-temp-line'
+        })
+      })
+      // Past forecasts rh min & max vertical lines
+      forecastSummaries.forEach(forecast => {
+        d3Utils.drawVerticalLine({
+          svg,
+          className: 'forecastSummaryRHLine',
+          x: xScale(forecast.date),
+          y1: yRHScale(forecast.rh_min),
+          y2: yRHScale(forecast.rh_max)
+        })
       })
 
       /* Render temp and rh models */
@@ -332,8 +363,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         className: 'highResModelRHDot',
         data: hrModelRHValues,
         cx: d => xScale(d.date),
-        cy: d => yRHScale(d.hrModelRH),
-        testId: 'high-res-model-rh-dot'
+        cy: d => yRHScale(d.hrModelRH)
       })
 
       /* Render temp and rh noon forecasts */
@@ -353,26 +383,22 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yRHScale(d.forecastRH)
       })
 
-      // Past forecasts temp min & max vertical lines
-      forecastSummaries.forEach(forecast => {
-        d3Utils.drawVerticalLine({
-          svg,
-          className: 'forecastSummaryTempLine',
-          x: xScale(forecast.date),
-          y1: yTempScale(forecast.tmp_min),
-          y2: yTempScale(forecast.tmp_max),
-          testId: 'forecast-summary-temp-line'
-        })
+      /* Render temp and rh hourly readings */
+      d3Utils.drawDots({
+        svg,
+        className: 'readingTempDot',
+        data: readingTempValues,
+        cx: d => xScale(d.date),
+        cy: d => yTempScale(d.temp),
+        testId: 'hourly-reading-temp-dot'
       })
-      // Past forecasts rh min & max vertical lines
-      forecastSummaries.forEach(forecast => {
-        d3Utils.drawVerticalLine({
-          svg,
-          className: 'forecastSummaryRHLine',
-          x: xScale(forecast.date),
-          y1: yRHScale(forecast.rh_min),
-          y2: yRHScale(forecast.rh_max)
-        })
+      d3Utils.drawDots({
+        svg,
+        className: 'readingRHDot',
+        data: readingRHValues,
+        cx: d => xScale(d.date),
+        cy: d => yRHScale(d.rh),
+        testId: 'hourly-reading-rh-dot'
       })
 
       /* Render the current time reference line */
@@ -630,7 +656,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
     _forecastValues,
     _forecastSummaries,
     _highResModelValues,
-    _biasAdjustedModelValues
+    _biasAdjustedModelValues,
+    _highResModelSummaries
   ])
 
   return (

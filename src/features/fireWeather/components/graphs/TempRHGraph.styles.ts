@@ -11,6 +11,8 @@ export const modelSummaryTempAreaColor = '#ff96aa'
 export const modelSummaryRHAreaColor = '#94b9ff'
 export const highResModelTempDotColor = '#ff2b52'
 export const highResModelRHDotColor = '#3079ff'
+export const highResModelSummaryTempAreaColor = '#ff8a9f'
+export const highResModelSummaryRHAreaColor = '#80acff'
 export const forecastTempDotColor = '#f23bff'
 export const forecastRHDotColor = '#7a2eff'
 const forecastSummaryTempLineColor = forecastTempDotColor
@@ -73,12 +75,12 @@ export const useStyles = makeStyles({
       fill: modelSummaryRHAreaColor,
       opacity: 0.5
     },
-    '& .modelTempDot, .historicModelTempDot': {
+    '& .modelTempDot': {
       stroke: modelTempDotColor,
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .modelRHDot, .historicModelRHDot': {
+    '& .modelRHDot': {
       stroke: modelRHDotColor,
       fill: 'none',
       cursor: 'pointer'
@@ -102,6 +104,18 @@ export const useStyles = makeStyles({
       stroke: highResModelRHDotColor,
       fill: 'none',
       cursor: 'pointer'
+    },
+    '& .highResModelSummaryTempArea': {
+      stroke: highResModelSummaryTempAreaColor,
+      strokeWidth: 1,
+      fill: highResModelSummaryTempAreaColor,
+      opacity: 0.5
+    },
+    '& .highResModelSummaryRHArea': {
+      stroke: highResModelSummaryRHAreaColor,
+      strokeWidth: 1,
+      fill: highResModelSummaryRHAreaColor,
+      opacity: 0.5
     },
     '& .forecastTempDot': {
       stroke: forecastTempDotColor,

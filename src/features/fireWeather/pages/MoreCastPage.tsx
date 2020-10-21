@@ -15,6 +15,7 @@ import { fetchForecasts } from 'features/fireWeather/slices/forecastsSlice'
 import { fetchGlobalModelSummaries } from 'features/fireWeather/slices/modelSummariesSlice'
 import { fetchForecastSummaries } from 'features/fireWeather/slices/forecastSummariesSlice'
 import { fetchHighResModels } from 'features/fireWeather/slices/highResModelsSlice'
+import { fetchHighResModelSummaries } from 'features/fireWeather/slices/highResModelSummariesSlice'
 
 const useStyles = makeStyles({
   stationDropdown: {
@@ -42,6 +43,7 @@ const MoreCastPage = () => {
     dispatch(fetchGlobalModelsWithBiasAdjusted(stationCodes))
     dispatch(fetchGlobalModelSummaries(stationCodes))
     dispatch(fetchHighResModels(stationCodes))
+    dispatch(fetchHighResModelSummaries(stationCodes))
   }
 
   return (

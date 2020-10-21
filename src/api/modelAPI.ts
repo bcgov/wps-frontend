@@ -84,7 +84,7 @@ export interface ModelSummariesResponse {
  */
 export async function getModelSummaries(
   stationCodes: number[],
-  model: 'GDPS'
+  model: 'GDPS' | 'HRDPS'
 ): Promise<ModelSummariesForStation[]> {
   const url = `/models/${model}/predictions/summaries/`
   const { data } = await axios.post<ModelSummariesResponse>(url, {

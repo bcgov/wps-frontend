@@ -27,21 +27,23 @@ interface Props {
   pastHighResModelValues: ModelValue[] | undefined
   highResModelValues: ModelValue[] | undefined
   allHighResModelValues: ModelValue[] | undefined
+  highResModelSummaries: ModelSummary[] | undefined
 }
 
 const WxDataGraph = ({
   readingValues = [],
+  allModelValues = [],
   pastModelValues = [],
   modelValues = [],
-  allModelValues = [],
   modelSummaries = [],
+  allForecasts = [],
   pastForecastValues = [],
   forecastValues = [],
-  allForecasts = [],
   forecastSummaries = [],
+  allHighResModelValues = [],
   pastHighResModelValues = [],
   highResModelValues = [],
-  allHighResModelValues = []
+  highResModelSummaries = []
 }: Props) => {
   const classes = useStyles()
 
@@ -49,7 +51,8 @@ const WxDataGraph = ({
   const noModels = allModelValues.length === 0 && modelSummaries.length === 0
   const noForecasts = allForecasts.length === 0 && forecastSummaries.length === 0
   const noBiasAdjustedModels = allModelValues.length === 0
-  const noHighResModels = allHighResModelValues.length === 0
+  const noHighResModels =
+    allHighResModelValues.length === 0 && highResModelSummaries.length === 0
 
   const [toggleValues, setToggleValues] = useGraphToggles({
     showReadings: !noReadings,
@@ -113,8 +116,11 @@ const WxDataGraph = ({
         forecastSummaries={
           showForecasts && timeOfInterest !== 'future' ? forecastSummaries : []
         }
-        highResModelValues={showHighResModels ? askedHighResModelValues : []}
         biasAdjustedModelValues={showBiasAdjustedModels ? askedBiasAdjModelValues : []}
+        highResModelValues={showHighResModels ? askedHighResModelValues : []}
+        highResModelSummaries={
+          showHighResModels && timeOfInterest !== 'future' ? highResModelSummaries : []
+        }
       />
     </div>
   )

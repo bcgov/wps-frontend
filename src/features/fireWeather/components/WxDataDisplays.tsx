@@ -15,7 +15,8 @@ import {
   selectForecasts,
   selectWxDataLoading,
   selectForecastSummaries,
-  selectHighResModels
+  selectHighResModels,
+  selectHighResModelSummaries
 } from 'app/rootReducer'
 
 const useStyles = makeStyles({
@@ -63,6 +64,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
     pastHighResModelsByStation,
     allHighResModelsByStation
   } = useSelector(selectHighResModels)
+  const { highResModelSummariesByStation } = useSelector(selectHighResModelSummaries)
   const wxDataLoading = useSelector(selectWxDataLoading)
 
   return (
@@ -82,14 +84,9 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const highResModelValues = highResModelsByStation[s.code]
           const pastHighResModelValues = pastHighResModelsByStation[s.code]
           const allHighResModelValues = allHighResModelsByStation[s.code]
-
+          const highResModelSummaries = highResModelSummariesByStation[s.code]
           const nothingToDisplay =
-            !readingValues &&
-            !allForecasts &&
-            !forecastSummaries &&
-            !allModelValues &&
-            !modelSummaries &&
-            !allHighResModelValues
+            !readingValues && !allForecasts && !allModelValues && !allHighResModelValues
 
           return (
             <Paper key={s.code} className={classes.paper} elevation={3}>
@@ -132,9 +129,10 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
                   pastForecastValues={pastForecastValues}
                   forecastValues={forecastValues}
                   forecastSummaries={forecastSummaries}
+                  allHighResModelValues={allHighResModelValues}
                   pastHighResModelValues={pastHighResModelValues}
                   highResModelValues={highResModelValues}
-                  allHighResModelValues={allHighResModelValues}
+                  highResModelSummaries={highResModelSummaries}
                 />
               </ErrorBoundary>
             </Paper>

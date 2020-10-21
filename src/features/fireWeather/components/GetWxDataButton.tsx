@@ -10,7 +10,8 @@ import {
   selectForecasts,
   selectWxDataLoading,
   selectForecastSummaries,
-  selectHighResModels
+  selectHighResModels,
+  selectHighResModelSummaries
 } from 'app/rootReducer'
 
 interface Props {
@@ -25,6 +26,9 @@ const GetWxDataButton = ({ onBtnClick, selectedStations }: Props) => {
   const { error: errFetchingForecasts } = useSelector(selectForecasts)
   const { error: errFetchingForecastSummaries } = useSelector(selectForecastSummaries)
   const { error: errFetchingHighResModels } = useSelector(selectHighResModels)
+  const { error: errFetchingHighResModelSummaries } = useSelector(
+    selectHighResModelSummaries
+  )
   const wxDataLoading = useSelector(selectWxDataLoading)
   const shouldBtnDisabled = selectedStations.length === 0
 
@@ -52,7 +56,7 @@ const GetWxDataButton = ({ onBtnClick, selectedStations }: Props) => {
       {errFetchingModels && (
         <ErrorMessage
           error={errFetchingModels}
-          context="while fetching global models"
+          context="while fetching GDPS"
           marginTop={5}
         />
       )}
@@ -60,7 +64,7 @@ const GetWxDataButton = ({ onBtnClick, selectedStations }: Props) => {
       {errFetchingModelSummaries && (
         <ErrorMessage
           error={errFetchingModelSummaries}
-          context="while fetching global model summaries"
+          context="while fetching GDPS summaries"
           marginTop={5}
         />
       )}
@@ -84,7 +88,15 @@ const GetWxDataButton = ({ onBtnClick, selectedStations }: Props) => {
       {errFetchingHighResModels && (
         <ErrorMessage
           error={errFetchingHighResModels}
-          context="while fetching high resolution models"
+          context="while fetching HRDPS"
+          marginTop={5}
+        />
+      )}
+
+      {errFetchingHighResModelSummaries && (
+        <ErrorMessage
+          error={errFetchingHighResModelSummaries}
+          context="while fetching HRDPS summaries"
           marginTop={5}
         />
       )}

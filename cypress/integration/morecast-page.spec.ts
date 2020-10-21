@@ -14,11 +14,12 @@ describe('MoreCast Page', () => {
     cy.getByTestId('get-wx-data-button').click({ force: true })
 
     cy.checkErrorMessage('Error occurred (while fetching hourly readings).')
-    cy.checkErrorMessage('Error occurred (while fetching global models).')
-    cy.checkErrorMessage('Error occurred (while fetching global model summaries).')
+    cy.checkErrorMessage('Error occurred (while fetching GDPS).')
+    cy.checkErrorMessage('Error occurred (while fetching GDPS summaries).')
     cy.checkErrorMessage('Error occurred (while fetching noon forecasts).')
     cy.checkErrorMessage('Error occurred (while fetching noon forecast summaries).')
-    cy.checkErrorMessage('Error occurred (while fetching high resolution models).')
+    cy.checkErrorMessage('Error occurred (while fetching HRDPS).')
+    cy.checkErrorMessage('Error occurred (while fetching HRDPS summaries).')
 
     cy.contains('Data is not available.')
   })
@@ -30,6 +31,7 @@ describe('MoreCast Page', () => {
     cy.route('POST', 'api/models/GDPS/predictions/most_recent', 'fixture:weather-data/models-with-bias-adjusted') // prettier-ignore
     cy.route('POST', 'api/models/GDPS/predictions/summaries/', 'fixture:weather-data/model-summaries')
     cy.route('POST', 'api/models/HRDPS/predictions/most_recent', 'fixture:weather-data/hr-models-with-bias-adjusted') // prettier-ignore
+    cy.route('POST', 'api/models/HRDPS/predictions/summaries', 'fixture:weather-data/high-res-model-summaries') // prettier-ignore
     cy.wait('@getStations')
 
     // Request the weather data
@@ -60,12 +62,19 @@ describe('MoreCast Page', () => {
     cy.getByTestId('wx-graph-bias-toggle').click()
     cy.getByTestId('bias-adjusted-model-temp-dot').should('not.exist')
 
+    cy.getByTestId('wx-graph-high-res-model-toggle').click()
+    cy.getByTestId('high-res-model-summary-temp-area')
+    cy.getByTestId('high-res-model-temp-dot')
+    cy.getByTestId('wx-graph-high-res-model-toggle').click()
+    cy.getByTestId('high-res-model-summary-temp-area').should('not.exist')
+    cy.getByTestId('high-res-model-temp-dot').should('not.exist')
+
     // Hover over the first dot and check if the tooltip shows up with the correct text
     cy.getByTestId('hourly-reading-rh-dot')
       .first()
       .trigger('mousemove', { force: true, x: 2, y: 1 })
     cy.getByTestId('temp-rh-tooltip-text')
       .should('contain', 'Temp: - (°C)')
-      .and('contain', 'RH: 37 (%)')
+      .and('contain', 'RH: 61 (%)')
   })
 })

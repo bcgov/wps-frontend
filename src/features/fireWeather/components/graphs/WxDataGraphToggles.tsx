@@ -10,7 +10,7 @@ import Select from '@material-ui/core/Select'
 import {
   ToggleValues,
   SetToggleValues,
-  GraphTimeOption
+  TimeSelectOption
 } from 'features/fireWeather/components/graphs/useGraphToggles'
 
 const useStyles = makeStyles({
@@ -51,7 +51,7 @@ const WxDataToggles = ({
   }
   const handleSelect = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
     const { name, value } = e.target
-    setToggleValues(name as 'timeOfInterest', value as GraphTimeOption)
+    setToggleValues(name as 'timeOfInterest', value as TimeSelectOption)
   }
 
   return (
@@ -112,6 +112,27 @@ const WxDataToggles = ({
         className={classes.switchControl}
         control={
           <Switch
+            name="showHighResModels"
+            data-testid="wx-graph-high-res-model-toggle"
+            checked={toggleValues.showHighResModels}
+            disabled={noHighResModels}
+            size="small"
+            onChange={(e, checked) => {
+              setToggleValues(e.target.name as 'showHighResModels', checked)
+            }}
+          />
+        }
+        label={
+          <Typography className={classes.switchLabel} variant="body2">
+            HRDPS
+          </Typography>
+        }
+      />
+
+      <FormControlLabel
+        className={classes.switchControl}
+        control={
+          <Switch
             name="showModels"
             data-testid="wx-graph-model-toggle"
             checked={toggleValues.showModels}
@@ -122,7 +143,7 @@ const WxDataToggles = ({
         }
         label={
           <Typography className={classes.switchLabel} variant="body2">
-            Global Models
+            GDPS
           </Typography>
         }
       />
@@ -141,28 +162,7 @@ const WxDataToggles = ({
         }
         label={
           <Typography className={classes.switchLabel} variant="body2">
-            Bias Adjusted Models
-          </Typography>
-        }
-      />
-
-      <FormControlLabel
-        className={classes.switchControl}
-        control={
-          <Switch
-            name="showHighResModels"
-            data-testid="wx-graph-high-res-model-toggle"
-            checked={toggleValues.showHighResModels}
-            disabled={noHighResModels}
-            size="small"
-            onChange={(e, checked) => {
-              setToggleValues(e.target.name as 'showHighResModels', checked)
-            }}
-          />
-        }
-        label={
-          <Typography className={classes.switchLabel} variant="body2">
-            High Res Models
+            Bias Adjusted GDPS
           </Typography>
         }
       />
