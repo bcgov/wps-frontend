@@ -34,7 +34,7 @@ afterEach(() => {
 
 it('renders fire weather page', async () => {
   const { getByText, getByTestId } = renderWithRedux(
-    <AuthWrapper shouldAuthenticate>
+    <AuthWrapper>
       <MoreCastPage />
     </AuthWrapper>
   )
