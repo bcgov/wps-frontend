@@ -1,7 +1,7 @@
 import React from 'react'
 import { Container, PageHeader, PageTitle } from 'components'
 
-export const HfiCalculatorPage: React.FunctionComponent = () => {
+const HfiCalculatorPage: React.FunctionComponent = () => {
   return (
     <main data-testid="hfi-calculator-page">
       <PageHeader title="Predictive Services Unit" />
@@ -10,3 +10,5 @@ export const HfiCalculatorPage: React.FunctionComponent = () => {
     </main>
   )
 }
+
+export default React.memo(HfiCalculatorPage)

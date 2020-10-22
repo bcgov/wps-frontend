@@ -1,6 +1,6 @@
-const stationCode = 328
-
 describe('MoreCast Page', () => {
+  const stationCode = 328
+
   beforeEach(() => {
     cy.server()
     cy.route('GET', 'api/stations/', 'fixture:weather-stations.json').as('getStations')

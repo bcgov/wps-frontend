@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 
 import { HIDE_DISCLAIMER } from 'utils/constants'
 import AuthWrapper from 'features/auth/AuthWrapper'
+import PercentileCalculatorPageWithDisclaimer from 'features/percentileCalculator/pages/PercentileCalculatorPageWithDisclaimer'
 import MoreCastPage from 'features/fireWeather/pages/MoreCastPage'
-import { PercentileCalculatorPageWithDisclaimer } from 'features/percentileCalculator/pages/PercentileCalculatorPageWithDisclaimer'
-import { HfiCalculatorPage } from 'features/hfiCalculator/pages/HfiCalculatorPage'
+import HfiCalculatorPage from 'features/hfiCalculator/pages/HfiCalculatorPage'
 
 const shouldShowDisclaimer = HIDE_DISCLAIMER === 'false' || HIDE_DISCLAIMER === undefined
 
@@ -33,6 +33,7 @@ const Routes: React.FunctionComponent = () => {
             <HfiCalculatorPage />
           </AuthWrapper>
         </Route>
+
         <Route>
           <NoMatch />
         </Route>
