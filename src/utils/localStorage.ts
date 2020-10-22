@@ -25,4 +25,6 @@ export const getDataFromLocalStorage = <K extends Keys>(key: K): Items[K] | null
   return null
 }
 
-export const clearLocalStorage = (): void => localStorage.clear()
+export const deleteDataFromLocalStorage = (key: Keys): void => {
+  localStorage.removeItem(key)
+}
