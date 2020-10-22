@@ -1,9 +1,10 @@
 import moment from 'moment'
 import { isNoonInPST } from './date'
 
-const getModelValues = () => {
+const getFutureValues = () => {
   const _modelValues = []
   const _highResModelValues = []
+  const _forecastValues = []
 
   const days = 2
   const first = moment()
@@ -38,6 +39,14 @@ const getModelValues = () => {
         })
       }
 
+      if (isNoonInPST(datetime)) {
+        _forecastValues.push({
+          datetime,
+          temperature: Math.random() * 30,
+          relative_humidity: Math.random() * 101
+        })
+      }
+
       _highResModelValues.push({
         datetime,
         temperature: temp + Math.random(),
@@ -51,7 +60,8 @@ const getModelValues = () => {
 
   return {
     modelValues: _modelValues,
-    highResModelValues: _highResModelValues
+    highResModelValues: _highResModelValues,
+    forecastValues: _forecastValues
   }
 }
 
@@ -64,7 +74,7 @@ const getPastValues = () => {
   const _pastHighResModelValues = []
   const _highResModelSummaries = []
 
-  const days = 3
+  const days = 2
   const first = moment()
     .utc()
     .set({ minute: 0, second: 0 })
@@ -79,40 +89,7 @@ const getPastValues = () => {
         .add(length, 'hours')
         .utc()
         .format()
-      // every 12 hour
-      if (length % 12 === 0) {
-        _pastForecastValues.push({
-          datetime,
-          temperature: temp + Math.random(),
-          relative_humidity: rh + Math.random()
-        })
-        _forecastSummaries.push({
-          datetime,
-          tmp_min: temp + Math.random() * 1,
-          tmp_max: temp + Math.random() * 4,
-          rh_min: rh + Math.random() * 1,
-          rh_max: rh + Math.random() * 4
-        })
-      }
-      // every 3 hour
-      if (length % 3 === 0) {
-        _pastModelValues.push({
-          datetime,
-          temperature: temp + Math.random() * 3,
-          bias_adjusted_temperature: temp + Math.random() * 3 - 2,
-          relative_humidity: rh + Math.random() * 3,
-          bias_adjusted_relative_humidity: rh + Math.random() * 3 - 2
-        })
-        _modelSummaries.push({
-          datetime,
-          tmp_tgl_2_5th: temp + Math.random() * 5,
-          tmp_tgl_2_median: temp + Math.random() * 2,
-          tmp_tgl_2_90th: temp - Math.random() * 5,
-          rh_tgl_2_5th: rh + Math.random() * 5,
-          rh_tgl_2_median: rh + Math.random() * 2,
-          rh_tgl_2_90th: rh - Math.random() * 5
-        })
-      }
+
       // every hour
       _readingValues.push({
         datetime,
@@ -142,6 +119,41 @@ const getPastValues = () => {
         rh_tgl_2_median: rh + Math.random() * 1,
         rh_tgl_2_90th: rh - Math.random() * 3
       })
+
+      if (isNoonInPST(datetime)) {
+        _pastForecastValues.push({
+          datetime,
+          temperature: temp + Math.random() * 2,
+          relative_humidity: rh + Math.random() * 2
+        })
+        _forecastSummaries.push({
+          datetime,
+          tmp_min: temp + Math.random() * 1,
+          tmp_max: temp + Math.random() * 5,
+          rh_min: rh + Math.random() * 1,
+          rh_max: rh + Math.random() * 5
+        })
+      }
+
+      // every 3 hour
+      if (length % 3 === 0) {
+        _pastModelValues.push({
+          datetime,
+          temperature: temp + Math.random() * 3,
+          bias_adjusted_temperature: temp + Math.random() * 3 - 2,
+          relative_humidity: rh + Math.random() * 3,
+          bias_adjusted_relative_humidity: rh + Math.random() * 3 - 2
+        })
+        _modelSummaries.push({
+          datetime,
+          tmp_tgl_2_5th: temp + Math.random() * 5,
+          tmp_tgl_2_median: temp + Math.random() * 2,
+          tmp_tgl_2_90th: temp - Math.random() * 5,
+          rh_tgl_2_5th: rh + Math.random() * 5,
+          rh_tgl_2_median: rh + Math.random() * 2,
+          rh_tgl_2_90th: rh - Math.random() * 5
+        })
+      }
     }
 
     first.add(1, 'days')
@@ -158,29 +170,7 @@ const getPastValues = () => {
   }
 }
 
-const getForecastValues = () => {
-  const _forecastValues = []
-  const days = 4
-  const first = moment()
-    .utc()
-    .set({ hour: 20, minute: 0, second: 0 })
-  const last = moment(first).add(days, 'days')
-
-  while (last.diff(first, 'days') >= 0) {
-    _forecastValues.push({
-      datetime: moment(first)
-        .utc()
-        .format(),
-      temperature: Math.random() * 30,
-      relative_humidity: Math.random() * 101
-    })
-
-    first.add(1, 'days')
-  }
-  return _forecastValues
-}
-
-export const { modelValues, highResModelValues } = getModelValues()
+export const { forecastValues, modelValues, highResModelValues } = getFutureValues()
 
 export const {
   readingValues,
@@ -191,5 +181,3 @@ export const {
   pastHighResModelValues,
   highResModelSummaries
 } = getPastValues()
-
-export const forecastValues = getForecastValues()
