@@ -41,7 +41,7 @@
     "start": "CI=true react-scripts start",
     "start:cypress": "export $(cat .env.cypress | xargs) && react-scripts -r @cypress/instrument-cra start",
     "build": "react-scripts build",
-    "test": "DEBUG_PRINT_LIMIT=5000 react-scripts test",
+    "test": "react-scripts test",
     "test:ci": "CI=true npm test",
     "coverage": "npm test -- --coverage --watchAll=false",
     "coverage:ci": "CI=true npm test -- --coverage --watchAll=false",
