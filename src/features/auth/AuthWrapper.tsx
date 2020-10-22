@@ -5,17 +5,24 @@ import { selectAuthentication } from 'app/rootReducer'
 import { authenticate } from 'features/auth/slices/authenticationSlice'
 
 interface Props {
+  shouldAuthenticate: boolean
   children: React.ReactElement
 }
 
 // TODO: Turn this into High order function later
-const AuthWrapper = ({ children }: Props) => {
+const AuthWrapper = ({ children, shouldAuthenticate }: Props) => {
   const dispatch = useDispatch()
   const { isAuthenticated, authenticating, error } = useSelector(selectAuthentication)
 
   useEffect(() => {
-    dispatch(authenticate())
-  }, [dispatch])
+    if (shouldAuthenticate) {
+      dispatch(authenticate())
+    }
+  }, [dispatch, shouldAuthenticate])
+
+  if (!shouldAuthenticate) {
+    return children
+  }
 
   if (error) {
     return <div>{error}</div>

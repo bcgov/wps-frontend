@@ -1,7 +1,7 @@
 describe('HFI Calculator Page', () => {
   beforeEach(() => {
     cy.server()
-    cy.visitProtectedPage('/hfi-calculator/')
+    cy.visit('/hfi-calculator/')
   })
 
   it('Basic Page', () => {

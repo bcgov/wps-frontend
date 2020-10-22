@@ -8,6 +8,8 @@ import MoreCastPage from 'features/fireWeather/pages/MoreCastPage'
 import HfiCalculatorPage from 'features/hfiCalculator/pages/HfiCalculatorPage'
 
 const shouldShowDisclaimer = HIDE_DISCLAIMER === 'false' || HIDE_DISCLAIMER === undefined
+const shouldAuthenticate =
+  process.env.NODE_ENV === 'production' || window.Cypress === undefined
 
 const NoMatch = () => <div>Page not found.</div>
 
@@ -23,13 +25,13 @@ const Routes: React.FunctionComponent = () => {
 
         <Redirect from="/fire-weather/" to="/morecast/" />
         <Route path="/morecast/">
-          <AuthWrapper>
+          <AuthWrapper shouldAuthenticate={shouldAuthenticate}>
             <MoreCastPage />
           </AuthWrapper>
         </Route>
 
         <Route path="/hfi-calculator/">
-          <AuthWrapper>
+          <AuthWrapper shouldAuthenticate={shouldAuthenticate}>
             <HfiCalculatorPage />
           </AuthWrapper>
         </Route>
