@@ -19,3 +19,5 @@ objects:
       env.keycloak-auth-url: 'https://sso-dev.pathfinder.gov.bc.ca/auth'
       env.keycloak-client: wps-web
       env.keycloak-realm: ${REACT_APP_KEYCLOAK_REALM}
+      env.matomo-url: 'https://matomo-auzhsi-dev.pathfinder.gov.bc.ca/'
+      env.matomo-site-id: '1'
