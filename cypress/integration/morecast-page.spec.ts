@@ -40,10 +40,14 @@ describe('MoreCast Page', () => {
 
     // Check if svg elements are displayed in the graph
     cy.getByTestId('hourly-reading-temp-dot')
+    cy.getByTestId('hourly-reading-temp-line')
     cy.getByTestId('hourly-reading-rh-dot')
+    cy.getByTestId('hourly-reading-rh-line')
     cy.getByTestId('wx-graph-reading-toggle').click()
     cy.getByTestId('hourly-reading-temp-dot').should('not.exist')
+    cy.getByTestId('hourly-reading-temp-line').should('not.exist')
     cy.getByTestId('hourly-reading-rh-dot').should('not.exist')
+    cy.getByTestId('hourly-reading-rh-line').should('not.exist')
 
     // Test the toggle buttons
     cy.getByTestId('wx-graph-global-model-toggle').click()
@@ -62,15 +66,19 @@ describe('MoreCast Page', () => {
 
     cy.getByTestId('wx-graph-bias-toggle').click()
     cy.getByTestId('bias-adjusted-model-temp-dot')
+    cy.getByTestId('bias-adjusted-model-temp-line')
     cy.getByTestId('wx-graph-bias-toggle').click()
     cy.getByTestId('bias-adjusted-model-temp-dot').should('not.exist')
+    cy.getByTestId('bias-adjusted-model-temp-line').should('not.exist')
 
     cy.getByTestId('wx-graph-high-res-model-toggle').click()
     cy.getByTestId('high-res-model-summary-temp-area')
     cy.getByTestId('high-res-model-temp-dot')
+    cy.getByTestId('high-res-model-temp-line')
     cy.getByTestId('wx-graph-high-res-model-toggle').click()
     cy.getByTestId('high-res-model-summary-temp-area').should('not.exist')
     cy.getByTestId('high-res-model-temp-dot').should('not.exist')
+    cy.getByTestId('high-res-model-temp-line').should('not.exist')
 
     // Hover over the first dot and check if the tooltip shows up with the correct text
     cy.getByTestId('wx-graph-reading-toggle').click()
