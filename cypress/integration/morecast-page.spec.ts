@@ -45,9 +45,7 @@ describe('MoreCast Page', () => {
     cy.getByTestId('hourly-reading-rh-path')
     cy.getByTestId('wx-graph-reading-toggle').click()
     cy.getByTestId('hourly-reading-temp-dot').should('not.exist')
-    cy.getByTestId('hourly-reading-temp-path').should('not.exist')
     cy.getByTestId('hourly-reading-rh-dot').should('not.exist')
-    cy.getByTestId('hourly-reading-rh-path').should('not.exist')
 
     // Test the toggle buttons
     cy.getByTestId('wx-graph-global-model-toggle').click()
@@ -69,7 +67,6 @@ describe('MoreCast Page', () => {
     cy.getByTestId('bias-adjusted-model-temp-path')
     cy.getByTestId('wx-graph-bias-toggle').click()
     cy.getByTestId('bias-adjusted-model-temp-dot').should('not.exist')
-    cy.getByTestId('bias-adjusted-model-temp-path').should('not.exist')
 
     cy.getByTestId('wx-graph-high-res-model-toggle').click()
     cy.getByTestId('high-res-model-summary-temp-area')
@@ -78,7 +75,6 @@ describe('MoreCast Page', () => {
     cy.getByTestId('wx-graph-high-res-model-toggle').click()
     cy.getByTestId('high-res-model-summary-temp-area').should('not.exist')
     cy.getByTestId('high-res-model-temp-dot').should('not.exist')
-    cy.getByTestId('high-res-model-temp-path').should('not.exist')
 
     // Hover over the first dot and check if the tooltip shows up with the correct text
     cy.getByTestId('wx-graph-reading-toggle').click()

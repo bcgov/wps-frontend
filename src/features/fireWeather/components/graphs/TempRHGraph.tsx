@@ -361,7 +361,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         data: biasAdjModelTempValues,
         x: d => xScale(d.date),
         y: d => yTempScale(d.biasAdjustedModelTemp),
-        testId: 'bias-adjusted-model-temp=path'
+        testId: 'bias-adjusted-model-temp-path'
       })
       d3Utils.drawDots({
         svg,
