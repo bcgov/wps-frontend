@@ -1,4 +1,7 @@
 import * as d3 from 'd3'
+import xScale from 'features/fireWeather/components/graphs/TempRHGraph'
+import yTempScale from 'features/fireWeather/components/graphs/TempRHGraph'
+import yRHScale from 'features/fireWeather/components/graphs/TempRHGraph'
 
 export const getNearestByDate = <T extends { date: Date }>(
   invertedDate: Date,
@@ -59,8 +62,7 @@ export const drawDots = <T>({
   if (data.length === 0) {
     return
   }
-
-  const dots = svg // Hourly reading temp dot
+  const dots = svg
     .selectAll(`.${className}`)
     .data(data)
     .enter()
@@ -70,8 +72,55 @@ export const drawDots = <T>({
     .attr('cy', cy)
     .attr('r', radius)
 
+  // svg
+  //   .attr('class', `${className}-line`)
+  //   .selectAll(`${className}-line`)
+  //   .data(data)
+  //   .enter()
+  //   .append('line')
+  //   .attr('x1', cx)
+  //   .attr('y1', cy)
+  //   .attr('x2', cx+1)
+  //   .attr('y2', cy+1)
+  //   .attr('stroke', 'gray')
+  //   .attr('stroke-width', 1.0)
+
   if (testId) {
     dots.attr('data-testid', testId)
+  }
+}
+
+export const drawLines = ({
+  svg,
+  className,
+  x1,
+  y1,
+  x2,
+  y2,
+  strokeWidth,
+  testId
+}: {
+  svg: d3.Selection<SVGGElement, unknown, null, undefined>
+  className: string
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  strokeWidth: number
+  testId?: string
+}): void => {
+  const line = svg
+    .append('line')
+    .attr('x1', x1)
+    .attr('y1', y1)
+    .attr('x2', x2)
+    .attr('y2', y2)
+    .attr('stroke-width', strokeWidth)
+    .attr('stroke', 'gray')
+    .attr('class', className)
+
+  if (testId) {
+    line.attr('data-testid', testId)
   }
 }
 
