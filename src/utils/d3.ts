@@ -1,24 +1,5 @@
 import * as d3 from 'd3'
 
-export const getNearestByDate = <T extends { date: Date }>(
-  invertedDate: Date,
-  arr: T[]
-): T | undefined => {
-  // What is bisect: https://observablehq.com/@d3/d3-bisect
-  const bisect = d3.bisector((d: T) => d.date).left
-  const index = bisect(arr, invertedDate, 1)
-  const a = arr[index - 1]
-  const b = arr[index]
-  // Get the nearest value from the user's mouse position
-  const value =
-    b &&
-    invertedDate.valueOf() - a.date.valueOf() > b.date.valueOf() - invertedDate.valueOf()
-      ? b
-      : a
-
-  return value
-}
-
 export const formatDateInMonthAndDay = d3.timeFormat('%b %d') as (
   value: Date | { valueOf(): number }
 ) => string
@@ -196,6 +177,25 @@ export const addLegend = ({
     .style('fill', color)
 }
 
+const getNearestByDate = <T extends { date: Date }>(
+  invertedDate: Date,
+  arr: T[]
+): T | undefined => {
+  // What is bisect: https://observablehq.com/@d3/d3-bisect
+  const bisect = d3.bisector((d: T) => d.date).left
+  const index = bisect(arr, invertedDate, 1)
+  const a = arr[index - 1]
+  const b = arr[index]
+  // Get the nearest value from the user's mouse position
+  const value =
+    b &&
+    invertedDate.valueOf() - a.date.valueOf() > b.date.valueOf() - invertedDate.valueOf()
+      ? b
+      : a
+
+  return value
+}
+
 /**
  * Attach a listener to display a tooltip in the graph, inspired by: https://observablehq.com/@d3/line-chart-with-tooltip
  * Note: .tooltip, .tooltip--hidden, and .tooltipCursor classes need to be defined
@@ -286,8 +286,8 @@ export const addTooltipListener = <T extends { date: Date } & { [K in keyof T]: 
   // the listener can react to user's mouseover in anywhere within the graph
   svg
     .append('rect')
-    .attr('width', '100%')
-    .attr('height', '100%')
+    .attr('width', width)
+    .attr('height', height)
     .attr('fill', 'transparent')
   if (bgdTestId) {
     svg.attr('data-testid', bgdTestId)
