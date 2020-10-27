@@ -100,7 +100,7 @@ export const drawLines = ({
     .attr('x2', x2)
     .attr('y2', y2)
     .attr('stroke-width', strokeWidth)
-    .attr('stroke', 'gray')
+    .attr('opacity', 0.8)
     .attr('class', className)
 
   if (testId) {
