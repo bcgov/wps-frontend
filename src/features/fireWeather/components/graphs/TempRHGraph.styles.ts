@@ -58,7 +58,7 @@ export const useStyles = makeStyles({
       fill: readingTempDotColor,
       cursor: 'pointer'
     },
-    '& .readingTempLine': {
+    '& .readingTempPath': {
       stroke: readingTempDotColor
     },
     '& .readingRHDot': {
@@ -66,7 +66,7 @@ export const useStyles = makeStyles({
       fill: readingTempDotColor,
       cursor: 'pointer'
     },
-    '& .readingRHLine': {
+    '& .readingRHPath': {
       stroke: readingRHDotColor
     },
     '& .modelSummaryTempArea': {
@@ -86,7 +86,7 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .modelTempLine': {
+    '& .modelTempPath': {
       stroke: modelTempDotColor
     },
     '& .modelRHDot': {
@@ -94,7 +94,7 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .modelRHLine': {
+    '& .modelRHPath': {
       stroke: modelRHDotColor
     },
     '& .biasAdjustedModelTempDot': {
@@ -102,7 +102,7 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .biasAdjustedModelTempLine': {
+    '& .biasAdjustedModelTempPath': {
       stroke: biasModelTempDotColor
     },
     '& .biasAdjustedModelRHDot': {
@@ -110,7 +110,7 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .biasAdjustedModelRHLine': {
+    '& .biasAdjustedModelRHPath': {
       stroke: biasModelRHDotColor
     },
     '& .highResModelTempDot': {
@@ -118,7 +118,7 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .highResModelTempLine': {
+    '& .highResModelTempPath': {
       stroke: highResModelTempDotColor
     },
     '& .highResModelRHDot': {
@@ -126,7 +126,7 @@ export const useStyles = makeStyles({
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .highResModelRHLine': {
+    '& .highResModelRHPath': {
       stroke: highResModelRHDotColor
     },
     '& .highResModelSummaryTempArea': {

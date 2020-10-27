@@ -1,4 +1,6 @@
 import * as d3 from 'd3'
+import xScale from 'features/fireWeather/components/graphs/TempRHGraph'
+import yRHScale from 'features/fireWeather/components/graphs/TempRHGraph'
 
 export const getNearestByDate = <T extends { date: Date }>(
   invertedDate: Date,
@@ -74,37 +76,37 @@ export const drawDots = <T>({
   }
 }
 
-export const drawLines = ({
+export const drawPath = <T>({
   svg,
   className,
-  x1,
-  y1,
-  x2,
-  y2,
+  data,
+  x,
+  y,
   strokeWidth,
   testId
 }: {
   svg: d3.Selection<SVGGElement, unknown, null, undefined>
   className: string
-  x1: number
-  y1: number
-  x2: number
-  y2: number
-  strokeWidth: number
+  data: T[]
+  x: (d: T) => number
+  y: (d: T) => number
+  strokeWidth?: number
   testId?: string
 }): void => {
-  const line = svg
-    .append('line')
-    .attr('x1', x1)
-    .attr('y1', y1)
-    .attr('x2', x2)
-    .attr('y2', y2)
-    .attr('stroke-width', strokeWidth)
+  const path = svg
+    .append('path')
+    .datum(data)
+    .attr('d', d3.line<T>()
+      .x(x)
+      .y(y)  
+    )
+    .attr('stroke-width', strokeWidth === undefined ? 1 : strokeWidth)
+    .attr('fill', 'none')
     .attr('opacity', 0.8)
     .attr('class', className)
 
   if (testId) {
-    line.attr('data-testid', testId)
+    path.attr('data-testid', testId)
   }
 }
 
