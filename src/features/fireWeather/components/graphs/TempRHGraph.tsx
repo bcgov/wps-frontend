@@ -7,7 +7,6 @@ import { ForecastSummary as _ForecastSummary, NoonForecastValue } from 'api/fore
 import { formatDateInPDT } from 'utils/date'
 import * as styles from 'features/fireWeather/components/graphs/TempRHGraph.styles'
 import * as d3Utils from 'utils/d3'
-import { highResModelValues } from 'utils/storybook'
 
 interface WeatherValue {
   date: Date

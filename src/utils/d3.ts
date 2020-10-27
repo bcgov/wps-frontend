@@ -1,6 +1,4 @@
 import * as d3 from 'd3'
-import xScale from 'features/fireWeather/components/graphs/TempRHGraph'
-import yRHScale from 'features/fireWeather/components/graphs/TempRHGraph'
 
 export const getNearestByDate = <T extends { date: Date }>(
   invertedDate: Date,
@@ -96,9 +94,12 @@ export const drawPath = <T>({
   const path = svg
     .append('path')
     .datum(data)
-    .attr('d', d3.line<T>()
-      .x(x)
-      .y(y)  
+    .attr(
+      'd',
+      d3
+        .line<T>()
+        .x(x)
+        .y(y)
     )
     .attr('stroke-width', strokeWidth === undefined ? 1 : strokeWidth)
     .attr('fill', 'none')
