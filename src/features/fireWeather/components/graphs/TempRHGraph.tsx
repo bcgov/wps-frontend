@@ -472,7 +472,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           y1: yTempScale(readingTempValues[i].temp),
           x2: xScale(readingTempValues[i + 1].date),
           y2: yTempScale(readingTempValues[i + 1].temp),
-          strokeWidth: 1,
+          strokeWidth: 1.8,
           testId: 'hourly-reading-temp-line'
         })
       }
@@ -492,7 +492,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           y1: yRHScale(readingRHValues[i].rh),
           x2: xScale(readingRHValues[i + 1].date),
           y2: yRHScale(readingRHValues[i + 1].rh),
-          strokeWidth: 1,
+          strokeWidth: 1.8,
           testId: 'hourly-reading-rh-line'
         })
       }
