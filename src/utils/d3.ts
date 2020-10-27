@@ -1,7 +1,4 @@
 import * as d3 from 'd3'
-import xScale from 'features/fireWeather/components/graphs/TempRHGraph'
-import yTempScale from 'features/fireWeather/components/graphs/TempRHGraph'
-import yRHScale from 'features/fireWeather/components/graphs/TempRHGraph'
 
 export const getNearestByDate = <T extends { date: Date }>(
   invertedDate: Date,
