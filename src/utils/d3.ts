@@ -69,19 +69,6 @@ export const drawDots = <T>({
     .attr('cy', cy)
     .attr('r', radius)
 
-  // svg
-  //   .attr('class', `${className}-line`)
-  //   .selectAll(`${className}-line`)
-  //   .data(data)
-  //   .enter()
-  //   .append('line')
-  //   .attr('x1', cx)
-  //   .attr('y1', cy)
-  //   .attr('x2', cx+1)
-  //   .attr('y2', cy+1)
-  //   .attr('stroke', 'gray')
-  //   .attr('stroke-width', 1.0)
-
   if (testId) {
     dots.attr('data-testid', testId)
   }
