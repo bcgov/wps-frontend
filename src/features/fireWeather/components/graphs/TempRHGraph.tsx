@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import * as d3 from 'd3'
 
 import { ReadingValue } from 'api/readingAPI'
@@ -226,38 +226,45 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         })
 
       /* Set the dimensions and margins of the graph */
-      const margin = { top: 10, right: 40, bottom: 90, left: 40 }
-      const legendMarginTop = 50
-      const widthValue = 600
-      const heightValue = 300
-      const width = widthValue - margin.left - margin.right
-      const height = heightValue - margin.top - margin.bottom
+      const margin = { top: 10, right: 40, bottom: 150, left: 40 }
+      const svgWidth = 600
+      const svgHeight = 350
+      const chartWidth = svgWidth - margin.left - margin.right
+      const chartHeight = svgHeight - margin.top - margin.bottom
       const svg = d3
         .select(svgRef.current)
         // Make it responsive: https://medium.com/@louisemoxy/a-simple-way-to-make-d3-js-charts-svgs-responsive-7afb04bc2e4b
-        .attr('viewBox', `0 0 ${widthValue} ${heightValue}`)
+        .attr('viewBox', `0 0 ${svgWidth} ${svgHeight}`)
       const chart = svg
         .append('g')
         .attr('class', 'chart')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
+      const focusHeight = 40
+      const focusMarginTop = chartHeight + focusHeight + 10
+      const focus = svg
+        .append('g')
+        .attr('class', 'focus')
+        .attr('transform', `translate(${margin.left}, ${focusMarginTop})`)
+      const legendMarginTop = focusMarginTop + 70
       const legend = svg
         .append('g')
         .attr('class', 'legend')
-        .attr('transform', `translate(${margin.left}, ${height + legendMarginTop})`)
+        .attr('transform', `translate(${margin.left}, ${legendMarginTop})`)
 
       /* Create scales for x and y axis */
       const xScale = d3
         .scaleTime()
         .domain(minAndMaxDate)
-        .range([0, width])
+        .range([0, chartWidth])
+      const xFocusScale = xScale.copy()
       const yTempScale = d3
         .scaleLinear()
         .domain([-10, 45])
-        .range([height, 0])
+        .range([chartHeight, 0])
       const yRHScale = d3
         .scaleLinear()
         .domain([0, 100])
-        .range([height, 0])
+        .range([chartHeight, 0])
 
       /* Render temp and rh model summary clouds */
       d3Utils.drawArea({
@@ -422,7 +429,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           className: 'currLine',
           x: scaledCurrDate,
           y1: 0,
-          y2: height
+          y2: chartHeight
         })
         chart
           .append('text')
@@ -435,15 +442,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       }
 
       /* Render the X & Y axis and labels */
-      chart // X axis
+      const xAxis = d3
+        .axisBottom(xScale)
+        .tickFormat(d3Utils.formatDateInMonthAndDay)
+        .tickValues(xTickValues)
+      chart // Render X axis
         .append('g')
-        .attr('transform', `translate(0, ${height})`)
-        .call(
-          d3
-            .axisBottom(xScale)
-            .tickFormat(d3Utils.formatDateInMonthAndDay)
-            .tickValues(xTickValues)
-        )
+        .attr('class', 'axis axis--x')
+        .attr('transform', `translate(0, ${chartHeight})`)
+        .call(xAxis)
         .selectAll('text')
         .attr('y', 0)
         .attr('x', 0)
@@ -452,36 +459,66 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .attr('transform', 'rotate(45)')
         .attr('class', 'xAxisLabel')
 
-      // Y axis
+      // Render Y axis
       chart.append('g').call(d3.axisLeft(yTempScale).tickValues([-10, 5, 20, 35, 45]))
       chart
         .append('g')
-        .attr('transform', `translate(${width}, 0)`)
+        .attr('transform', `translate(${chartWidth}, 0)`)
         .call(d3.axisRight(yRHScale).tickValues([0, 25, 50, 75, 100]))
 
       chart // Temperature label
         .append('text')
         .attr('transform', 'rotate(-90)')
         .attr('y', 0 - margin.left)
-        .attr('x', 0 - height / 2)
+        .attr('x', 0 - chartHeight / 2)
         .attr('dy', '1.3em')
         .attr('class', 'yAxisLabel')
         .text('Temp (°C)')
       chart // RH label
         .append('text')
         .attr('transform', 'rotate(-270)')
-        .attr('y', 0 - width - margin.left)
-        .attr('x', height / 2)
+        .attr('y', 0 - chartWidth - margin.left)
+        .attr('x', chartHeight / 2)
         .attr('dy', '1.3em')
         .attr('class', 'yAxisLabel')
         .text('RH (%)')
+
+      const brushed = () => {
+        const selection = d3.event.selection as [number, number]
+        if (selection) {
+          const rangeOfInterest = selection.map(xFocusScale.invert)
+          xScale.domain(rangeOfInterest)
+          chart.select('.axis--x').call(xAxis)
+        }
+      }
+      const brush = d3
+        .brushX()
+        .extent([
+          [0, 0],
+          [chartWidth, focusHeight]
+        ])
+        .on('brush', brushed)
+      focus
+        .append('g')
+        .attr('transform', `translate(0, ${focusHeight})`)
+        .call(
+          d3
+            .axisBottom(xFocusScale)
+            .tickFormat(d3Utils.formatDateInMonthAndDay)
+            .tickValues(xTickValues)
+        )
+      focus
+        .append('g')
+        .call(brush)
+        // .call(brush.move, xFocusScale.range())
+        .call(brush.move, [0, 100])
 
       /* Attach tooltip listener */
       d3Utils.addTooltipListener({
         svg: chart,
         xScale,
-        width,
-        height,
+        width: chartWidth,
+        height: chartHeight,
         data: weatherValues,
         textTestId: 'temp-rh-tooltip-text',
         bgdTestId: 'temp-rh-graph-background',
