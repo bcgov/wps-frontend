@@ -335,12 +335,28 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yTempScale(d.modelTemp),
         testId: 'model-temp-dot'
       })
+      d3Utils.drawPath({
+        svg,
+        className: 'modelTempPath',
+        data: modelTempValues,
+        x: d => xScale(d.date),
+        y: d => yTempScale(d.modelTemp),
+        testId: 'model-temp-path'
+      })
       d3Utils.drawDots({
         svg: chart,
         className: 'modelRHDot',
         data: modelRHValues,
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.modelRH)
+      })
+      d3Utils.drawPath({
+        svg,
+        className: 'modelRHPath',
+        data: modelRHValues,
+        x: d => xScale(d.date),
+        y: d => yRHScale(d.modelRH),
+        testId: 'model-rh-path'
       })
 
       /* Render bias adjusted model temp and rh values */
@@ -353,6 +369,14 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         radius: 0.5,
         testId: 'bias-adjusted-model-temp-dot'
       })
+      d3Utils.drawPath({
+        svg,
+        className: 'biasAdjustedModelTempPath',
+        data: biasAdjModelTempValues,
+        x: d => xScale(d.date),
+        y: d => yTempScale(d.biasAdjustedModelTemp),
+        testId: 'bias-adjusted-model-temp-path'
+      })
       d3Utils.drawDots({
         svg: chart,
         className: 'biasAdjustedModelRHDot',
@@ -361,6 +385,14 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yRHScale(d.biasAdjustedModelRH),
         radius: 0.5,
         testId: 'bias-adjusted-model-rh-dot'
+      })
+      d3Utils.drawPath({
+        svg,
+        className: 'biasAdjustedModelRHPath',
+        data: biasAdjModelRHValues,
+        x: d => xScale(d.date),
+        y: d => yRHScale(d.biasAdjustedModelRH),
+        testId: 'bias-adjusted-model-rh-path'
       })
 
       /* Render high resolution model temp and rh values */
@@ -372,12 +404,28 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yTempScale(d.hrModelTemp),
         testId: 'high-res-model-temp-dot'
       })
+      d3Utils.drawPath({
+        svg,
+        className: 'highResModelTempPath',
+        data: hrModelTempValues,
+        x: d => xScale(d.date),
+        y: d => yTempScale(d.hrModelTemp),
+        testId: 'high-res-model-temp-path'
+      })
       d3Utils.drawDots({
         svg: chart,
         className: 'highResModelRHDot',
         data: hrModelRHValues,
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.hrModelRH)
+      })
+      d3Utils.drawPath({
+        svg,
+        className: 'highResModelRHPath',
+        data: hrModelRHValues,
+        x: d => xScale(d.date),
+        y: d => yRHScale(d.hrModelRH),
+        testId: 'high-res-model-rh-path'
       })
 
       /* Render temp and rh noon forecasts */
@@ -406,6 +454,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yTempScale(d.temp),
         testId: 'hourly-reading-temp-dot'
       })
+      d3Utils.drawPath({
+        svg,
+        className: 'readingTempPath',
+        data: readingTempValues,
+        x: d => xScale(d.date),
+        y: d => yTempScale(d.temp),
+        strokeWidth: 1.5,
+        testId: 'hourly-reading-temp-path'
+      })
       d3Utils.drawDots({
         svg: chart,
         className: 'readingRHDot',
@@ -413,6 +470,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.rh),
         testId: 'hourly-reading-rh-dot'
+      })
+      d3Utils.drawPath({
+        svg,
+        className: 'readingRHPath',
+        data: readingRHValues,
+        x: d => xScale(d.date),
+        y: d => yRHScale(d.rh),
+        strokeWidth: 1.5,
+        testId: 'hourly-reading-rh-path'
       })
 
       /* Render the current time reference line */
