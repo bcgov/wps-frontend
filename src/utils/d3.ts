@@ -80,7 +80,7 @@ export const drawPath = <T>({
   data,
   x,
   y,
-  strokeWidth,
+  strokeWidth = 1,
   testId
 }: {
   svg: d3.Selection<SVGGElement, unknown, null, undefined>
@@ -101,7 +101,7 @@ export const drawPath = <T>({
         .x(x)
         .y(y)
     )
-    .attr('stroke-width', strokeWidth === undefined ? 1 : strokeWidth)
+    .attr('stroke-width', strokeWidth)
     .attr('fill', 'none')
     .attr('opacity', 0.8)
     .attr('class', className)
