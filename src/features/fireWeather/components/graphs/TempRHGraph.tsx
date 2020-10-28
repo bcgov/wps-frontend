@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
 import * as d3 from 'd3'
 
 import { ReadingValue } from 'api/readingAPI'
@@ -57,7 +57,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
       /* Prepare for data */
       const daysLookup: { [k: string]: Date } = {} // will help to create the date label on x axis
-      const allDates: Date[] = [] // will be used to determine x axis range
       const weatherValueByDatetime: { [k: string]: WeatherValue } = {}
 
       const readingTempValues: { date: Date; temp: number }[] = []
@@ -68,7 +67,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         }
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
-        allDates.push(date)
 
         const reading = { date, temp: NaN, rh: NaN }
         if (v.temperature != null) {
@@ -94,14 +92,12 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           ...weatherValueByDatetime[d.datetime],
           ...forecast
         }
-        allDates.push(date)
 
         return forecast
       })
 
       const forecastSummaries: ForecastSummary[] = _forecastSummaries.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
-        allDates.push(date)
 
         return { ...d, date }
       })
@@ -116,7 +112,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         }
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
-        allDates.push(date)
 
         const model = {
           date,
@@ -140,7 +135,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
       const modelSummaries: ModelSummary[] = _modelSummaries.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
-        allDates.push(date)
 
         return { ...d, date }
       })
@@ -157,7 +151,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         }
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
-        allDates.push(date)
 
         const biasAdjustedModel = {
           date,
@@ -186,7 +179,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         }
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
-        allDates.push(date)
 
         const hrModel = { date, hrModelTemp: NaN, hrModelRH: NaN }
         if (v.temperature != null) {
@@ -204,7 +196,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       const highResModelSummaries: ModelSummary[] = _highResModelSummaries.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
-        allDates.push(date)
 
         return { ...d, date }
       })
@@ -213,7 +204,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       const weatherValues = Object.values(weatherValueByDatetime).sort(
         (a, b) => a.date.valueOf() - b.date.valueOf()
       )
-      const minAndMaxDate = d3.extent(allDates) as [Date, Date]
+      const xDomain = d3.extent(weatherValues, v => v.date) as [Date, Date]
       const xTickValues = Object.values(daysLookup)
         .sort((a, b) => a.valueOf() - b.valueOf()) // sort in ascending order
         .map((day, idx) => {
@@ -254,7 +245,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       /* Create scales for x and y axis */
       const xScale = d3
         .scaleTime()
-        .domain(minAndMaxDate)
+        .domain(xDomain)
         .range([0, chartWidth])
       const xFocusScale = xScale.copy()
       const yTempScale = d3
@@ -336,7 +327,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         testId: 'model-temp-dot'
       })
       d3Utils.drawPath({
-        svg,
+        svg: chart,
         className: 'modelTempPath',
         data: modelTempValues,
         x: d => xScale(d.date),
@@ -351,7 +342,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yRHScale(d.modelRH)
       })
       d3Utils.drawPath({
-        svg,
+        svg: chart,
         className: 'modelRHPath',
         data: modelRHValues,
         x: d => xScale(d.date),
@@ -370,7 +361,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         testId: 'bias-adjusted-model-temp-dot'
       })
       d3Utils.drawPath({
-        svg,
+        svg: chart,
         className: 'biasAdjustedModelTempPath',
         data: biasAdjModelTempValues,
         x: d => xScale(d.date),
@@ -387,7 +378,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         testId: 'bias-adjusted-model-rh-dot'
       })
       d3Utils.drawPath({
-        svg,
+        svg: chart,
         className: 'biasAdjustedModelRHPath',
         data: biasAdjModelRHValues,
         x: d => xScale(d.date),
@@ -405,7 +396,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         testId: 'high-res-model-temp-dot'
       })
       d3Utils.drawPath({
-        svg,
+        svg: chart,
         className: 'highResModelTempPath',
         data: hrModelTempValues,
         x: d => xScale(d.date),
@@ -420,7 +411,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yRHScale(d.hrModelRH)
       })
       d3Utils.drawPath({
-        svg,
+        svg: chart,
         className: 'highResModelRHPath',
         data: hrModelRHValues,
         x: d => xScale(d.date),
@@ -455,7 +446,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         testId: 'hourly-reading-temp-dot'
       })
       d3Utils.drawPath({
-        svg,
+        svg: chart,
         className: 'readingTempPath',
         data: readingTempValues,
         x: d => xScale(d.date),
@@ -472,7 +463,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         testId: 'hourly-reading-rh-dot'
       })
       d3Utils.drawPath({
-        svg,
+        svg: chart,
         className: 'readingRHPath',
         data: readingRHValues,
         x: d => xScale(d.date),
@@ -484,10 +475,10 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       /* Render the current time reference line */
       const currDate = new Date()
       const isCurrDateInXAxisRange =
-        minAndMaxDate[0] &&
-        minAndMaxDate[1] &&
-        minAndMaxDate[0].valueOf() < currDate.valueOf() &&
-        minAndMaxDate[1].valueOf() > currDate.valueOf()
+        xDomain[0] &&
+        xDomain[1] &&
+        xDomain[0].valueOf() < currDate.valueOf() &&
+        xDomain[1].valueOf() > currDate.valueOf()
       if (isCurrDateInXAxisRange) {
         const scaledCurrDate = xScale(currDate)
         d3Utils.drawVerticalLine({
@@ -554,7 +545,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         if (selection) {
           const rangeOfInterest = selection.map(xFocusScale.invert)
           xScale.domain(rangeOfInterest)
-          chart.select('.axis--x').call(xAxis)
+          // chart.select('.axis--x').call(xAxis)
         }
       }
       const brush = d3
