@@ -13,7 +13,7 @@ describe('MoreCast Page', () => {
     cy.selectStationByCode(stationCode)
     cy.getByTestId('get-wx-data-button').click({ force: true })
 
-    cy.checkErrorMessage('Error occurred (while fetching hourly readings).')
+    cy.checkErrorMessage('Error occurred (while fetching observations).')
     cy.checkErrorMessage('Error occurred (while fetching GDPS).')
     cy.checkErrorMessage('Error occurred (while fetching GDPS summaries).')
     cy.checkErrorMessage('Error occurred (while fetching noon forecasts).')
@@ -25,7 +25,7 @@ describe('MoreCast Page', () => {
   })
 
   it('if all the weather data were successfully fetched', () => {
-    cy.route('POST', 'api/hourlies/', 'fixture:weather-data/actual-readings')
+    cy.route('POST', 'api/hourlies/', 'fixture:weather-data/observations')
     cy.route('POST', 'api/noon_forecasts/', 'fixture:weather-data/noon-forecasts')
     cy.route('POST', 'api/noon_forecasts/summaries/', 'fixture:weather-data/noon-forecast-summaries')
     cy.route('POST', 'api/models/GDPS/predictions/most_recent', 'fixture:weather-data/models-with-bias-adjusted') // prettier-ignore
@@ -39,13 +39,13 @@ describe('MoreCast Page', () => {
     cy.getByTestId('get-wx-data-button').click({ force: true })
 
     // Check if svg elements are displayed in the graph
-    cy.getByTestId('hourly-reading-temp-dot')
-    cy.getByTestId('hourly-reading-temp-path')
-    cy.getByTestId('hourly-reading-rh-dot')
-    cy.getByTestId('hourly-reading-rh-path')
-    cy.getByTestId('wx-graph-reading-toggle').click()
-    cy.getByTestId('hourly-reading-temp-dot').should('not.exist')
-    cy.getByTestId('hourly-reading-rh-dot').should('not.exist')
+    cy.getByTestId('hourly-observed-temp-dot')
+    cy.getByTestId('hourly-observed-temp-path')
+    cy.getByTestId('hourly-observed-rh-dot')
+    cy.getByTestId('hourly-observed-rh-path')
+    cy.getByTestId('wx-graph-observation-toggle').click()
+    cy.getByTestId('hourly-observed-temp-dot').should('not.exist')
+    cy.getByTestId('hourly-observed-rh-dot').should('not.exist')
 
     // Test the toggle buttons
     cy.getByTestId('wx-graph-global-model-toggle').click()
@@ -77,8 +77,8 @@ describe('MoreCast Page', () => {
     cy.getByTestId('high-res-model-temp-dot').should('not.exist')
 
     // Hover over the first dot and check if the tooltip shows up with the correct text
-    cy.getByTestId('wx-graph-reading-toggle').click()
-    cy.getByTestId('hourly-reading-rh-dot')
+    cy.getByTestId('wx-graph-observation-toggle').click()
+    cy.getByTestId('hourly-observed-rh-dot')
       .first()
       .trigger('mousemove', { force: true, x: 2, y: 1 })
     cy.getByTestId('temp-rh-tooltip-text').contains('tspan', /(PDT, UTC-7)/)

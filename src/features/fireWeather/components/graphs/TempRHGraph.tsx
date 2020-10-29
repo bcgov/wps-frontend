@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import * as d3 from 'd3'
 
-import { ReadingValue } from 'api/readingAPI'
+import { ObservedValue } from 'api/observationAPI'
 import { ModelSummary as _ModelSummary, ModelValue } from 'api/modelAPI'
 import { ForecastSummary as _ForecastSummary, NoonForecastValue } from 'api/forecastAPI'
 import { formatDateInPDT } from 'utils/date'
@@ -25,7 +25,7 @@ type ModelSummary = Omit<_ModelSummary, 'datetime'> & { date: Date }
 type ForecastSummary = Omit<_ForecastSummary, 'datetime'> & { date: Date }
 
 interface Props {
-  readingValues: ReadingValue[]
+  observedValues: ObservedValue[]
   modelValues: ModelValue[]
   modelSummaries: _ModelSummary[]
   forecastValues: NoonForecastValue[]
@@ -36,7 +36,7 @@ interface Props {
 }
 
 const TempRHGraph: React.FunctionComponent<Props> = ({
-  readingValues: _readingValues,
+  observedValues: _observedValues,
   modelValues: _modelValues,
   modelSummaries: _modelSummaries,
   forecastValues: _forecastValues,
@@ -60,9 +60,9 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       const allDates: Date[] = [] // will be used to determine x axis range
       const weatherValueByDatetime: { [k: string]: WeatherValue } = {}
 
-      const readingTempValues: { date: Date; temp: number }[] = []
-      const readingRHValues: { date: Date; rh: number }[] = []
-      _readingValues.forEach(v => {
+      const observedTempValues: { date: Date; temp: number }[] = []
+      const observedRHValues: { date: Date; rh: number }[] = []
+      _observedValues.forEach(v => {
         if (v.temperature == null && v.relative_humidity == null) {
           return
         }
@@ -70,16 +70,16 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
         allDates.push(date)
 
-        const reading = { date, temp: NaN, rh: NaN }
+        const observation = { date, temp: NaN, rh: NaN }
         if (v.temperature != null) {
-          reading.temp = Number(v.temperature.toFixed(2))
-          readingTempValues.push(reading)
+          observation.temp = Number(v.temperature.toFixed(2))
+          observedTempValues.push(observation)
         }
         if (v.relative_humidity != null) {
-          reading.rh = Math.round(v.relative_humidity)
-          readingRHValues.push(reading)
+          observation.rh = Math.round(v.relative_humidity)
+          observedRHValues.push(observation)
         }
-        weatherValueByDatetime[v.datetime] = reading
+        weatherValueByDatetime[v.datetime] = observation
       })
 
       const forecastValues = _forecastValues.map(d => {
@@ -89,7 +89,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           forecastTemp: Number(d.temperature.toFixed(2)),
           forecastRH: Math.round(d.relative_humidity)
         }
-        // combine with existing readings and models values
+        // combine with existing observed and models values
         weatherValueByDatetime[d.datetime] = {
           ...weatherValueByDatetime[d.datetime],
           ...forecast
@@ -131,7 +131,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           model.modelRH = Math.round(rh)
           modelRHValues.push(model)
         }
-        // combine with the existing reading value
+        // combine with the existing observed value
         weatherValueByDatetime[v.datetime] = {
           ...weatherValueByDatetime[v.datetime],
           ...model
@@ -431,40 +431,40 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yRHScale(d.forecastRH)
       })
 
-      /* Render temp and rh hourly readings */
+      /* Render temp and rh hourly observations */
       d3Utils.drawDots({
         svg,
-        className: 'readingTempDot',
-        data: readingTempValues,
+        className: 'observedTempDot',
+        data: observedTempValues,
         cx: d => xScale(d.date),
         cy: d => yTempScale(d.temp),
-        testId: 'hourly-reading-temp-dot'
+        testId: 'hourly-observed-temp-dot'
       })
       d3Utils.drawPath({
         svg,
-        className: 'readingTempPath',
-        data: readingTempValues,
+        className: 'observedTempPath',
+        data: observedTempValues,
         x: d => xScale(d.date),
         y: d => yTempScale(d.temp),
         strokeWidth: 1.5,
-        testId: 'hourly-reading-temp-path'
+        testId: 'hourly-observed-temp-path'
       })
       d3Utils.drawDots({
         svg,
-        className: 'readingRHDot',
-        data: readingRHValues,
+        className: 'observedRHDot',
+        data: observedRHValues,
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.rh),
-        testId: 'hourly-reading-rh-dot'
+        testId: 'hourly-observed-rh-dot'
       })
       d3Utils.drawPath({
         svg,
-        className: 'readingRHPath',
-        data: readingRHValues,
+        className: 'observedRHPath',
+        data: observedRHValues,
         x: d => xScale(d.date),
         y: d => yRHScale(d.rh),
         strokeWidth: 1.5,
-        testId: 'hourly-reading-rh-path'
+        testId: 'hourly-observed-rh-path'
       })
 
       /* Render the current time reference line */
@@ -542,7 +542,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       d3Utils.addLegend({
         svg,
         text: 'Observed Temp',
-        color: styles.readingTempDotColor,
+        color: styles.observedTempDotColor,
         shapeX: legendX,
         shapeY: legendY,
         textX: legendX += 7,
@@ -551,7 +551,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       d3Utils.addLegend({
         svg,
         text: 'Observed RH',
-        color: styles.readingRHDotColor,
+        color: styles.observedRHDotColor,
         shapeX: legendX += 83,
         shapeY: legendY,
         textX: legendX += 7,
@@ -717,7 +717,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
     }
   }, [
     classes.root,
-    _readingValues,
+    _observedValues,
     _modelValues,
     _modelSummaries,
     _forecastValues,

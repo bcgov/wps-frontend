@@ -1,8 +1,8 @@
 import { makeStyles } from '@material-ui/core/styles'
 
 const currLineColor = 'green'
-export const readingTempDotColor = '#ff1212'
-export const readingRHDotColor = '#196aff'
+export const observedTempDotColor = '#ff1212'
+export const observedRHDotColor = '#196aff'
 export const modelTempDotColor = '#ff6984'
 export const modelRHDotColor = '#6198ff'
 export const biasModelTempDotColor = '#aa0000'
@@ -53,21 +53,21 @@ export const useStyles = makeStyles({
         display: 'none'
       }
     },
-    '& .readingTempDot': {
-      stroke: readingTempDotColor,
-      fill: readingTempDotColor,
+    '& .observedTempDot': {
+      stroke: observedTempDotColor,
+      fill: observedTempDotColor,
       cursor: 'pointer'
     },
-    '& .readingTempPath': {
-      stroke: readingTempDotColor
+    '& .observedTempPath': {
+      stroke: observedTempDotColor
     },
-    '& .readingRHDot': {
-      stroke: readingRHDotColor,
-      fill: readingTempDotColor,
+    '& .observedRHDot': {
+      stroke: observedRHDotColor,
+      fill: observedTempDotColor,
       cursor: 'pointer'
     },
-    '& .readingRHPath': {
-      stroke: readingRHDotColor
+    '& .observedRHPath': {
+      stroke: observedRHDotColor
     },
     '& .modelSummaryTempArea': {
       stroke: modelSummaryTempAreaColor,
