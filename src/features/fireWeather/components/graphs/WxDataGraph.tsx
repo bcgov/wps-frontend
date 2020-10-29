@@ -63,7 +63,13 @@ const WxDataGraph = ({
     timeOfInterest: 'past'
   })
 
-  if (noObservations && noForecasts && noModels && noBiasAdjustedModels && noHighResModels) {
+  if (
+    noObservations &&
+    noForecasts &&
+    noModels &&
+    noBiasAdjustedModels &&
+    noHighResModels
+  ) {
     return null
   }
 
@@ -109,7 +115,9 @@ const WxDataGraph = ({
       />
 
       <TempRHGraph
-        observedValues={showObservations && timeOfInterest !== 'future' ? observedValues : []}
+        observedValues={
+          showObservations && timeOfInterest !== 'future' ? observedValues : []
+        }
         modelValues={showModels ? askedModelValues : []}
         modelSummaries={showModels && timeOfInterest !== 'future' ? modelSummaries : []}
         forecastValues={showForecasts ? askedForecastValues : []}
