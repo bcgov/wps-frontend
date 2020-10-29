@@ -432,13 +432,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render temp and rh hourly observations */
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg,
-        className: 'observedTempDot',
+        className: 'observedTempSymbol',
         data: observedTempValues,
-        cx: d => xScale(d.date),
-        cy: d => yTempScale(d.temp),
-        testId: 'hourly-observed-temp-dot'
+        x: d => xScale(d.date),
+        y: d => yTempScale(d.temp),
+        symbol: d3.symbolSquare,
+        size: 10,
+        testId: 'hourly-observed-temp-symbol'
       })
       d3Utils.drawPath({
         svg,
@@ -449,13 +451,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         strokeWidth: 1.5,
         testId: 'hourly-observed-temp-path'
       })
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg,
-        className: 'observedRHDot',
+        className: 'observedRHSymbol',
         data: observedRHValues,
-        cx: d => xScale(d.date),
-        cy: d => yRHScale(d.rh),
-        testId: 'hourly-observed-rh-dot'
+        x: d => xScale(d.date),
+        y: d => yRHScale(d.rh),
+        symbol: d3.symbolSquare,
+        size: 10,
+        testId: 'hourly-observed-rh-symbol'
       })
       d3Utils.drawPath({
         svg,
@@ -542,20 +546,22 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       d3Utils.addLegend({
         svg,
         text: 'Observed Temp',
-        color: styles.observedTempDotColor,
-        shapeX: legendX,
-        shapeY: legendY,
-        textX: legendX += 7,
-        textY: legendY + 3
+        color: styles.observedTempColor,
+        shape: 'rect',
+        shapeX: legendX - 2,
+        shapeY: legendY - 4,
+        textX: legendX += 10,
+        textY: legendY + 4
       })
       d3Utils.addLegend({
         svg,
         text: 'Observed RH',
-        color: styles.observedRHDotColor,
-        shapeX: legendX += 83,
-        shapeY: legendY,
-        textX: legendX += 7,
-        textY: legendY + 3
+        color: styles.observedRHColor,
+        shape: 'rect',
+        shapeX: legendX += 80,
+        shapeY: legendY - 4,
+        textX: legendX += 12,
+        textY: legendY + 4
       })
       d3Utils.addLegend({
         svg,

@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import 'd3-shape'
 
 export const getNearestByDate = <T extends { date: Date }>(
   invertedDate: Date,
@@ -71,6 +72,50 @@ export const drawDots = <T>({
 
   if (testId) {
     dots.attr('data-testid', testId)
+  }
+}
+
+export const drawSymbols = <T>({
+  svg,
+  className,
+  data,
+  x,
+  y,
+  size = 64,
+  symbol = d3.symbolCircle,
+  testId
+}: {
+  svg: d3.Selection<SVGGElement, unknown, null, undefined>
+  className: string
+  data: T[]
+  x: (d: T) => number
+  y: (d: T) => number
+  size?: number
+  symbol?: d3.SymbolType
+  testId?: string
+}): void => {
+  if (data.length === 0) {
+    return
+  }
+  const symbols = svg
+    .selectAll(`.${className}`)
+    .data(data)
+    .enter()
+    .append('path')
+    .attr(
+      'd',
+      d3
+        .symbol<T>()
+        .type(symbol)
+        .size(size)
+    )
+    .attr('transform', function(d) {
+      return `translate(${x(d)},${y(d)})`
+    })
+    .attr('class', className)
+
+  if (testId) {
+    symbols.attr('data-testid', testId)
   }
 }
 

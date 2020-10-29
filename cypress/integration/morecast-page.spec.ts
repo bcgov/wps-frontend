@@ -39,13 +39,13 @@ describe('MoreCast Page', () => {
     cy.getByTestId('get-wx-data-button').click({ force: true })
 
     // Check if svg elements are displayed in the graph
-    cy.getByTestId('hourly-observed-temp-dot')
+    cy.getByTestId('hourly-observed-temp-symbol')
     cy.getByTestId('hourly-observed-temp-path')
-    cy.getByTestId('hourly-observed-rh-dot')
+    cy.getByTestId('hourly-observed-rh-symbol')
     cy.getByTestId('hourly-observed-rh-path')
     cy.getByTestId('wx-graph-observation-toggle').click()
-    cy.getByTestId('hourly-observed-temp-dot').should('not.exist')
-    cy.getByTestId('hourly-observed-rh-dot').should('not.exist')
+    cy.getByTestId('hourly-observed-temp-symbol').should('not.exist')
+    cy.getByTestId('hourly-observed-rh-symbol').should('not.exist')
 
     // Test the toggle buttons
     cy.getByTestId('wx-graph-global-model-toggle').click()
@@ -78,9 +78,9 @@ describe('MoreCast Page', () => {
 
     // Hover over the first dot and check if the tooltip shows up with the correct text
     cy.getByTestId('wx-graph-observation-toggle').click()
-    cy.getByTestId('hourly-observed-rh-dot')
+    cy.getByTestId('hourly-observed-rh-symbol')
       .first()
-      .trigger('mousemove', { force: true, x: 2, y: 1 })
+      .trigger('mousemove', { force: true, x: 3, y: 1 })
     cy.getByTestId('temp-rh-tooltip-text').contains('tspan', /(PDT, UTC-7)/)
     cy.getByTestId('temp-rh-tooltip-text')
       .should('contain', 'Observed Temp: - (°C)')
