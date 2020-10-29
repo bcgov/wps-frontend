@@ -13,7 +13,7 @@ describe('MoreCast Page', () => {
     cy.selectStationByCode(stationCode)
     cy.getByTestId('get-wx-data-button').click({ force: true })
 
-    cy.checkErrorMessage('Error occurred (while fetching observations).')
+    cy.checkErrorMessage('Error occurred (while fetching hourly observations).')
     cy.checkErrorMessage('Error occurred (while fetching GDPS).')
     cy.checkErrorMessage('Error occurred (while fetching GDPS summaries).')
     cy.checkErrorMessage('Error occurred (while fetching noon forecasts).')
