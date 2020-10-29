@@ -6,7 +6,7 @@ export interface ToggleValues {
   showReadings: boolean
   showModels: boolean
   showForecasts: boolean
-  showBiasAdjustedModels: boolean
+  showBiasAdjModels: boolean
   showHighResModels: boolean
   timeOfInterest: TimeSelectOption
 }

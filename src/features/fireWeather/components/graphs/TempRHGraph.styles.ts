@@ -97,20 +97,20 @@ export const useStyles = makeStyles({
     '& .modelRHPath': {
       stroke: modelRHDotColor
     },
-    '& .biasAdjustedModelTempDot': {
+    '& .biasAdjModelTempDot': {
       stroke: biasModelTempDotColor,
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .biasAdjustedModelTempPath': {
+    '& .biasAdjModelTempPath': {
       stroke: biasModelTempDotColor
     },
-    '& .biasAdjustedModelRHDot': {
+    '& .biasAdjModelRHDot': {
       stroke: biasModelRHDotColor,
       fill: 'none',
       cursor: 'pointer'
     },
-    '& .biasAdjustedModelRHPath': {
+    '& .biasAdjModelRHPath': {
       stroke: biasModelRHDotColor
     },
     '& .highResModelTempDot': {

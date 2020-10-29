@@ -32,7 +32,7 @@ interface Props {
   noReadings: boolean
   noModels: boolean
   noForecasts: boolean
-  noBiasAdjustedModels: boolean
+  noBiasAdjModels: boolean
   noHighResModels: boolean
 }
 
@@ -42,7 +42,7 @@ const WxDataToggles = ({
   noReadings,
   noModels,
   noForecasts,
-  noBiasAdjustedModels,
+  noBiasAdjModels,
   noHighResModels
 }: Props) => {
   const classes = useStyles()
@@ -152,10 +152,10 @@ const WxDataToggles = ({
         className={classes.switchControl}
         control={
           <Switch
-            name="showBiasAdjustedModels"
+            name="showBiasAdjModels"
             data-testid="wx-graph-bias-toggle"
-            checked={toggleValues.showBiasAdjustedModels}
-            disabled={noBiasAdjustedModels}
+            checked={toggleValues.showBiasAdjModels}
+            disabled={noBiasAdjModels}
             size="small"
             onChange={handleSwitch}
           />
