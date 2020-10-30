@@ -296,26 +296,28 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       // Past forecasts temp min & max vertical lines
-      forecastSummaries.forEach(forecast => {
+      const updateForecastSummaryTempLineList = forecastSummaries.map(forecast =>
         d3Utils.drawVerticalLine({
           svg: chart,
           className: 'forecastSummaryTempLine',
+          xScale: xScale.copy(),
           x: xScale(forecast.date),
           y1: yTempScale(forecast.tmp_min),
           y2: yTempScale(forecast.tmp_max),
           testId: 'forecast-summary-temp-line'
         })
-      })
+      )
       // Past forecasts rh min & max vertical lines
-      forecastSummaries.forEach(forecast => {
+      const updateForecastSummaryRHLineList = forecastSummaries.map(forecast =>
         d3Utils.drawVerticalLine({
           svg: chart,
           className: 'forecastSummaryRHLine',
+          xScale: xScale.copy(),
           x: xScale(forecast.date),
           y1: yRHScale(forecast.rh_min),
           y2: yRHScale(forecast.rh_max)
         })
-      })
+      )
 
       /* Render temp and rh models */
       const updateModelTempDots = d3Utils.drawDots({
@@ -512,8 +514,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .attr('class', 'xAxisLabel')
         .attr('y', 0)
         .attr('x', 0)
-        .attr('dy', '0.5em')
-        .attr('dx', '0.2em')
+        .attr('dy', '0.3em')
+        .attr('dx', '0.7em')
         .attr('transform', 'rotate(45)')
 
       // Render Y axis
@@ -572,6 +574,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           // Redraw the rest
           updateReadingTempPath(d => xScale(d.date))
           updateReadingRHPath(d => xScale(d.date))
+          updateForecastSummaryTempLineList.forEach(update => update(xScale))
+          updateForecastSummaryRHLineList.forEach(update => update(xScale))
           updateModelTempPath(d => xScale(d.date))
           updateModelRHPath(d => xScale(d.date))
           updateModelSummaryTempArea?.(d => xScale(d.date))
@@ -591,7 +595,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           [chartWidth, sidebarHeight]
         ])
         .on('brush', brushed)
-      sidebar // Render X axis
+      sidebar // Render X axis for the sidebar
         .append('g')
         .attr('transform', `translate(0, ${sidebarHeight})`)
         .call(
@@ -603,14 +607,16 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .selectAll('text')
         .attr('y', 0)
         .attr('x', 0)
-        .attr('dy', '1.5em')
-        .attr('dx', '1.2em')
+        .attr('dy', '1.1em')
+        .attr('dx', '1.6em')
         .attr('transform', 'rotate(45)')
       sidebar
         .append('g')
         .call(brush)
-        .call(brush.move, xSidebarScale.range())
-      // .call(brush.move, [0, 100])
+        .call(
+          brush.move,
+          xSidebarScale.range().map(x => x)
+        )
 
       /* Attach tooltip listener */
       d3Utils.addTooltipListener({

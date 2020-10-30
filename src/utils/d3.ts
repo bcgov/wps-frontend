@@ -70,11 +70,11 @@ export const drawDots = <T>({
     dots.attr('data-testid', testId)
   }
 
-  const updateDots = (cx: (d: T) => number, duration?: number) => {
+  const updateDots = (newCx: (d: T) => number, duration?: number) => {
     dots
       .transition(d3.event.transform)
       .duration(duration || transitionDuration)
-      .attr('cx', cx)
+      .attr('cx', newCx)
   }
 
   return updateDots
@@ -115,11 +115,11 @@ export const drawPath = <T>({
     path.attr('data-testid', testId)
   }
 
-  const updatePath = (x: (d: T) => number, duration?: number) => {
+  const updatePath = (newX: (d: T) => number, duration?: number) => {
     path
       .transition(d3.event.transform)
       .duration(duration || transitionDuration)
-      .attr('d', line.x(x))
+      .attr('d', line.x(newX))
   }
 
   return updatePath
@@ -129,6 +129,7 @@ export const drawPath = <T>({
 export const drawVerticalLine = ({
   svg,
   className,
+  xScale,
   x,
   y1,
   y2,
@@ -136,11 +137,12 @@ export const drawVerticalLine = ({
 }: {
   svg: d3.Selection<SVGGElement, unknown, null, undefined>
   className: string
+  xScale: d3.ScaleTime<number, number>
   x: number
   y1: number
   y2: number
   testId?: string
-}): void => {
+}) => {
   const line = svg
     .append('line')
     .attr('x1', x)
@@ -152,6 +154,19 @@ export const drawVerticalLine = ({
   if (testId) {
     line.attr('data-testid', testId)
   }
+
+  const update = (newXScale: d3.ScaleTime<number, number>, duration?: number) => {
+    // Get inverted x using the original x scale then apply it with the new scale
+    const newX = newXScale(xScale.invert(x))
+
+    line
+      .transition(d3.event.transform)
+      .duration(duration || transitionDuration)
+      .attr('x1', newX)
+      .attr('x2', newX)
+  }
+
+  return update
 }
 
 export const drawArea = <T>({
@@ -193,11 +208,11 @@ export const drawArea = <T>({
     path.attr('data-testid', testId)
   }
 
-  const updateArea = (x: (d: T) => number, duration?: number) => {
+  const updateArea = (newX: (d: T) => number, duration?: number) => {
     path
       .transition(d3.event.transform)
       .duration(duration || transitionDuration)
-      .attr('d', area.x(x))
+      .attr('d', area.x(newX))
   }
 
   return updateArea
