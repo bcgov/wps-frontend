@@ -45,7 +45,7 @@ interface Props {
 const WxDataDisplays = ({ requestedStations }: Props) => {
   const classes = useStyles()
 
-  const { observationsByStation: observationsByStation } = useSelector(selectObservations)
+  const { observationsByStation } = useSelector(selectObservations)
   const {
     allModelsByStation,
     pastModelsByStation,
