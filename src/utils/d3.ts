@@ -1,5 +1,4 @@
 import * as d3 from 'd3'
-import 'd3-shape'
 
 export const getNearestByDate = <T extends { date: Date }>(
   invertedDate: Date,
