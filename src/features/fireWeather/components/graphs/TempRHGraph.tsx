@@ -226,9 +226,9 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         })
 
       /* Set the dimensions and margins of the graph */
-      const margin = { top: 10, right: 40, bottom: 90, left: 40 }
+      const margin = { top: 20, right: 40, bottom: 130, left: 40 }
       const widthValue = 600
-      const heightValue = 300
+      const heightValue = 500
       const width = widthValue - margin.left - margin.right
       const height = heightValue - margin.top - margin.bottom
       const svg = d3
@@ -245,7 +245,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .range([0, width])
       const yTempScale = d3
         .scaleLinear()
-        .domain([-10, 45])
+        .domain([-10, 40])
         .range([height, 0])
       const yRHScale = d3
         .scaleLinear()
@@ -313,13 +313,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render temp and rh models */
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg,
-        className: 'modelTempDot',
+        className: 'modelTempSymbol',
         data: modelTempValues,
-        cx: d => xScale(d.date),
-        cy: d => yTempScale(d.modelTemp),
-        testId: 'model-temp-dot'
+        x: d => xScale(d.date),
+        y: d => yTempScale(d.modelTemp),
+        size: 10,
+        symbol: d3.symbolTriangle,
+        testId: 'model-temp-symbol'
       })
       d3Utils.drawPath({
         svg,
@@ -329,12 +331,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y: d => yTempScale(d.modelTemp),
         testId: 'model-temp-path'
       })
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg,
-        className: 'modelRHDot',
+        className: 'modelRHSymbol',
         data: modelRHValues,
-        cx: d => xScale(d.date),
-        cy: d => yRHScale(d.modelRH)
+        x: d => xScale(d.date),
+        y: d => yRHScale(d.modelRH),
+        size: 10,
+        symbol: d3.symbolTriangle,
+        testId: 'model-rh-symbol'
       })
       d3Utils.drawPath({
         svg,
@@ -346,14 +351,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render bias adjusted model temp and rh values */
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg,
-        className: 'biasAdjustedModelTempDot',
+        className: 'biasAdjustedModelTempSymbol',
         data: biasAdjModelTempValues,
-        cx: d => xScale(d.date),
-        cy: d => yTempScale(d.biasAdjustedModelTemp),
-        radius: 0.5,
-        testId: 'bias-adjusted-model-temp-dot'
+        x: d => xScale(d.date),
+        y: d => yTempScale(d.biasAdjustedModelTemp),
+        size: 5,
+        symbol: d3.symbolDiamond,
+        testId: 'bias-adjusted-model-temp-symbol'
       })
       d3Utils.drawPath({
         svg,
@@ -363,14 +369,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y: d => yTempScale(d.biasAdjustedModelTemp),
         testId: 'bias-adjusted-model-temp-path'
       })
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg,
-        className: 'biasAdjustedModelRHDot',
+        className: 'biasAdjustedModelRHSymbol',
         data: biasAdjModelRHValues,
-        cx: d => xScale(d.date),
-        cy: d => yRHScale(d.biasAdjustedModelRH),
-        radius: 0.5,
-        testId: 'bias-adjusted-model-rh-dot'
+        x: d => xScale(d.date),
+        y: d => yRHScale(d.biasAdjustedModelRH),
+        size: 10,
+        symbol: d3.symbolDiamond,
+        testId: 'bias-adjusted-model-rh-symbol'
       })
       d3Utils.drawPath({
         svg,
@@ -382,13 +389,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render high resolution model temp and rh values */
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg,
-        className: 'highResModelTempDot',
+        className: 'highResModelTempSymbol',
         data: hrModelTempValues,
-        cx: d => xScale(d.date),
-        cy: d => yTempScale(d.hrModelTemp),
-        testId: 'high-res-model-temp-dot'
+        x: d => xScale(d.date),
+        y: d => yTempScale(d.hrModelTemp),
+        size: 7,
+        symbol: d3.symbolCircle,
+        testId: 'high-res-model-temp-symbol'
       })
       d3Utils.drawPath({
         svg,
@@ -398,12 +407,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y: d => yTempScale(d.hrModelTemp),
         testId: 'high-res-model-temp-path'
       })
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg,
-        className: 'highResModelRHDot',
+        className: 'highResModelRHSymbol',
         data: hrModelRHValues,
-        cx: d => xScale(d.date),
-        cy: d => yRHScale(d.hrModelRH)
+        x: d => xScale(d.date),
+        y: d => yRHScale(d.hrModelRH),
+        size: 7,
+        symbol: d3.symbolCircle,
+        testId: 'high-res-model-rh-symbol'
       })
       d3Utils.drawPath({
         svg,
@@ -541,7 +553,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
       /* Render legends */
       // TODO: We're going to have to look at using layouts moving forward to achieve the placement of objects. https://www.d3indepth.com/layouts/
-      let legendY = height + margin.bottom - 45
+      let legendY = height + margin.bottom - 60
       let legendX = 0
       d3Utils.addLegend({
         svg,
@@ -585,9 +597,10 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       d3Utils.addLegend({
         svg,
-        text: 'Model Temp',
-        color: styles.modelTempDotColor,
-        fill: 'none',
+        text: 'GDPS Temp',
+        shape: 'triangle',
+        color: styles.modelTempColor,
+        fill: styles.modelTempColor,
         shapeX: legendX += 70,
         shapeY: legendY,
         textX: legendX += 7,
@@ -595,9 +608,10 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       d3Utils.addLegend({
         svg,
-        text: 'Model RH',
-        color: styles.modelRHDotColor,
-        fill: 'none',
+        text: 'GDPS RH',
+        shape: 'triangle',
+        color: styles.modelRHColor,
+        fill: styles.modelRHColor,
         shapeX: legendX += 70,
         shapeY: legendY,
         textX: legendX + 7,
@@ -609,7 +623,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       d3Utils.addLegend({
         svg,
         shape: 'rect',
-        text: 'Model Temp 5th - 90th percentiles',
+        text: 'GDPS Temp 5th - 90th percentiles',
         color: styles.modelSummaryTempAreaColor,
         shapeX: legendX - 2,
         shapeY: legendY - 4,
@@ -619,7 +633,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       d3Utils.addLegend({
         svg,
         shape: 'rect',
-        text: 'Model RH 5th - 90th percentiles',
+        text: 'GDPS RH 5th - 90th percentiles',
         color: styles.modelSummaryRHAreaColor,
         shapeX: legendX += 165,
         shapeY: legendY - 4,
@@ -631,9 +645,10 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       legendY += 16
       d3Utils.addLegend({
         svg,
-        text: 'Bias Adjusted Model Temp',
-        color: styles.biasModelTempDotColor,
-        fill: 'none',
+        text: 'Bias Adjusted GDPS Temp',
+        shape: 'diamond',
+        color: styles.biasModelTempColor,
+        fill: styles.biasModelTempColor,
         shapeX: legendX,
         shapeY: legendY,
         textX: legendX += 7,
@@ -642,9 +657,10 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       d3Utils.addLegend({
         svg,
-        text: 'Bias Adjusted Model RH',
-        color: styles.biasModelRHDotColor,
-        fill: 'none',
+        text: 'Bias Adjusted GDPS RH',
+        shape: 'diamond',
+        color: styles.biasModelRHColor,
+        fill: styles.biasModelRHColor,
         shapeX: legendX += 130,
         shapeY: legendY,
         textX: legendX + 7,
@@ -653,8 +669,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       d3Utils.addLegend({
         svg,
-        text: 'High Res Model Temp',
-        color: styles.highResModelTempDotColor,
+        text: 'HRDPS Temp',
+        color: styles.highResModelTempColor,
         fill: 'none',
         shapeX: legendX += 127,
         shapeY: legendY,
@@ -663,12 +679,37 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       d3Utils.addLegend({
         svg,
-        text: 'High Res Model RH',
-        color: styles.highResModelRHDotColor,
+        text: 'HRDPS RH',
+        color: styles.highResModelRHColor,
         fill: 'none',
-        shapeX: legendX += 111,
+        shapeX: legendX += 81,
         shapeY: legendY,
         textX: legendX + 7,
+        textY: legendY + 3
+      })
+      // new line
+      legendX = 0
+      legendY += 16
+      d3Utils.addLegend({
+        svg,
+        text: 'HRDPS Temp 5th - 90th percentiles',
+        shape: 'rect',
+        color: styles.highResModelSummaryTempAreaColor,
+        fill: styles.highResModelSummaryTempAreaColor,
+        shapeX: legendX - 2,
+        shapeY: legendY - 4,
+        textX: legendX += 10,
+        textY: legendY + 4
+      })
+      d3Utils.addLegend({
+        svg,
+        text: 'HRDPS RH 5th - 90th percentiles',
+        shape: 'rect',
+        color: styles.highResModelSummaryRHAreaColor,
+        fill: styles.highResModelSummaryRHAreaColor,
+        shapeX: legendX += 165,
+        shapeY: legendY - 4,
+        textX: legendX + 13,
         textY: legendY + 3
       })
       /* Attach tooltip listener */

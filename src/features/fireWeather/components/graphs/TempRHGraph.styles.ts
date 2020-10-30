@@ -1,20 +1,20 @@
 import { makeStyles } from '@material-ui/core/styles'
 
 const currLineColor = 'green'
-export const observedTempColor = '#ff1212'
-export const observedRHColor = '#196aff'
-export const modelTempDotColor = '#ff6984'
-export const modelRHDotColor = '#6198ff'
-export const biasModelTempDotColor = '#aa0000'
-export const biasModelRHDotColor = '#0000aa'
+export const observedTempColor = '#c21717'
+export const observedRHColor = '#17c4c4'
+export const modelTempColor = '#e73333'
+export const modelRHColor = '#32e7e7'
+export const biasModelTempColor = '#c26f17'
+export const biasModelRHColor = '#176bc4'
 export const modelSummaryTempAreaColor = '#ff96aa'
-export const modelSummaryRHAreaColor = '#94b9ff'
-export const highResModelTempDotColor = '#ff2b52'
-export const highResModelRHDotColor = '#3079ff'
-export const highResModelSummaryTempAreaColor = '#ff8a9f'
-export const highResModelSummaryRHAreaColor = '#80acff'
-export const forecastTempDotColor = '#f23bff'
-export const forecastRHDotColor = '#7a2eff'
+export const modelSummaryRHAreaColor = '#94ffeb'
+export const highResModelTempColor = '#a017c2'
+export const highResModelRHColor = '#3ac417'
+export const highResModelSummaryTempAreaColor = '#f5a46c'
+export const highResModelSummaryRHAreaColor = '#6bbbf5'
+export const forecastTempDotColor = '#6f0505'
+export const forecastRHDotColor = '#057070'
 const forecastSummaryTempLineColor = forecastTempDotColor
 const forecastSummaryRHLineColor = forecastRHDotColor
 
@@ -81,53 +81,53 @@ export const useStyles = makeStyles({
       fill: modelSummaryRHAreaColor,
       opacity: 0.5
     },
-    '& .modelTempDot': {
-      stroke: modelTempDotColor,
-      fill: 'none',
+    '& .modelTempSymbol': {
+      stroke: modelTempColor,
+      fill: modelTempColor,
       cursor: 'pointer'
     },
     '& .modelTempPath': {
-      stroke: modelTempDotColor
+      stroke: modelTempColor
     },
-    '& .modelRHDot': {
-      stroke: modelRHDotColor,
-      fill: 'none',
+    '& .modelRHSymbol': {
+      stroke: modelRHColor,
+      fill: modelRHColor,
       cursor: 'pointer'
     },
     '& .modelRHPath': {
-      stroke: modelRHDotColor
+      stroke: modelRHColor
     },
-    '& .biasAdjustedModelTempDot': {
-      stroke: biasModelTempDotColor,
-      fill: 'none',
+    '& .biasAdjustedModelTempSymbol': {
+      stroke: biasModelTempColor,
+      fill: biasModelTempColor,
       cursor: 'pointer'
     },
     '& .biasAdjustedModelTempPath': {
-      stroke: biasModelTempDotColor
+      stroke: biasModelTempColor
     },
-    '& .biasAdjustedModelRHDot': {
-      stroke: biasModelRHDotColor,
-      fill: 'none',
+    '& .biasAdjustedModelRHSymbol': {
+      stroke: biasModelRHColor,
+      fill: biasModelRHColor,
       cursor: 'pointer'
     },
     '& .biasAdjustedModelRHPath': {
-      stroke: biasModelRHDotColor
+      stroke: biasModelRHColor
     },
-    '& .highResModelTempDot': {
-      stroke: highResModelTempDotColor,
+    '& .highResModelTempSymbol': {
+      stroke: highResModelTempColor,
       fill: 'none',
       cursor: 'pointer'
     },
     '& .highResModelTempPath': {
-      stroke: highResModelTempDotColor
+      stroke: highResModelTempColor
     },
-    '& .highResModelRHDot': {
-      stroke: highResModelRHDotColor,
+    '& .highResModelRHSymbol': {
+      stroke: highResModelRHColor,
       fill: 'none',
       cursor: 'pointer'
     },
     '& .highResModelRHPath': {
-      stroke: highResModelRHDotColor
+      stroke: highResModelRHColor
     },
     '& .highResModelSummaryTempArea': {
       stroke: highResModelSummaryTempAreaColor,
