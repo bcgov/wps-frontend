@@ -270,14 +270,26 @@ export const addLegend = ({
   } else if (shape === 'triangle') {
     svg
       .append('path')
-      .attr('d', d3.symbol().type(d3.symbolTriangle).size(10))
+      .attr(
+        'd',
+        d3
+          .symbol()
+          .type(d3.symbolTriangle)
+          .size(10)
+      )
       .attr('transform', `translate(${shapeX},${shapeY})`)
       .style('stroke', color)
       .attr('fill', fill || color)
   } else if (shape === 'diamond') {
     svg
       .append('path')
-      .attr('d', d3.symbol().type(d3.symbolDiamond).size(10))
+      .attr(
+        'd',
+        d3
+          .symbol()
+          .type(d3.symbolDiamond)
+          .size(10)
+      )
       .attr('transform', `translate(${shapeX},${shapeY})`)
       .style('stroke', color)
       .attr('fill', fill || color)

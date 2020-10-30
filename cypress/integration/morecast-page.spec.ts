@@ -50,10 +50,10 @@ describe('MoreCast Page', () => {
     // Test the toggle buttons
     cy.getByTestId('wx-graph-global-model-toggle').click()
     cy.getByTestId('model-summary-temp-area')
-    cy.getByTestId('model-temp-dot')
+    cy.getByTestId('model-temp-symbol')
     cy.getByTestId('wx-graph-global-model-toggle').click()
     cy.getByTestId('model-summary-temp-area').should('not.exist')
-    cy.getByTestId('model-temp-dot').should('not.exist')
+    cy.getByTestId('model-temp-symbol').should('not.exist')
 
     cy.getByTestId('wx-graph-forecast-toggle').click()
     cy.getByTestId('forecast-temp-dot')
@@ -63,18 +63,18 @@ describe('MoreCast Page', () => {
     cy.getByTestId('forecast-summary-temp-line').should('not.exist')
 
     cy.getByTestId('wx-graph-bias-toggle').click()
-    cy.getByTestId('bias-adjusted-model-temp-dot')
+    cy.getByTestId('bias-adjusted-model-temp-symbol')
     cy.getByTestId('bias-adjusted-model-temp-path')
     cy.getByTestId('wx-graph-bias-toggle').click()
-    cy.getByTestId('bias-adjusted-model-temp-dot').should('not.exist')
+    cy.getByTestId('bias-adjusted-model-temp-symbol').should('not.exist')
 
     cy.getByTestId('wx-graph-high-res-model-toggle').click()
     cy.getByTestId('high-res-model-summary-temp-area')
-    cy.getByTestId('high-res-model-temp-dot')
+    cy.getByTestId('high-res-model-temp-symbol')
     cy.getByTestId('high-res-model-temp-path')
     cy.getByTestId('wx-graph-high-res-model-toggle').click()
     cy.getByTestId('high-res-model-summary-temp-area').should('not.exist')
-    cy.getByTestId('high-res-model-temp-dot').should('not.exist')
+    cy.getByTestId('high-res-model-temp-symbol').should('not.exist')
 
     // Hover over the first dot and check if the tooltip shows up with the correct text
     cy.getByTestId('wx-graph-observation-toggle').click()
