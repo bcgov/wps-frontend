@@ -16,8 +16,8 @@ interface WeatherValue {
   modelRH?: number
   forecastTemp?: number
   forecastRH?: number
-  biasAdjustedModelTemp?: number
-  biasAdjustedModelRH?: number
+  biasAdjModelTemp?: number
+  biasAdjModelRH?: number
   hrModelTemp?: number
   hrModelRH?: number
 }
@@ -30,7 +30,7 @@ interface Props {
   modelSummaries: _ModelSummary[]
   forecastValues: NoonForecastValue[]
   forecastSummaries: _ForecastSummary[]
-  biasAdjustedModelValues: ModelValue[]
+  biasAdjModelValues: ModelValue[]
   highResModelValues: ModelValue[]
   highResModelSummaries: _ModelSummary[]
 }
@@ -41,7 +41,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
   modelSummaries: _modelSummaries,
   forecastValues: _forecastValues,
   forecastSummaries: _forecastSummaries,
-  biasAdjustedModelValues: _biasAdjustedModelValues,
+  biasAdjModelValues: _biasAdjModelValues,
   highResModelValues: _highResModelValues,
   highResModelSummaries: _highResModelSummaries
 }: Props) => {
@@ -87,7 +87,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           forecastTemp: Number(d.temperature.toFixed(2)),
           forecastRH: Math.round(d.relative_humidity)
         }
-        // combine with existing readings and models values
+        // Combine with existing readings and models values
         weatherValueByDatetime[d.datetime] = {
           ...weatherValueByDatetime[d.datetime],
           ...forecast
@@ -139,9 +139,9 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         return { ...d, date }
       })
 
-      const biasAdjModelTempValues: { date: Date; biasAdjustedModelTemp: number }[] = []
-      const biasAdjModelRHValues: { date: Date; biasAdjustedModelRH: number }[] = []
-      _biasAdjustedModelValues.forEach(v => {
+      const biasAdjModelTempValues: { date: Date; biasAdjModelTemp: number }[] = []
+      const biasAdjModelRHValues: { date: Date; biasAdjModelRH: number }[] = []
+      _biasAdjModelValues.forEach(v => {
         const {
           bias_adjusted_temperature: biasAdjTemp,
           bias_adjusted_relative_humidity: biasAdjRH
@@ -152,22 +152,22 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
 
-        const biasAdjustedModel = {
+        const biasAdjModel = {
           date,
-          biasAdjustedModelTemp: NaN,
-          biasAdjustedModelRH: NaN
+          biasAdjModelTemp: NaN,
+          biasAdjModelRH: NaN
         }
         if (biasAdjTemp != null) {
-          biasAdjustedModel.biasAdjustedModelTemp = Number(biasAdjTemp.toFixed(2))
-          biasAdjModelTempValues.push(biasAdjustedModel)
+          biasAdjModel.biasAdjModelTemp = Number(biasAdjTemp.toFixed(2))
+          biasAdjModelTempValues.push(biasAdjModel)
         }
         if (biasAdjRH != null) {
-          biasAdjustedModel.biasAdjustedModelRH = Math.round(biasAdjRH)
-          biasAdjModelRHValues.push(biasAdjustedModel)
+          biasAdjModel.biasAdjModelRH = Math.round(biasAdjRH)
+          biasAdjModelRHValues.push(biasAdjModel)
         }
         weatherValueByDatetime[v.datetime] = {
           ...weatherValueByDatetime[v.datetime],
-          ...biasAdjustedModel
+          ...biasAdjModel
         }
       })
 
@@ -206,7 +206,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       )
       const xDomain = d3.extent(weatherValues, v => v.date) as [Date, Date]
       const xTickValues = Object.values(daysLookup)
-        .sort((a, b) => a.valueOf() - b.valueOf()) // sort in ascending order
+        .sort((a, b) => a.valueOf() - b.valueOf()) // Sort in ascending order
         .map((day, idx) => {
           if (idx === 0) {
             // Return the first day as it is
@@ -216,7 +216,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           return new Date(day).setHours(0, 0, 0)
         })
 
-      /* Set the dimensions and margins of the graph */
+      /* Set the dimensions and groups of the graph */
       const margin = { top: 10, right: 40, bottom: 150, left: 40 }
       const svgWidth = 600
       const svgHeight = 350
@@ -230,13 +230,13 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .append('g')
         .attr('class', 'chart')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
-      const focusHeight = 40
-      const focusMarginTop = chartHeight + focusHeight + 10
-      const focus = svg
+      const sidebarHeight = 20
+      const sidebarMarginTop = chartHeight + sidebarHeight + 30
+      const sidebar = svg // for brush (slide bar)
         .append('g')
-        .attr('class', 'focus')
-        .attr('transform', `translate(${margin.left}, ${focusMarginTop})`)
-      const legendMarginTop = focusMarginTop + 70
+        .attr('class', 'sidebar')
+        .attr('transform', `translate(${margin.left}, ${sidebarMarginTop})`)
+      const legendMarginTop = sidebarMarginTop + 70
       const legend = svg
         .append('g')
         .attr('class', 'legend')
@@ -247,7 +247,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .scaleTime()
         .domain(xDomain)
         .range([0, chartWidth])
-      const xFocusScale = xScale.copy()
+      const xSidebarScale = xScale.copy()
       const yTempScale = d3
         .scaleLinear()
         .domain([-10, 45])
@@ -258,7 +258,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .range([chartHeight, 0])
 
       /* Render temp and rh model summary clouds */
-      d3Utils.drawArea({
+      const updateModelSummaryTempArea = d3Utils.drawArea({
         svg: chart,
         className: 'modelSummaryTempArea',
         datum: modelSummaries,
@@ -267,7 +267,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y1: d => yTempScale(d.tmp_tgl_2_5th),
         testId: 'model-summary-temp-area'
       })
-      d3Utils.drawArea({
+      const updateModelSummaryRHArea = d3Utils.drawArea({
         svg: chart,
         className: 'modelSummaryRHArea',
         datum: modelSummaries,
@@ -277,7 +277,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render high resolution model temp and rh summary clouds */
-      d3Utils.drawArea({
+      const updateHighResModelSummaryTempArea = d3Utils.drawArea({
         svg: chart,
         className: 'highResModelSummaryTempArea',
         datum: highResModelSummaries,
@@ -286,7 +286,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y1: d => yTempScale(d.tmp_tgl_2_5th),
         testId: 'high-res-model-summary-temp-area'
       })
-      d3Utils.drawArea({
+      const updateHighResModelSummaryRHArea = d3Utils.drawArea({
         svg: chart,
         className: 'highResModelSummaryRHArea',
         datum: highResModelSummaries,
@@ -318,7 +318,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render temp and rh models */
-      d3Utils.drawDots({
+      const updateModelTempDots = d3Utils.drawDots({
         svg: chart,
         className: 'modelTempDot',
         data: modelTempValues,
@@ -326,7 +326,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yTempScale(d.modelTemp),
         testId: 'model-temp-dot'
       })
-      d3Utils.drawPath({
+      const updateModelTempPath = d3Utils.drawPath({
         svg: chart,
         className: 'modelTempPath',
         data: modelTempValues,
@@ -334,14 +334,14 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y: d => yTempScale(d.modelTemp),
         testId: 'model-temp-path'
       })
-      d3Utils.drawDots({
+      const updateModelRHDots = d3Utils.drawDots({
         svg: chart,
         className: 'modelRHDot',
         data: modelRHValues,
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.modelRH)
       })
-      d3Utils.drawPath({
+      const updateModelRHPath = d3Utils.drawPath({
         svg: chart,
         className: 'modelRHPath',
         data: modelRHValues,
@@ -351,43 +351,43 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render bias adjusted model temp and rh values */
-      d3Utils.drawDots({
+      const updateBiasAdjModelTempDots = d3Utils.drawDots({
         svg: chart,
-        className: 'biasAdjustedModelTempDot',
+        className: 'biasAdjModelTempDot',
         data: biasAdjModelTempValues,
         cx: d => xScale(d.date),
-        cy: d => yTempScale(d.biasAdjustedModelTemp),
+        cy: d => yTempScale(d.biasAdjModelTemp),
         radius: 0.5,
         testId: 'bias-adjusted-model-temp-dot'
       })
-      d3Utils.drawPath({
+      const updateBiasAdjModelTempPath = d3Utils.drawPath({
         svg: chart,
-        className: 'biasAdjustedModelTempPath',
+        className: 'biasAdjModelTempPath',
         data: biasAdjModelTempValues,
         x: d => xScale(d.date),
-        y: d => yTempScale(d.biasAdjustedModelTemp),
+        y: d => yTempScale(d.biasAdjModelTemp),
         testId: 'bias-adjusted-model-temp-path'
       })
-      d3Utils.drawDots({
+      const updateBiasAdjModelRHDots = d3Utils.drawDots({
         svg: chart,
-        className: 'biasAdjustedModelRHDot',
+        className: 'biasAdjModelRHDot',
         data: biasAdjModelRHValues,
         cx: d => xScale(d.date),
-        cy: d => yRHScale(d.biasAdjustedModelRH),
+        cy: d => yRHScale(d.biasAdjModelRH),
         radius: 0.5,
         testId: 'bias-adjusted-model-rh-dot'
       })
-      d3Utils.drawPath({
+      const updateBiasAdjModelRHPath = d3Utils.drawPath({
         svg: chart,
-        className: 'biasAdjustedModelRHPath',
+        className: 'biasAdjModelRHPath',
         data: biasAdjModelRHValues,
         x: d => xScale(d.date),
-        y: d => yRHScale(d.biasAdjustedModelRH),
+        y: d => yRHScale(d.biasAdjModelRH),
         testId: 'bias-adjusted-model-rh-path'
       })
 
       /* Render high resolution model temp and rh values */
-      d3Utils.drawDots({
+      const updateHighResModelTempDots = d3Utils.drawDots({
         svg: chart,
         className: 'highResModelTempDot',
         data: hrModelTempValues,
@@ -395,7 +395,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yTempScale(d.hrModelTemp),
         testId: 'high-res-model-temp-dot'
       })
-      d3Utils.drawPath({
+      const updateHighResModelTempPath = d3Utils.drawPath({
         svg: chart,
         className: 'highResModelTempPath',
         data: hrModelTempValues,
@@ -403,14 +403,14 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y: d => yTempScale(d.hrModelTemp),
         testId: 'high-res-model-temp-path'
       })
-      d3Utils.drawDots({
+      const updateHighResModelRHDots = d3Utils.drawDots({
         svg: chart,
         className: 'highResModelRHDot',
         data: hrModelRHValues,
         cx: d => xScale(d.date),
         cy: d => yRHScale(d.hrModelRH)
       })
-      d3Utils.drawPath({
+      const updateHighResModelRHPath = d3Utils.drawPath({
         svg: chart,
         className: 'highResModelRHPath',
         data: hrModelRHValues,
@@ -420,7 +420,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render temp and rh noon forecasts */
-      d3Utils.drawDots({
+      const updateForecastTempDots = d3Utils.drawDots({
         svg: chart,
         className: 'forecastTempDot',
         data: forecastValues,
@@ -428,7 +428,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yTempScale(d.forecastTemp),
         testId: 'forecast-temp-dot'
       })
-      d3Utils.drawDots({
+      const updateForecastRHDots = d3Utils.drawDots({
         svg: chart,
         className: 'forecastRHDot',
         data: forecastValues,
@@ -437,7 +437,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render temp and rh hourly readings */
-      d3Utils.drawDots({
+      const updateReadingTempDots = d3Utils.drawDots({
         svg: chart,
         className: 'readingTempDot',
         data: readingTempValues,
@@ -445,7 +445,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yTempScale(d.temp),
         testId: 'hourly-reading-temp-dot'
       })
-      d3Utils.drawPath({
+      const updateReadingTempPath = d3Utils.drawPath({
         svg: chart,
         className: 'readingTempPath',
         data: readingTempValues,
@@ -454,7 +454,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         strokeWidth: 1.5,
         testId: 'hourly-reading-temp-path'
       })
-      d3Utils.drawDots({
+      const updateReadingRHDots = d3Utils.drawDots({
         svg: chart,
         className: 'readingRHDot',
         data: readingRHValues,
@@ -462,7 +462,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yRHScale(d.rh),
         testId: 'hourly-reading-rh-dot'
       })
-      d3Utils.drawPath({
+      const updateReadingRHPath = d3Utils.drawPath({
         svg: chart,
         className: 'readingRHPath',
         data: readingRHValues,
@@ -473,33 +473,33 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render the current time reference line */
-      const currDate = new Date()
-      const isCurrDateInXAxisRange =
-        xDomain[0] &&
-        xDomain[1] &&
-        xDomain[0].valueOf() < currDate.valueOf() &&
-        xDomain[1].valueOf() > currDate.valueOf()
-      if (isCurrDateInXAxisRange) {
-        const scaledCurrDate = xScale(currDate)
-        d3Utils.drawVerticalLine({
-          svg: chart,
-          className: 'currLine',
-          x: scaledCurrDate,
-          y1: 0,
-          y2: chartHeight
-        })
-        chart
-          .append('text')
-          .attr('y', -12)
-          .attr('x', scaledCurrDate)
-          .attr('dy', '1em')
-          .attr('dx', '-1em')
-          .attr('class', 'currLabel')
-          .text('Now')
-      }
+      // const currDate = new Date()
+      // const isCurrDateInXAxisRange =
+      //   xDomain[0] &&
+      //   xDomain[1] &&
+      //   xDomain[0].valueOf() < currDate.valueOf() &&
+      //   xDomain[1].valueOf() > currDate.valueOf()
+      // if (isCurrDateInXAxisRange) {
+      //   const scaledCurrDate = xScale(currDate)
+      //   d3Utils.drawVerticalLine({
+      //     svg: chart,
+      //     className: 'currLine',
+      //     x: scaledCurrDate,
+      //     y1: 0,
+      //     y2: chartHeight
+      //   })
+      //   chart
+      //     .append('text')
+      //     .attr('y', -12)
+      //     .attr('x', scaledCurrDate)
+      //     .attr('dy', '1em')
+      //     .attr('dx', '-1em')
+      //     .attr('class', 'currLabel')
+      //     .text('Now')
+      // }
 
       /* Render the X & Y axis and labels */
-      const xAxis = d3
+      const xAxisFunc = d3
         .axisBottom(xScale)
         .tickFormat(d3Utils.formatDateInMonthAndDay)
         .tickValues(xTickValues)
@@ -507,14 +507,14 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .append('g')
         .attr('class', 'axis axis--x')
         .attr('transform', `translate(0, ${chartHeight})`)
-        .call(xAxis)
+        .call(xAxisFunc)
         .selectAll('text')
+        .attr('class', 'xAxisLabel')
         .attr('y', 0)
         .attr('x', 0)
-        .attr('dy', '1em')
-        .attr('dx', '0.5em')
+        .attr('dy', '0.5em')
+        .attr('dx', '0.2em')
         .attr('transform', 'rotate(45)')
-        .attr('class', 'xAxisLabel')
 
       // Render Y axis
       chart.append('g').call(d3.axisLeft(yTempScale).tickValues([-10, 5, 20, 35, 45]))
@@ -543,32 +543,74 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       const brushed = () => {
         const selection = d3.event.selection as [number, number]
         if (selection) {
-          const rangeOfInterest = selection.map(xFocusScale.invert)
-          xScale.domain(rangeOfInterest)
-          // chart.select('.axis--x').call(xAxis)
+          // Update x scale with a new domain selected by the brush
+          xScale.domain(selection.map(xSidebarScale.invert, xSidebarScale))
+          // Update chart's x-axis with the new scale
+          chart.select('.axis--x').call(xAxisFunc as any)
+
+          // Redraw all the displayed dots
+          chart
+            .selectAll('.dot')
+            .transition(d3.event.transform)
+            .duration(d3Utils.transitionDuration)
+            .attr('cx', datum => {
+              const d = datum as { date: Date }
+              return xScale(d.date)
+            })
+
+          // updateReadingTempDots?.(d => xScale(d.date))
+          // updateReadingRHDots?.(d => xScale(d.date))
+          // updateForecastTempDots?.(d => xScale(d.date))
+          // updateForecastRHDots?.(d => xScale(d.date))
+          // updateModelTempDots?.(d => xScale(d.date))
+          // updateModelRHDots?.(d => xScale(d.date))
+          // updateHighResModelTempDots?.(d => xScale(d.date))
+          // updateHighResModelRHDots?.(d => xScale(d.date))
+          // updateBiasAdjModelTempDots?.(d => xScale(d.date))
+          // updateBiasAdjModelRHDots?.(d => xScale(d.date))
+
+          // Redraw the rest
+          updateReadingTempPath(d => xScale(d.date))
+          updateReadingRHPath(d => xScale(d.date))
+          updateModelTempPath(d => xScale(d.date))
+          updateModelRHPath(d => xScale(d.date))
+          updateModelSummaryTempArea?.(d => xScale(d.date))
+          updateModelSummaryRHArea?.(d => xScale(d.date))
+          updateHighResModelTempPath(d => xScale(d.date))
+          updateHighResModelRHPath(d => xScale(d.date))
+          updateHighResModelSummaryTempArea?.(d => xScale(d.date))
+          updateHighResModelSummaryRHArea?.(d => xScale(d.date))
+          updateBiasAdjModelTempPath(d => xScale(d.date))
+          updateBiasAdjModelRHPath(d => xScale(d.date))
         }
       }
       const brush = d3
         .brushX()
         .extent([
           [0, 0],
-          [chartWidth, focusHeight]
+          [chartWidth, sidebarHeight]
         ])
         .on('brush', brushed)
-      focus
+      sidebar // Render X axis
         .append('g')
-        .attr('transform', `translate(0, ${focusHeight})`)
+        .attr('transform', `translate(0, ${sidebarHeight})`)
         .call(
           d3
-            .axisBottom(xFocusScale)
-            .tickFormat(d3Utils.formatDateInMonthAndDay)
+            .axisBottom(xSidebarScale)
+            .tickFormat(d3Utils.formatDateInDay)
             .tickValues(xTickValues)
         )
-      focus
+        .selectAll('text')
+        .attr('y', 0)
+        .attr('x', 0)
+        .attr('dy', '1.5em')
+        .attr('dx', '1.2em')
+        .attr('transform', 'rotate(45)')
+      sidebar
         .append('g')
         .call(brush)
-        // .call(brush.move, xFocusScale.range())
-        .call(brush.move, [0, 100])
+        .call(brush.move, xSidebarScale.range())
+      // .call(brush.move, [0, 100])
 
       /* Attach tooltip listener */
       d3Utils.addTooltipListener({
@@ -596,7 +638,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
                 return `Forecast Temp: ${weatherValue} (°C)`
               case 'modelTemp':
                 return `Model Temp: ${weatherValue} (°C)`
-              case 'biasAdjustedModelTemp':
+              case 'biasAdjModelTemp':
                 return `Bias adjusted Temp: ${weatherValue} (°C)`
               case 'hrModelTemp':
                 return `High Res Model Temp ${weatherValue} (°C)`
@@ -607,7 +649,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
                 return `Forecast RH: ${weatherValue} (%)`
               case 'modelRH':
                 return `Model RH: ${weatherValue} (%)`
-              case 'biasAdjustedModelRH':
+              case 'biasAdjModelRH':
                 return `Bias adjusted Model RH: ${weatherValue} (%)`
               case 'hrModelRH':
                 return `High Res Model RH ${weatherValue} (%)`
@@ -759,7 +801,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
     _forecastValues,
     _forecastSummaries,
     _highResModelValues,
-    _biasAdjustedModelValues,
+    _biasAdjModelValues,
     _highResModelSummaries
   ])
 

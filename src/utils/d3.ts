@@ -1,8 +1,23 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+import moment from 'moment'
 import * as d3 from 'd3'
 
-export const formatDateInMonthAndDay = d3.timeFormat('%b %d') as (
-  value: Date | { valueOf(): number }
-) => string
+export const transitionDuration = 50
+
+/**
+ * High order function to generate formatting functions
+ * @param format format string recognized Moment
+ */
+const formatDate = (format: string) => (value: Date | { valueOf(): number }) => {
+  if (value instanceof Date) {
+    return moment(value).format(format)
+  }
+
+  return moment(value.valueOf()).format(format)
+}
+
+export const formatDateInDay = formatDate('Do')
+export const formatDateInMonthAndDay = formatDate('MMM DD')
 
 export const storeDaysLookup = (
   lookup: { [k: string]: Date },
@@ -36,16 +51,17 @@ export const drawDots = <T>({
   cy: (d: T) => number
   radius?: number
   testId?: string
-}): void => {
+}) => {
   if (data.length === 0) {
     return
   }
+
   const dots = svg
     .selectAll(`.${className}`)
     .data(data)
     .enter()
     .append('circle')
-    .attr('class', className)
+    .attr('class', `${className} dot`)
     .attr('cx', cx)
     .attr('cy', cy)
     .attr('r', radius)
@@ -53,6 +69,15 @@ export const drawDots = <T>({
   if (testId) {
     dots.attr('data-testid', testId)
   }
+
+  const updateDots = (cx: (d: T) => number, duration?: number) => {
+    dots
+      .transition(d3.event.transform)
+      .duration(duration || transitionDuration)
+      .attr('cx', cx)
+  }
+
+  return updateDots
 }
 
 export const drawPath = <T>({
@@ -71,17 +96,16 @@ export const drawPath = <T>({
   y: (d: T) => number
   strokeWidth?: number
   testId?: string
-}): void => {
+}) => {
+  const line = d3
+    .line<T>()
+    .x(x)
+    .y(y)
+
   const path = svg
     .append('path')
     .datum(data)
-    .attr(
-      'd',
-      d3
-        .line<T>()
-        .x(x)
-        .y(y)
-    )
+    .attr('d', line)
     .attr('stroke-width', strokeWidth)
     .attr('fill', 'none')
     .attr('opacity', 0.8)
@@ -90,8 +114,18 @@ export const drawPath = <T>({
   if (testId) {
     path.attr('data-testid', testId)
   }
+
+  const updatePath = (x: (d: T) => number, duration?: number) => {
+    path
+      .transition(d3.event.transform)
+      .duration(duration || transitionDuration)
+      .attr('d', line.x(x))
+  }
+
+  return updatePath
 }
 
+// Todo: drawReferenceLine
 export const drawVerticalLine = ({
   svg,
   className,
@@ -138,27 +172,35 @@ export const drawArea = <T>({
   y1: (d: T) => number // y1 accessor function
   curve?: d3.CurveFactory
   testId?: string
-}): void => {
+}) => {
   if (datum.length === 0) {
     return
   }
 
-  const area = svg
+  const area = d3
+    .area<T>()
+    .curve(curve)
+    .x(x)
+    .y0(y0)
+    .y1(y1)
+  const path = svg
     .append('path')
     .datum(datum)
     .attr('class', className)
-    .attr(
-      'd',
-      d3
-        .area<T>()
-        .curve(curve)
-        .x(x)
-        .y0(y0)
-        .y1(y1)
-    )
+    .attr('d', area)
+
   if (testId) {
-    area.attr('data-testid', testId)
+    path.attr('data-testid', testId)
   }
+
+  const updateArea = (x: (d: T) => number, duration?: number) => {
+    path
+      .transition(d3.event.transform)
+      .duration(duration || transitionDuration)
+      .attr('d', area.x(x))
+  }
+
+  return updateArea
 }
 
 export const addLegend = ({

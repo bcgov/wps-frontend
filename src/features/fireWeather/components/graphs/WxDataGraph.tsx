@@ -50,7 +50,7 @@ const WxDataGraph = ({
   const noReadings = readingValues.length === 0
   const noModels = allModelValues.length === 0 && modelSummaries.length === 0
   const noForecasts = allForecasts.length === 0 && forecastSummaries.length === 0
-  const noBiasAdjustedModels = allModelValues.length === 0
+  const noBiasAdjModels = allModelValues.length === 0
   const noHighResModels =
     allHighResModelValues.length === 0 && highResModelSummaries.length === 0
 
@@ -58,12 +58,12 @@ const WxDataGraph = ({
     showReadings: !noReadings,
     showModels: false,
     showForecasts: false,
-    showBiasAdjustedModels: false,
+    showBiasAdjModels: false,
     showHighResModels: false,
     timeOfInterest: 'past'
   })
 
-  if (noReadings && noForecasts && noModels && noBiasAdjustedModels && noHighResModels) {
+  if (noReadings && noForecasts && noModels && noBiasAdjModels && noHighResModels) {
     return null
   }
 
@@ -71,7 +71,7 @@ const WxDataGraph = ({
     showReadings,
     showModels,
     showForecasts,
-    showBiasAdjustedModels,
+    showBiasAdjModels,
     showHighResModels,
     timeOfInterest
   } = toggleValues
@@ -104,7 +104,7 @@ const WxDataGraph = ({
         noReadings={noReadings}
         noForecasts={noForecasts}
         noModels={noModels}
-        noBiasAdjustedModels={noBiasAdjustedModels}
+        noBiasAdjModels={noBiasAdjModels}
         noHighResModels={noHighResModels}
       />
 
@@ -116,7 +116,7 @@ const WxDataGraph = ({
         forecastSummaries={
           showForecasts && timeOfInterest !== 'future' ? forecastSummaries : []
         }
-        biasAdjustedModelValues={showBiasAdjustedModels ? askedBiasAdjModelValues : []}
+        biasAdjModelValues={showBiasAdjModels ? askedBiasAdjModelValues : []}
         highResModelValues={showHighResModels ? askedHighResModelValues : []}
         highResModelSummaries={
           showHighResModels && timeOfInterest !== 'future' ? highResModelSummaries : []
