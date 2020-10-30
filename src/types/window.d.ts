@@ -11,5 +11,7 @@ interface Window {
   // Matomo Tracking (see https://developer.matomo.org/guides/spa-tracking)
   _paq: any
   // Matomo Tag Manager (see https://developer.matomo.org/guides/tagmanager/settingup)
-  _mtm: any
+  _mtm: {
+    push: Function
+  }
 }
