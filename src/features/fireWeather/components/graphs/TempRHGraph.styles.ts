@@ -115,7 +115,7 @@ export const useStyles = makeStyles({
     },
     '& .highResModelTempSymbol': {
       stroke: highResModelTempColor,
-      fill: 'none',
+      fill: highResModelTempColor,
       cursor: 'pointer'
     },
     '& .highResModelTempPath': {
@@ -123,7 +123,7 @@ export const useStyles = makeStyles({
     },
     '& .highResModelRHSymbol': {
       stroke: highResModelRHColor,
-      fill: 'none',
+      fill: highResModelRHColor,
       cursor: 'pointer'
     },
     '& .highResModelRHPath': {
