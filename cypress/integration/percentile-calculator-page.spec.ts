@@ -33,6 +33,24 @@ describe('Percentile Calculator Page', () => {
     })
   })
 
+  describe("Id's exists - for analytics", () => {
+    it('The reset button exists', () => {
+      cy.get('#reset-percentiles-button').should('exist')
+    })
+    it('The weather station dropdown exists', () => {
+      cy.get('#weather-station-dropdown').should('exist')
+    })
+    it('The map link exists', () => {
+      cy.get('#launch-map-link').should('exist')
+    })
+    it('The contact link exists', () => {
+      cy.get('#contact-link').should('exist')
+    })
+    it('The calculate button exists', () => {
+      cy.get('#calculate-percentiles-button').should('exist')
+    })
+  })
+
   describe('Other inputs', () => {
     beforeEach(() => {
       cy.route('GET', 'api/stations/', 'fixture:weather-stations.json')
