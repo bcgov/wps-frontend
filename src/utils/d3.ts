@@ -125,7 +125,6 @@ export const drawPath = <T>({
   return updatePath
 }
 
-// Todo: drawReferenceLine
 export const drawVerticalLine = ({
   svg,
   className,
@@ -156,7 +155,8 @@ export const drawVerticalLine = ({
   }
 
   const update = (newXScale: d3.ScaleTime<number, number>, duration?: number) => {
-    // Get inverted x using the original x scale then apply it with the new scale
+    // Get inverted x using the original scale
+    // then calculate the new x with the new scale
     const newX = newXScale(xScale.invert(x))
 
     line
@@ -164,6 +164,54 @@ export const drawVerticalLine = ({
       .duration(duration || transitionDuration)
       .attr('x1', newX)
       .attr('x2', newX)
+  }
+
+  return update
+}
+
+export const drawText = ({
+  svg,
+  className,
+  xScale,
+  x,
+  y,
+  dy,
+  dx,
+  text,
+  testId
+}: {
+  svg: d3.Selection<SVGGElement, unknown, null, undefined>
+  className: string
+  xScale: d3.ScaleTime<number, number>
+  x: number
+  y: number
+  dx: string
+  dy: string
+  text: string
+  testId?: string
+}) => {
+  const textSvg = svg
+    .append('text')
+    .attr('y', y)
+    .attr('x', x)
+    .attr('dy', dy)
+    .attr('dx', dx)
+    .attr('class', className)
+    .text(text)
+
+  if (testId) {
+    textSvg.attr('data-testid', testId)
+  }
+
+  const update = (newXScale: d3.ScaleTime<number, number>, duration?: number) => {
+    // Get inverted x using the original scale
+    // then calculate the new x with the new scale
+    const newX = newXScale(xScale.invert(x))
+
+    textSvg
+      .transition(d3.event.transform)
+      .duration(duration || transitionDuration)
+      .attr('x', newX)
   }
 
   return update

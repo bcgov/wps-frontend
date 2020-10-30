@@ -47,6 +47,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 }: Props) => {
   const classes = styles.useStyles()
   const svgRef = useRef(null)
+  const brushSelection = useRef<[number, number] | null>(null)
 
   useEffect(() => {
     if (svgRef.current) {
@@ -216,7 +217,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           return new Date(day).setHours(0, 0, 0)
         })
 
-      /* Set the dimensions and groups of the graph */
+      /* Set dimensions and svg groups */
       const margin = { top: 10, right: 40, bottom: 150, left: 40 }
       const svgWidth = 600
       const svgHeight = 350
@@ -226,16 +227,35 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .select(svgRef.current)
         // Make it responsive: https://medium.com/@louisemoxy/a-simple-way-to-make-d3-js-charts-svgs-responsive-7afb04bc2e4b
         .attr('viewBox', `0 0 ${svgWidth} ${svgHeight}`)
+
+      // Set up a clipper that removes graphics that don't fall within the boundary
+      svg
+        .append('defs')
+        .append('clipPath')
+        .attr('id', 'clip')
+        .append('rect')
+        .attr('x', 0)
+        .attr('y', -10) // to include the reference line text
+        .attr('width', chartWidth + 1) // Add +1 to show the last tick of x axis
+        .attr('height', svgHeight) // to include the x axis and its label
       const chart = svg
         .append('g')
         .attr('class', 'chart')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
+        .attr('clip-path', 'url(#clip)')
+
+      const context = svg
+        .append('g')
+        .attr('class', 'context')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`)
+
       const sidebarHeight = 20
       const sidebarMarginTop = chartHeight + sidebarHeight + 30
-      const sidebar = svg // for brush (slide bar)
+      const sidebar = svg
         .append('g')
         .attr('class', 'sidebar')
         .attr('transform', `translate(${margin.left}, ${sidebarMarginTop})`)
+
       const legendMarginTop = sidebarMarginTop + 70
       const legend = svg
         .append('g')
@@ -320,7 +340,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       )
 
       /* Render temp and rh models */
-      const updateModelTempDots = d3Utils.drawDots({
+      d3Utils.drawDots({
         svg: chart,
         className: 'modelTempDot',
         data: modelTempValues,
@@ -336,7 +356,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y: d => yTempScale(d.modelTemp),
         testId: 'model-temp-path'
       })
-      const updateModelRHDots = d3Utils.drawDots({
+      d3Utils.drawDots({
         svg: chart,
         className: 'modelRHDot',
         data: modelRHValues,
@@ -353,7 +373,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render bias adjusted model temp and rh values */
-      const updateBiasAdjModelTempDots = d3Utils.drawDots({
+      d3Utils.drawDots({
         svg: chart,
         className: 'biasAdjModelTempDot',
         data: biasAdjModelTempValues,
@@ -370,7 +390,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y: d => yTempScale(d.biasAdjModelTemp),
         testId: 'bias-adjusted-model-temp-path'
       })
-      const updateBiasAdjModelRHDots = d3Utils.drawDots({
+      d3Utils.drawDots({
         svg: chart,
         className: 'biasAdjModelRHDot',
         data: biasAdjModelRHValues,
@@ -389,7 +409,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render high resolution model temp and rh values */
-      const updateHighResModelTempDots = d3Utils.drawDots({
+      d3Utils.drawDots({
         svg: chart,
         className: 'highResModelTempDot',
         data: hrModelTempValues,
@@ -405,7 +425,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y: d => yTempScale(d.hrModelTemp),
         testId: 'high-res-model-temp-path'
       })
-      const updateHighResModelRHDots = d3Utils.drawDots({
+      d3Utils.drawDots({
         svg: chart,
         className: 'highResModelRHDot',
         data: hrModelRHValues,
@@ -422,7 +442,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render temp and rh noon forecasts */
-      const updateForecastTempDots = d3Utils.drawDots({
+      d3Utils.drawDots({
         svg: chart,
         className: 'forecastTempDot',
         data: forecastValues,
@@ -430,7 +450,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yTempScale(d.forecastTemp),
         testId: 'forecast-temp-dot'
       })
-      const updateForecastRHDots = d3Utils.drawDots({
+      d3Utils.drawDots({
         svg: chart,
         className: 'forecastRHDot',
         data: forecastValues,
@@ -439,7 +459,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render temp and rh hourly readings */
-      const updateReadingTempDots = d3Utils.drawDots({
+      d3Utils.drawDots({
         svg: chart,
         className: 'readingTempDot',
         data: readingTempValues,
@@ -456,7 +476,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         strokeWidth: 1.5,
         testId: 'hourly-reading-temp-path'
       })
-      const updateReadingRHDots = d3Utils.drawDots({
+      d3Utils.drawDots({
         svg: chart,
         className: 'readingRHDot',
         data: readingRHValues,
@@ -475,65 +495,60 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render the current time reference line */
-      // const currDate = new Date()
-      // const isCurrDateInXAxisRange =
-      //   xDomain[0] &&
-      //   xDomain[1] &&
-      //   xDomain[0].valueOf() < currDate.valueOf() &&
-      //   xDomain[1].valueOf() > currDate.valueOf()
-      // if (isCurrDateInXAxisRange) {
-      //   const scaledCurrDate = xScale(currDate)
-      //   d3Utils.drawVerticalLine({
-      //     svg: chart,
-      //     className: 'currLine',
-      //     x: scaledCurrDate,
-      //     y1: 0,
-      //     y2: chartHeight
-      //   })
-      //   chart
-      //     .append('text')
-      //     .attr('y', -12)
-      //     .attr('x', scaledCurrDate)
-      //     .attr('dy', '1em')
-      //     .attr('dx', '-1em')
-      //     .attr('class', 'currLabel')
-      //     .text('Now')
-      // }
+      const scaledCurrDate = xScale(new Date())
+      const updateCurrLine = d3Utils.drawVerticalLine({
+        svg: chart,
+        className: 'currLine',
+        xScale: xScale.copy(),
+        x: scaledCurrDate,
+        y1: 0,
+        y2: chartHeight
+      })
+      const updateCurrLineText = d3Utils.drawText({
+        svg: chart,
+        className: 'currLabel',
+        xScale: xScale.copy(),
+        x: scaledCurrDate,
+        y: -12,
+        dx: '-1em',
+        dy: '1em',
+        text: 'Now'
+      })
 
       /* Render the X & Y axis and labels */
       const xAxisFunc = d3
         .axisBottom(xScale)
-        .tickFormat(d3Utils.formatDateInMonthAndDay)
+        .tickFormat(d3Utils.formatDateInDay)
         .tickValues(xTickValues)
-      chart // Render X axis
+      chart // Include only x axis to the chart group
         .append('g')
-        .attr('class', 'axis axis--x')
+        .attr('class', 'x-axis')
         .attr('transform', `translate(0, ${chartHeight})`)
         .call(xAxisFunc)
         .selectAll('text')
         .attr('class', 'xAxisLabel')
         .attr('y', 0)
         .attr('x', 0)
-        .attr('dy', '0.3em')
-        .attr('dx', '0.7em')
+        .attr('dy', '-0.1em')
+        .attr('dx', '0.8em')
         .attr('transform', 'rotate(45)')
-
-      // Render Y axis
-      chart.append('g').call(d3.axisLeft(yTempScale).tickValues([-10, 5, 20, 35, 45]))
-      chart
+      context.append('g').call(d3.axisLeft(yTempScale).tickValues([-10, 5, 20, 35, 45]))
+      context
         .append('g')
+        .attr('class', 'y-axis')
         .attr('transform', `translate(${chartWidth}, 0)`)
         .call(d3.axisRight(yRHScale).tickValues([0, 25, 50, 75, 100]))
 
-      chart // Temperature label
+      context // Temperature label
         .append('text')
-        .attr('transform', 'rotate(-90)')
         .attr('y', 0 - margin.left)
         .attr('x', 0 - chartHeight / 2)
         .attr('dy', '1.3em')
+        .attr('dx', '0')
         .attr('class', 'yAxisLabel')
         .text('Temp (°C)')
-      chart // RH label
+        .attr('transform', 'rotate(-90)')
+      context // RH label
         .append('text')
         .attr('transform', 'rotate(-270)')
         .attr('y', 0 - chartWidth - margin.left)
@@ -542,13 +557,16 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .attr('class', 'yAxisLabel')
         .text('RH (%)')
 
+      // When the sidebar is moved or resized
       const brushed = () => {
         const selection = d3.event.selection as [number, number]
         if (selection) {
-          // Update x scale with a new domain selected by the brush
+          // Update x scale with a new domain modified by the brush
+          brushSelection.current = selection
           xScale.domain(selection.map(xSidebarScale.invert, xSidebarScale))
+
           // Update chart's x-axis with the new scale
-          chart.select('.axis--x').call(xAxisFunc as any)
+          chart.select('.x-axis').call(xAxisFunc as any)
 
           // Redraw all the displayed dots
           chart
@@ -560,18 +578,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
               return xScale(d.date)
             })
 
-          // updateReadingTempDots?.(d => xScale(d.date))
-          // updateReadingRHDots?.(d => xScale(d.date))
-          // updateForecastTempDots?.(d => xScale(d.date))
-          // updateForecastRHDots?.(d => xScale(d.date))
-          // updateModelTempDots?.(d => xScale(d.date))
-          // updateModelRHDots?.(d => xScale(d.date))
-          // updateHighResModelTempDots?.(d => xScale(d.date))
-          // updateHighResModelRHDots?.(d => xScale(d.date))
-          // updateBiasAdjModelTempDots?.(d => xScale(d.date))
-          // updateBiasAdjModelRHDots?.(d => xScale(d.date))
-
-          // Redraw the rest
+          // Redraw the rest of graphics
           updateReadingTempPath(d => xScale(d.date))
           updateReadingRHPath(d => xScale(d.date))
           updateForecastSummaryTempLineList.forEach(update => update(xScale))
@@ -586,6 +593,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           updateHighResModelSummaryRHArea?.(d => xScale(d.date))
           updateBiasAdjModelTempPath(d => xScale(d.date))
           updateBiasAdjModelRHPath(d => xScale(d.date))
+          updateCurrLine(xScale)
+          updateCurrLineText(xScale)
         }
       }
       const brush = d3
@@ -605,18 +614,16 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
             .tickValues(xTickValues)
         )
         .selectAll('text')
+        .attr('class', 'xAxisLabel')
         .attr('y', 0)
         .attr('x', 0)
-        .attr('dy', '1.1em')
-        .attr('dx', '1.6em')
+        .attr('dy', '1em')
+        .attr('dx', '0.8em')
         .attr('transform', 'rotate(45)')
       sidebar
         .append('g')
         .call(brush)
-        .call(
-          brush.move,
-          xSidebarScale.range().map(x => x)
-        )
+        .call(brush.move, brushSelection.current || xSidebarScale.range())
 
       /* Attach tooltip listener */
       d3Utils.addTooltipListener({
