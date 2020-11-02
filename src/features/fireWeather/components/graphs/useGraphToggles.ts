@@ -1,14 +1,12 @@
 // Custom React Hook for the temp & rh graph toggle state
 import { useState } from 'react'
 
-export type TimeSelectOption = 'past' | 'future' | 'all'
 export interface ToggleValues {
   showReadings: boolean
   showModels: boolean
   showForecasts: boolean
   showBiasAdjModels: boolean
   showHighResModels: boolean
-  timeOfInterest: TimeSelectOption
 }
 
 export type SetToggleValues = (

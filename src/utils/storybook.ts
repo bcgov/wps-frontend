@@ -14,8 +14,8 @@ const getFutureValues = () => {
 
   while (last.diff(first, 'days') >= 0) {
     for (let length = 0; length < 24; length++) {
-      const temp = 15 + Math.random() * 10
-      const rh = 40 + Math.random() * 15
+      const temp = 20 + Math.random() * 10
+      const rh = 30 + Math.random() * 15
       const dew_point = Math.random() * 10
       const wind_speed = Math.random() * 10
       const wind_direction = Math.random() * 100
@@ -42,8 +42,8 @@ const getFutureValues = () => {
       if (isNoonInPST(datetime)) {
         _forecastValues.push({
           datetime,
-          temperature: Math.random() * 30,
-          relative_humidity: Math.random() * 101
+          temperature: temp + Math.random() * 2 + 6,
+          relative_humidity: rh + Math.random() * 2 + 6
         })
       }
 
@@ -83,8 +83,8 @@ const getPastValues = () => {
 
   while (last.diff(first, 'days') >= 0) {
     for (let length = 0; length < 24; length++) {
-      const temp = 15 + Math.random() * 10
-      const rh = 40 + Math.random() * 15
+      const temp = 20 + Math.random() * 10
+      const rh = 30 + Math.random() * 15
       const datetime = moment(first)
         .add(length, 'hours')
         .utc()
@@ -123,15 +123,15 @@ const getPastValues = () => {
       if (isNoonInPST(datetime)) {
         _pastForecastValues.push({
           datetime,
-          temperature: temp + Math.random() * 2,
-          relative_humidity: rh + Math.random() * 2
+          temperature: temp + Math.random() * 2 + 5,
+          relative_humidity: rh + Math.random() * 2 + 5
         })
         _forecastSummaries.push({
           datetime,
-          tmp_min: temp + Math.random() * 1,
-          tmp_max: temp + Math.random() * 5,
-          rh_min: rh + Math.random() * 1,
-          rh_max: rh + Math.random() * 5
+          tmp_min: temp + Math.random() * 1 + 5,
+          tmp_max: temp + Math.random() * 5 + 5,
+          rh_min: rh + Math.random() * 1 + 5,
+          rh_max: rh + Math.random() * 5 + 5
         })
       }
 

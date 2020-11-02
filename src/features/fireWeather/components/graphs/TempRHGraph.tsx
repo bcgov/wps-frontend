@@ -623,7 +623,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       sidebar
         .append('g')
         .call(brush)
-        .call(brush.move, brushSelection.current || xSidebarScale.range())
+        .call(brush.move, brushSelection.current || xSidebarScale.range().map(x => x / 4))
 
       /* Attach tooltip listener */
       d3Utils.addTooltipListener({

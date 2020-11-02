@@ -17,15 +17,9 @@ const useStyles = makeStyles({
 interface Props {
   readingValues: ReadingValue[] | undefined
   allModelValues: ModelValue[] | undefined
-  pastModelValues: ModelValue[] | undefined
-  modelValues: ModelValue[] | undefined
   modelSummaries: ModelSummary[] | undefined
-  pastForecastValues: NoonForecastValue[] | undefined
-  forecastValues: NoonForecastValue[] | undefined
   allForecasts: NoonForecastValue[] | undefined
   forecastSummaries: ForecastSummary[] | undefined
-  pastHighResModelValues: ModelValue[] | undefined
-  highResModelValues: ModelValue[] | undefined
   allHighResModelValues: ModelValue[] | undefined
   highResModelSummaries: ModelSummary[] | undefined
 }
@@ -33,16 +27,10 @@ interface Props {
 const WxDataGraph = ({
   readingValues = [],
   allModelValues = [],
-  pastModelValues = [],
-  modelValues = [],
   modelSummaries = [],
   allForecasts = [],
-  pastForecastValues = [],
-  forecastValues = [],
   forecastSummaries = [],
   allHighResModelValues = [],
-  pastHighResModelValues = [],
-  highResModelValues = [],
   highResModelSummaries = []
 }: Props) => {
   const classes = useStyles()
@@ -59,8 +47,7 @@ const WxDataGraph = ({
     showModels: false,
     showForecasts: false,
     showBiasAdjModels: false,
-    showHighResModels: false,
-    timeOfInterest: 'past'
+    showHighResModels: false
   })
 
   if (noReadings && noForecasts && noModels && noBiasAdjModels && noHighResModels) {
@@ -72,29 +59,8 @@ const WxDataGraph = ({
     showModels,
     showForecasts,
     showBiasAdjModels,
-    showHighResModels,
-    timeOfInterest
+    showHighResModels
   } = toggleValues
-  let askedModelValues = []
-  let askedForecastValues = []
-  let askedHighResModelValues = []
-  let askedBiasAdjModelValues = []
-  if (timeOfInterest === 'past') {
-    askedModelValues = pastModelValues
-    askedForecastValues = pastForecastValues
-    askedHighResModelValues = pastHighResModelValues
-    askedBiasAdjModelValues = pastModelValues
-  } else if (timeOfInterest === 'future') {
-    askedModelValues = modelValues
-    askedForecastValues = forecastValues
-    askedHighResModelValues = highResModelValues
-    askedBiasAdjModelValues = modelValues
-  } else {
-    askedModelValues = allModelValues
-    askedForecastValues = allForecasts
-    askedHighResModelValues = allHighResModelValues
-    askedBiasAdjModelValues = allModelValues
-  }
 
   return (
     <div className={classes.display}>
@@ -109,18 +75,14 @@ const WxDataGraph = ({
       />
 
       <TempRHGraph
-        readingValues={showReadings && timeOfInterest !== 'future' ? readingValues : []}
-        modelValues={showModels ? askedModelValues : []}
-        modelSummaries={showModels && timeOfInterest !== 'future' ? modelSummaries : []}
-        forecastValues={showForecasts ? askedForecastValues : []}
-        forecastSummaries={
-          showForecasts && timeOfInterest !== 'future' ? forecastSummaries : []
-        }
-        biasAdjModelValues={showBiasAdjModels ? askedBiasAdjModelValues : []}
-        highResModelValues={showHighResModels ? askedHighResModelValues : []}
-        highResModelSummaries={
-          showHighResModels && timeOfInterest !== 'future' ? highResModelSummaries : []
-        }
+        readingValues={showReadings ? readingValues : []}
+        modelValues={showModels ? allModelValues : []}
+        modelSummaries={showModels ? modelSummaries : []}
+        forecastValues={showForecasts ? allForecasts : []}
+        forecastSummaries={showForecasts ? forecastSummaries : []}
+        biasAdjModelValues={showBiasAdjModels ? allModelValues : []}
+        highResModelValues={showHighResModels ? allHighResModelValues : []}
+        highResModelSummaries={showHighResModels ? highResModelSummaries : []}
       />
     </div>
   )
