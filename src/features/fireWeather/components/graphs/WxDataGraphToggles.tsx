@@ -47,7 +47,12 @@ const WxDataToggles = ({
 }: Props) => {
   const classes = useStyles()
   const handleSwitch = (e: React.ChangeEvent<{ name: string }>, checked: boolean) => {
+    console.log('handle switch', e.target.name, checked)
     setToggleValues(e.target.name as keyof ToggleValues, checked)
+    if (window._mtm) {
+      const targetName = `${e.target.name}`
+      window._mtm.push({ event: targetName, targetName: checked })
+    }
   }
   const handleSelect = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
     const { name, value } = e.target
@@ -117,9 +122,7 @@ const WxDataToggles = ({
             checked={toggleValues.showHighResModels}
             disabled={noHighResModels}
             size="small"
-            onChange={(e, checked) => {
-              setToggleValues(e.target.name as 'showHighResModels', checked)
-            }}
+            onChange={handleSwitch}
           />
         }
         label={

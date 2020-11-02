@@ -36,6 +36,7 @@ describe('Percentile Calculator Page', () => {
   describe('For analytics', () => {
     it('Some DOM elements should exist with IDs', () => {
       cy.visit('/percentile-calculator/')
+      cy.get('#disclaimer-accept-button')
       cy.getByTestId('disclaimer-accept-button').click()
 
       cy.get('#reset-percentiles-button')
