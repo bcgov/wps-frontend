@@ -2,7 +2,7 @@
 import { useState } from 'react'
 
 export interface ToggleValues {
-  showReadings: boolean
+  showObservations: boolean
   showModels: boolean
   showForecasts: boolean
   showBiasAdjModels: boolean

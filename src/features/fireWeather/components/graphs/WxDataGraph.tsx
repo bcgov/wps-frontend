@@ -2,7 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { ModelSummary, ModelValue } from 'api/modelAPI'
-import { ReadingValue } from 'api/readingAPI'
+import { ObservedValue } from 'api/observationAPI'
 import { NoonForecastValue, ForecastSummary } from 'api/forecastAPI'
 import TempRHGraph from 'features/fireWeather/components/graphs/TempRHGraph'
 import WxDataGraphToggles from 'features/fireWeather/components/graphs/WxDataGraphToggles'
@@ -15,7 +15,7 @@ const useStyles = makeStyles({
 })
 
 interface Props {
-  readingValues: ReadingValue[] | undefined
+  observedValues: ObservedValue[] | undefined
   allModelValues: ModelValue[] | undefined
   modelSummaries: ModelSummary[] | undefined
   allForecasts: NoonForecastValue[] | undefined
@@ -25,7 +25,7 @@ interface Props {
 }
 
 const WxDataGraph = ({
-  readingValues = [],
+  observedValues = [],
   allModelValues = [],
   modelSummaries = [],
   allForecasts = [],
@@ -35,7 +35,7 @@ const WxDataGraph = ({
 }: Props) => {
   const classes = useStyles()
 
-  const noReadings = readingValues.length === 0
+  const noObservations = observedValues.length === 0
   const noModels = allModelValues.length === 0 && modelSummaries.length === 0
   const noForecasts = allForecasts.length === 0 && forecastSummaries.length === 0
   const noBiasAdjModels = allModelValues.length === 0
@@ -43,19 +43,19 @@ const WxDataGraph = ({
     allHighResModelValues.length === 0 && highResModelSummaries.length === 0
 
   const [toggleValues, setToggleValues] = useGraphToggles({
-    showReadings: !noReadings,
+    showObservations: !noObservations,
     showModels: false,
     showForecasts: false,
     showBiasAdjModels: false,
     showHighResModels: false
   })
 
-  if (noReadings && noForecasts && noModels && noBiasAdjModels && noHighResModels) {
+  if (noObservations && noForecasts && noModels && noBiasAdjModels && noHighResModels) {
     return null
   }
 
   const {
-    showReadings,
+    showObservations,
     showModels,
     showForecasts,
     showBiasAdjModels,
@@ -67,7 +67,7 @@ const WxDataGraph = ({
       <WxDataGraphToggles
         toggleValues={toggleValues}
         setToggleValues={setToggleValues}
-        noReadings={noReadings}
+        noObservations={noObservations}
         noForecasts={noForecasts}
         noModels={noModels}
         noBiasAdjModels={noBiasAdjModels}
@@ -75,7 +75,7 @@ const WxDataGraph = ({
       />
 
       <TempRHGraph
-        readingValues={showReadings ? readingValues : []}
+        observedValues={showObservations ? observedValues : []}
         modelValues={showModels ? allModelValues : []}
         modelSummaries={showModels ? modelSummaries : []}
         forecastValues={showForecasts ? allForecasts : []}

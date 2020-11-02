@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import * as d3 from 'd3'
 
-import { ReadingValue } from 'api/readingAPI'
+import { ObservedValue } from 'api/observationAPI'
 import { ModelSummary as _ModelSummary, ModelValue } from 'api/modelAPI'
 import { ForecastSummary as _ForecastSummary, NoonForecastValue } from 'api/forecastAPI'
 import { formatDateInPDT } from 'utils/date'
@@ -25,7 +25,7 @@ type ModelSummary = Omit<_ModelSummary, 'datetime'> & { date: Date }
 type ForecastSummary = Omit<_ForecastSummary, 'datetime'> & { date: Date }
 
 interface Props {
-  readingValues: ReadingValue[]
+  observedValues: ObservedValue[]
   modelValues: ModelValue[]
   modelSummaries: _ModelSummary[]
   forecastValues: NoonForecastValue[]
@@ -36,7 +36,7 @@ interface Props {
 }
 
 const TempRHGraph: React.FunctionComponent<Props> = ({
-  readingValues: _readingValues,
+  observedValues: _observedValues,
   modelValues: _modelValues,
   modelSummaries: _modelSummaries,
   forecastValues: _forecastValues,
@@ -60,25 +60,25 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       const daysLookup: { [k: string]: Date } = {} // will help to create the date label on x axis
       const weatherValueByDatetime: { [k: string]: WeatherValue } = {}
 
-      const readingTempValues: { date: Date; temp: number }[] = []
-      const readingRHValues: { date: Date; rh: number }[] = []
-      _readingValues.forEach(v => {
+      const observedTempValues: { date: Date; temp: number }[] = []
+      const observedRHValues: { date: Date; rh: number }[] = []
+      _observedValues.forEach(v => {
         if (v.temperature == null && v.relative_humidity == null) {
           return
         }
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
 
-        const reading = { date, temp: NaN, rh: NaN }
+        const observation = { date, temp: NaN, rh: NaN }
         if (v.temperature != null) {
-          reading.temp = Number(v.temperature.toFixed(2))
-          readingTempValues.push(reading)
+          observation.temp = Number(v.temperature.toFixed(2))
+          observedTempValues.push(observation)
         }
         if (v.relative_humidity != null) {
-          reading.rh = Math.round(v.relative_humidity)
-          readingRHValues.push(reading)
+          observation.rh = Math.round(v.relative_humidity)
+          observedRHValues.push(observation)
         }
-        weatherValueByDatetime[v.datetime] = reading
+        weatherValueByDatetime[v.datetime] = observation
       })
 
       const forecastValues = _forecastValues.map(d => {
@@ -88,7 +88,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           forecastTemp: Number(d.temperature.toFixed(2)),
           forecastRH: Math.round(d.relative_humidity)
         }
-        // Combine with existing readings and models values
+        // combine with existing observed and models values
         weatherValueByDatetime[d.datetime] = {
           ...weatherValueByDatetime[d.datetime],
           ...forecast
@@ -127,7 +127,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           model.modelRH = Math.round(rh)
           modelRHValues.push(model)
         }
-        // combine with the existing reading value
+        // combine with the existing observed value
         weatherValueByDatetime[v.datetime] = {
           ...weatherValueByDatetime[v.datetime],
           ...model
@@ -270,7 +270,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       const xSidebarScale = xScale.copy()
       const yTempScale = d3
         .scaleLinear()
-        .domain([-10, 45])
+        .domain([-10, 40])
         .range([chartHeight, 0])
       const yRHScale = d3
         .scaleLinear()
@@ -340,13 +340,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       )
 
       /* Render temp and rh models */
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg: chart,
-        className: 'modelTempDot',
+        className: 'modelTempSymbol',
         data: modelTempValues,
-        cx: d => xScale(d.date),
-        cy: d => yTempScale(d.modelTemp),
-        testId: 'model-temp-dot'
+        x: d => xScale(d.date),
+        y: d => yTempScale(d.modelTemp),
+        size: 10,
+        symbol: d3.symbolTriangle,
+        testId: 'model-temp-symbol'
       })
       const updateModelTempPath = d3Utils.drawPath({
         svg: chart,
@@ -356,12 +358,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y: d => yTempScale(d.modelTemp),
         testId: 'model-temp-path'
       })
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg: chart,
-        className: 'modelRHDot',
+        className: 'modelRHSymbol',
         data: modelRHValues,
-        cx: d => xScale(d.date),
-        cy: d => yRHScale(d.modelRH)
+        x: d => xScale(d.date),
+        y: d => yRHScale(d.modelRH),
+        size: 10,
+        symbol: d3.symbolTriangle,
+        testId: 'model-rh-symbol'
       })
       const updateModelRHPath = d3Utils.drawPath({
         svg: chart,
@@ -373,14 +378,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render bias adjusted model temp and rh values */
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg: chart,
-        className: 'biasAdjModelTempDot',
+        className: 'biasAdjustedModelTempSymbol',
         data: biasAdjModelTempValues,
-        cx: d => xScale(d.date),
-        cy: d => yTempScale(d.biasAdjModelTemp),
-        radius: 0.5,
-        testId: 'bias-adjusted-model-temp-dot'
+        x: d => xScale(d.date),
+        y: d => yTempScale(d.biasAdjModelTemp),
+        size: 5,
+        symbol: d3.symbolDiamond,
+        testId: 'bias-adjusted-model-temp-symbol'
       })
       const updateBiasAdjModelTempPath = d3Utils.drawPath({
         svg: chart,
@@ -390,14 +396,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y: d => yTempScale(d.biasAdjModelTemp),
         testId: 'bias-adjusted-model-temp-path'
       })
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg: chart,
-        className: 'biasAdjModelRHDot',
+        className: 'biasAdjustedModelRHSymbol',
         data: biasAdjModelRHValues,
-        cx: d => xScale(d.date),
-        cy: d => yRHScale(d.biasAdjModelRH),
-        radius: 0.5,
-        testId: 'bias-adjusted-model-rh-dot'
+        x: d => xScale(d.date),
+        y: d => yRHScale(d.biasAdjModelRH),
+        size: 10,
+        symbol: d3.symbolDiamond,
+        testId: 'bias-adjusted-model-rh-symbol'
       })
       const updateBiasAdjModelRHPath = d3Utils.drawPath({
         svg: chart,
@@ -409,13 +416,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       /* Render high resolution model temp and rh values */
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg: chart,
-        className: 'highResModelTempDot',
+        className: 'highResModelTempSymbol',
         data: hrModelTempValues,
-        cx: d => xScale(d.date),
-        cy: d => yTempScale(d.hrModelTemp),
-        testId: 'high-res-model-temp-dot'
+        x: d => xScale(d.date),
+        y: d => yTempScale(d.hrModelTemp),
+        size: 7,
+        symbol: d3.symbolCircle,
+        testId: 'high-res-model-temp-symbol'
       })
       const updateHighResModelTempPath = d3Utils.drawPath({
         svg: chart,
@@ -425,12 +434,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         y: d => yTempScale(d.hrModelTemp),
         testId: 'high-res-model-temp-path'
       })
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg: chart,
-        className: 'highResModelRHDot',
+        className: 'highResModelRHSymbol',
         data: hrModelRHValues,
-        cx: d => xScale(d.date),
-        cy: d => yRHScale(d.hrModelRH)
+        x: d => xScale(d.date),
+        y: d => yRHScale(d.hrModelRH),
+        size: 7,
+        symbol: d3.symbolCircle,
+        testId: 'high-res-model-rh-symbol'
       })
       const updateHighResModelRHPath = d3Utils.drawPath({
         svg: chart,
@@ -458,40 +470,44 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         cy: d => yRHScale(d.forecastRH)
       })
 
-      /* Render temp and rh hourly readings */
-      d3Utils.drawDots({
+      /* Render temp and rh hourly observations */
+      d3Utils.drawSymbols({
         svg: chart,
-        className: 'readingTempDot',
-        data: readingTempValues,
-        cx: d => xScale(d.date),
-        cy: d => yTempScale(d.temp),
-        testId: 'hourly-reading-temp-dot'
+        className: 'observedTempSymbol',
+        data: observedTempValues,
+        x: d => xScale(d.date),
+        y: d => yTempScale(d.temp),
+        symbol: d3.symbolSquare,
+        size: 10,
+        testId: 'hourly-observed-temp-symbol'
       })
-      const updateReadingTempPath = d3Utils.drawPath({
+      const updateObservedTempPath = d3Utils.drawPath({
         svg: chart,
-        className: 'readingTempPath',
-        data: readingTempValues,
+        className: 'observedTempPath',
+        data: observedTempValues,
         x: d => xScale(d.date),
         y: d => yTempScale(d.temp),
         strokeWidth: 1.5,
-        testId: 'hourly-reading-temp-path'
+        testId: 'hourly-observed-temp-path'
       })
-      d3Utils.drawDots({
+      d3Utils.drawSymbols({
         svg: chart,
-        className: 'readingRHDot',
-        data: readingRHValues,
-        cx: d => xScale(d.date),
-        cy: d => yRHScale(d.rh),
-        testId: 'hourly-reading-rh-dot'
+        className: 'observedRHSymbol',
+        data: observedRHValues,
+        x: d => xScale(d.date),
+        y: d => yRHScale(d.rh),
+        symbol: d3.symbolSquare,
+        size: 10,
+        testId: 'hourly-observed-rh-symbol'
       })
-      const updateReadingRHPath = d3Utils.drawPath({
+      const updateObservedRHPath = d3Utils.drawPath({
         svg: chart,
-        className: 'readingRHPath',
-        data: readingRHValues,
+        className: 'observedRHPath',
+        data: observedRHValues,
         x: d => xScale(d.date),
         y: d => yRHScale(d.rh),
         strokeWidth: 1.5,
-        testId: 'hourly-reading-rh-path'
+        testId: 'hourly-observed-rh-path'
       })
 
       /* Render the current time reference line */
@@ -532,7 +548,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .attr('dy', '-0.1em')
         .attr('dx', '0.8em')
         .attr('transform', 'rotate(45)')
-      context.append('g').call(d3.axisLeft(yTempScale).tickValues([-10, 5, 20, 35, 45]))
+      context.append('g').call(d3.axisLeft(yTempScale).tickValues([-10, 5, 20, 35, 40]))
       context
         .append('g')
         .attr('class', 'y-axis')
@@ -579,8 +595,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
             })
 
           // Redraw the rest of graphics
-          updateReadingTempPath(d => xScale(d.date))
-          updateReadingRHPath(d => xScale(d.date))
+          updateObservedTempPath(d => xScale(d.date))
+          updateObservedRHPath(d => xScale(d.date))
           updateForecastSummaryTempLineList.forEach(update => update(xScale))
           updateForecastSummaryRHLineList.forEach(update => update(xScale))
           updateModelTempPath(d => xScale(d.date))
@@ -682,20 +698,22 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       d3Utils.addLegend({
         svg: legend,
         text: 'Observed Temp',
-        color: styles.readingTempDotColor,
-        shapeX: legendX,
-        shapeY: legendY,
-        textX: legendX += 7,
-        textY: legendY + 3
+        color: styles.observedTempColor,
+        shape: 'rect',
+        shapeX: legendX - 2,
+        shapeY: legendY - 4,
+        textX: legendX += 10,
+        textY: legendY + 4
       })
       d3Utils.addLegend({
         svg: legend,
         text: 'Observed RH',
-        color: styles.readingRHDotColor,
-        shapeX: legendX += 83,
-        shapeY: legendY,
-        textX: legendX += 7,
-        textY: legendY + 3
+        color: styles.observedRHColor,
+        shape: 'rect',
+        shapeX: legendX += 80,
+        shapeY: legendY - 4,
+        textX: legendX += 12,
+        textY: legendY + 4
       })
       d3Utils.addLegend({
         svg: legend,
@@ -719,9 +737,10 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       d3Utils.addLegend({
         svg: legend,
-        text: 'Model Temp',
-        color: styles.modelTempDotColor,
-        fill: 'none',
+        text: 'GDPS Temp',
+        shape: 'triangle',
+        color: styles.modelTempColor,
+        fill: styles.modelTempColor,
         shapeX: legendX += 70,
         shapeY: legendY,
         textX: legendX += 7,
@@ -729,9 +748,10 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       d3Utils.addLegend({
         svg: legend,
-        text: 'Model RH',
-        color: styles.modelRHDotColor,
-        fill: 'none',
+        text: 'GDPS RH',
+        shape: 'triangle',
+        color: styles.modelRHColor,
+        fill: styles.modelRHColor,
         shapeX: legendX += 70,
         shapeY: legendY,
         textX: legendX + 7,
@@ -743,7 +763,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       d3Utils.addLegend({
         svg: legend,
         shape: 'rect',
-        text: 'Model Temp 5th - 90th percentiles',
+        text: 'GDPS Temp 5th - 90th percentiles',
         color: styles.modelSummaryTempAreaColor,
         shapeX: legendX - 2,
         shapeY: legendY - 4,
@@ -753,7 +773,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       d3Utils.addLegend({
         svg: legend,
         shape: 'rect',
-        text: 'Model RH 5th - 90th percentiles',
+        text: 'GDPS RH 5th - 90th percentiles',
         color: styles.modelSummaryRHAreaColor,
         shapeX: legendX += 165,
         shapeY: legendY - 4,
@@ -765,9 +785,10 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       legendY += 16
       d3Utils.addLegend({
         svg: legend,
-        text: 'Bias Adjusted Model Temp',
-        color: styles.biasModelTempDotColor,
-        fill: 'none',
+        text: 'Bias Adjusted GDPS Temp',
+        shape: 'diamond',
+        color: styles.biasModelTempColor,
+        fill: styles.biasModelTempColor,
         shapeX: legendX,
         shapeY: legendY,
         textX: legendX += 7,
@@ -776,9 +797,10 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       d3Utils.addLegend({
         svg: legend,
-        text: 'Bias Adjusted Model RH',
-        color: styles.biasModelRHDotColor,
-        fill: 'none',
+        text: 'Bias Adjusted GDPS RH',
+        shape: 'diamond',
+        color: styles.biasModelRHColor,
+        fill: styles.biasModelRHColor,
         shapeX: legendX += 130,
         shapeY: legendY,
         textX: legendX + 7,
@@ -787,9 +809,9 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       d3Utils.addLegend({
         svg: legend,
-        text: 'High Res Model Temp',
-        color: styles.highResModelTempDotColor,
-        fill: 'none',
+        text: 'HRDPS Temp',
+        color: styles.highResModelTempColor,
+        fill: styles.highResModelTempColor,
         shapeX: legendX += 127,
         shapeY: legendY,
         textX: legendX += 7,
@@ -797,18 +819,92 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       d3Utils.addLegend({
         svg: legend,
-        text: 'High Res Model RH',
-        color: styles.highResModelRHDotColor,
-        fill: 'none',
-        shapeX: legendX += 111,
+        text: 'HRDPS RH',
+        color: styles.highResModelRHColor,
+        fill: styles.highResModelRHColor,
+        shapeX: legendX += 81,
         shapeY: legendY,
         textX: legendX + 7,
         textY: legendY + 3
       })
+      // new line
+      legendX = 0
+      legendY += 16
+      d3Utils.addLegend({
+        svg: legend,
+        text: 'HRDPS Temp 5th - 90th percentiles',
+        shape: 'rect',
+        color: styles.highResModelSummaryTempAreaColor,
+        fill: styles.highResModelSummaryTempAreaColor,
+        shapeX: legendX - 2,
+        shapeY: legendY - 4,
+        textX: legendX += 10,
+        textY: legendY + 4
+      })
+      d3Utils.addLegend({
+        svg: legend,
+        text: 'HRDPS RH 5th - 90th percentiles',
+        shape: 'rect',
+        color: styles.highResModelSummaryRHAreaColor,
+        fill: styles.highResModelSummaryRHAreaColor,
+        shapeX: legendX += 165,
+        shapeY: legendY - 4,
+        textX: legendX + 13,
+        textY: legendY + 3
+      })
+      /* Attach tooltip listener */
+      d3Utils.addTooltipListener({
+        svg: chart,
+        xScale,
+        width: chartWidth,
+        height: chartHeight,
+        data: weatherValues,
+        textTestId: 'temp-rh-tooltip-text',
+        bgdTestId: 'temp-rh-graph-background',
+        getInnerText: ([k, value]) => {
+          const key = k as keyof WeatherValue
+          if (key === 'date' && typeof value === 'object') {
+            return `${formatDateInPDT(value, 'h:mm a, ddd, MMM Do')} (PDT, UTC-7)`
+          } else if (typeof value === 'number') {
+            let weatherValue: number | string = value
+            if (isNaN(weatherValue)) {
+              weatherValue = '-'
+            }
+
+            switch (key) {
+              case 'temp':
+                return `Observed Temp: ${weatherValue} (°C)`
+              case 'forecastTemp':
+                return `Forecast Temp: ${weatherValue} (°C)`
+              case 'modelTemp':
+                return `GDPS Temp: ${weatherValue} (°C)`
+              case 'biasAdjModelTemp':
+                return `Bias adjusted GDPS Temp: ${weatherValue} (°C)`
+              case 'hrModelTemp':
+                return `HRDPS Temp ${weatherValue} (°C)`
+
+              case 'rh':
+                return `Observed RH: ${weatherValue} (%)`
+              case 'forecastRH':
+                return `Forecast RH: ${weatherValue} (%)`
+              case 'modelRH':
+                return `GDPS RH: ${weatherValue} (%)`
+              case 'biasAdjModelRH':
+                return `Bias adjusted GDPS RH: ${weatherValue} (%)`
+              case 'hrModelRH':
+                return `HRDPS RH ${weatherValue} (%)`
+
+              default:
+                return ''
+            }
+          }
+          return ''
+        }
+      })
     }
   }, [
     classes.root,
-    _readingValues,
+    _observedValues,
     _modelValues,
     _modelSummaries,
     _forecastValues,

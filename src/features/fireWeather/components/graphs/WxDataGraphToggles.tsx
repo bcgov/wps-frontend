@@ -26,7 +26,7 @@ const useStyles = makeStyles({
 interface Props {
   toggleValues: ToggleValues
   setToggleValues: SetToggleValues
-  noReadings: boolean
+  noObservations: boolean
   noModels: boolean
   noForecasts: boolean
   noBiasAdjModels: boolean
@@ -36,7 +36,7 @@ interface Props {
 const WxDataToggles = ({
   toggleValues,
   setToggleValues,
-  noReadings,
+  noObservations,
   noModels,
   noForecasts,
   noBiasAdjModels,
@@ -53,10 +53,10 @@ const WxDataToggles = ({
         className={classes.switchControl}
         control={
           <Switch
-            name="showReadings"
-            data-testid="wx-graph-reading-toggle"
-            checked={toggleValues.showReadings}
-            disabled={noReadings}
+            name="showObservations"
+            data-testid="wx-graph-observation-toggle"
+            checked={toggleValues.showObservations}
+            disabled={noObservations}
             size="small"
             onChange={handleSwitch}
           />

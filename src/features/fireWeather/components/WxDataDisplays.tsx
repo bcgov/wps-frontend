@@ -3,13 +3,13 @@ import { useSelector } from 'react-redux'
 import { Paper, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
-import HourlyReadingsTable from 'features/fireWeather/components/HourlyReadingsTable'
+import HourlyObservationsTable from 'features/fireWeather/components/HourlyObservationsTable'
 import NoonForecastTable from 'features/fireWeather/components/NoonForecastTable'
 import WxDataGraph from 'features/fireWeather/components/graphs/WxDataGraph'
 import { ErrorBoundary } from 'components'
 import { Station } from 'api/stationAPI'
 import {
-  selectReadings,
+  selectObservations,
   selectModels,
   selectModelSummaries,
   selectForecasts,
@@ -45,7 +45,7 @@ interface Props {
 const WxDataDisplays = ({ requestedStations }: Props) => {
   const classes = useStyles()
 
-  const { readingsByStation } = useSelector(selectReadings)
+  const { observationsByStation } = useSelector(selectObservations)
   const { allModelsByStation, noonModelsByStation } = useSelector(selectModels)
   const { modelSummariesByStation } = useSelector(selectModelSummaries)
   const { allNoonForecastsByStation } = useSelector(selectForecasts)
@@ -58,7 +58,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
     <div className={classes.displays}>
       {!wxDataLoading &&
         requestedStations.map(s => {
-          const readingValues = readingsByStation[s.code]
+          const observedValues = observationsByStation[s.code]
           const allModelValues = allModelsByStation[s.code]
           const modelSummaries = modelSummariesByStation[s.code]
           const noonModelValues = noonModelsByStation[s.code]
@@ -67,7 +67,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
           const allHighResModelValues = allHighResModelsByStation[s.code]
           const highResModelSummaries = highResModelSummariesByStation[s.code]
           const nothingToDisplay =
-            !readingValues && !allForecasts && !allModelValues && !allHighResModelValues
+            !observedValues && !allForecasts && !allModelValues && !allHighResModelValues
 
           return (
             <Paper key={s.code} className={classes.paper} elevation={3}>
@@ -80,9 +80,9 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
                 </Typography>
               )}
               <ErrorBoundary>
-                <HourlyReadingsTable
-                  title="Past 5 days of hourly readings from station: "
-                  values={readingValues}
+                <HourlyObservationsTable
+                  title="Past 5 days of hourly observations from station: "
+                  values={observedValues}
                 />
               </ErrorBoundary>
               <ErrorBoundary>
@@ -101,7 +101,7 @@ const WxDataDisplays = ({ requestedStations }: Props) => {
               </ErrorBoundary>
               <ErrorBoundary>
                 <WxDataGraph
-                  readingValues={readingValues}
+                  observedValues={observedValues}
                   allModelValues={allModelValues}
                   modelSummaries={modelSummaries}
                   allForecasts={allForecasts}
