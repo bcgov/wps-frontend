@@ -61,7 +61,7 @@ export const drawDots = <T>({
     .data(data)
     .enter()
     .append('circle')
-    .attr('class', `${className} dot`)
+    .attr('class', className)
     .attr('cx', cx)
     .attr('cy', cy)
     .attr('r', radius)
@@ -98,30 +98,36 @@ export const drawSymbols = <T>({
   size?: number
   symbol?: d3.SymbolType
   testId?: string
-}): void => {
+}) => {
   if (data.length === 0) {
     return
   }
-  const symbols = svg
+
+  const symbolFunc = d3
+    .symbol<T>()
+    .type(symbol)
+    .size(size)
+
+  const path = svg
     .selectAll(`.${className}`)
     .data(data)
     .enter()
     .append('path')
-    .attr(
-      'd',
-      d3
-        .symbol<T>()
-        .type(symbol)
-        .size(size)
-    )
-    .attr('transform', function(d) {
-      return `translate(${x(d)},${y(d)})`
-    })
+    .attr('d', symbolFunc)
+    .attr('transform', d => `translate(${x(d)}, ${y(d)})`)
     .attr('class', className)
-
   if (testId) {
-    symbols.attr('data-testid', testId)
+    path.attr('data-testid', testId)
   }
+
+  const update = (newX: (d: T) => number, duration?: number) => {
+    path
+      .transition(d3.event.transform)
+      .duration(duration || transitionDuration)
+      .attr('transform', d => `translate(${newX(d)}, ${y(d)})`)
+  }
+
+  return update
 }
 
 export const drawPath = <T>({
@@ -141,7 +147,7 @@ export const drawPath = <T>({
   strokeWidth?: number
   testId?: string
 }) => {
-  const line = d3
+  const lineFunc = d3
     .line<T>()
     .x(x)
     .y(y)
@@ -149,12 +155,11 @@ export const drawPath = <T>({
   const path = svg
     .append('path')
     .datum(data)
-    .attr('d', line)
+    .attr('d', lineFunc)
     .attr('stroke-width', strokeWidth)
     .attr('fill', 'none')
     .attr('opacity', 0.8)
     .attr('class', className)
-
   if (testId) {
     path.attr('data-testid', testId)
   }
@@ -163,7 +168,7 @@ export const drawPath = <T>({
     path
       .transition(d3.event.transform)
       .duration(duration || transitionDuration)
-      .attr('d', line.x(newX))
+      .attr('d', lineFunc.x(newX))
   }
 
   return updatePath
@@ -193,7 +198,6 @@ export const drawVerticalLine = ({
     .attr('x2', x)
     .attr('y2', y2)
     .attr('class', className)
-
   if (testId) {
     line.attr('data-testid', testId)
   }
@@ -242,7 +246,6 @@ export const drawText = ({
     .attr('dx', dx)
     .attr('class', className)
     .text(text)
-
   if (testId) {
     textSvg.attr('data-testid', testId)
   }
@@ -284,18 +287,18 @@ export const drawArea = <T>({
     return
   }
 
-  const area = d3
+  const areaFunc = d3
     .area<T>()
     .curve(curve)
     .x(x)
     .y0(y0)
     .y1(y1)
+
   const path = svg
     .append('path')
     .datum(datum)
     .attr('class', className)
-    .attr('d', area)
-
+    .attr('d', areaFunc)
   if (testId) {
     path.attr('data-testid', testId)
   }
@@ -304,7 +307,7 @@ export const drawArea = <T>({
     path
       .transition(d3.event.transform)
       .duration(duration || transitionDuration)
-      .attr('d', area.x(newX))
+      .attr('d', areaFunc.x(newX))
   }
 
   return updateArea

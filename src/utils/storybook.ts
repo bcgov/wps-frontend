@@ -28,10 +28,10 @@ const getFutureValues = () => {
       if (length % 3 === 0 || isNoonInPST(datetime)) {
         _modelValues.push({
           datetime,
-          temperature: temp + Math.random() * 4,
+          temperature: temp + Math.random() * 5,
           bias_adjusted_temperature: temp + Math.random() * 4 - 2,
           dew_point,
-          relative_humidity: rh + Math.random() * 4,
+          relative_humidity: rh + Math.random() * 5,
           bias_adjusted_relative_humidity: rh + Math.random() * 4 - 5,
           wind_speed,
           wind_direction,
@@ -49,10 +49,10 @@ const getFutureValues = () => {
 
       _highResModelValues.push({
         datetime,
-        temperature: temp + Math.random(),
-        bias_adjusted_temperature: temp + Math.random() - 2,
-        relative_humidity: rh + Math.random(),
-        bias_adjusted_relative_humidity: rh + Math.random() - 2
+        temperature: temp + Math.random() * 3,
+        bias_adjusted_temperature: temp + Math.random() * 3 - 2,
+        relative_humidity: rh + Math.random() * 3,
+        bias_adjusted_relative_humidity: rh + Math.random() * 3 - 2
       })
     }
     first.add(1, 'days')
@@ -105,33 +105,33 @@ const getPastValues = () => {
       })
       _pastHighResModelValues.push({
         datetime,
-        temperature: temp + Math.random(),
-        bias_adjusted_temperature: temp + Math.random() - 2,
-        relative_humidity: rh + Math.random(),
-        bias_adjusted_relative_humidity: rh + Math.random() - 2
+        temperature: temp + Math.random() * 3,
+        bias_adjusted_temperature: temp + Math.random() * 3 - 2,
+        relative_humidity: rh + Math.random() * 3,
+        bias_adjusted_relative_humidity: rh + Math.random() * 3 - 2
       })
       _highResModelSummaries.push({
         datetime,
-        tmp_tgl_2_5th: temp + Math.random() * 3,
+        tmp_tgl_2_5th: temp + Math.random() * 5,
         tmp_tgl_2_median: temp + Math.random() * 1,
-        tmp_tgl_2_90th: temp - Math.random() * 3,
-        rh_tgl_2_5th: rh + Math.random() * 3,
+        tmp_tgl_2_90th: temp - Math.random() * 5,
+        rh_tgl_2_5th: rh + Math.random() * 5,
         rh_tgl_2_median: rh + Math.random() * 1,
-        rh_tgl_2_90th: rh - Math.random() * 3
+        rh_tgl_2_90th: rh - Math.random() * 5
       })
 
       if (isNoonInPST(datetime)) {
         _pastForecastValues.push({
           datetime,
-          temperature: temp + Math.random() * 2 + 5,
-          relative_humidity: rh + Math.random() * 2 + 5
+          temperature: temp + Math.random() * 2,
+          relative_humidity: rh + Math.random() * 2
         })
         _forecastSummaries.push({
           datetime,
-          tmp_min: temp + Math.random() * 1 + 5,
-          tmp_max: temp + Math.random() * 5 + 5,
-          rh_min: rh + Math.random() * 1 + 5,
-          rh_max: rh + Math.random() * 5 + 5
+          tmp_min: temp - Math.random() * 2,
+          tmp_max: temp + Math.random() * 6,
+          rh_min: rh - Math.random() * 2,
+          rh_max: rh + Math.random() * 6
         })
       }
 
@@ -139,19 +139,19 @@ const getPastValues = () => {
       if (length % 3 === 0) {
         _pastModelValues.push({
           datetime,
-          temperature: temp + Math.random() * 3,
-          bias_adjusted_temperature: temp + Math.random() * 3 - 2,
-          relative_humidity: rh + Math.random() * 3,
-          bias_adjusted_relative_humidity: rh + Math.random() * 3 - 2
+          temperature: temp + Math.random() * 5,
+          bias_adjusted_temperature: temp + Math.random() * 5 - 2,
+          relative_humidity: rh + Math.random() * 5,
+          bias_adjusted_relative_humidity: rh + Math.random() * 5 - 2
         })
         _modelSummaries.push({
           datetime,
-          tmp_tgl_2_5th: temp + Math.random() * 5,
+          tmp_tgl_2_5th: temp + Math.random() * 9,
           tmp_tgl_2_median: temp + Math.random() * 2,
-          tmp_tgl_2_90th: temp - Math.random() * 5,
-          rh_tgl_2_5th: rh + Math.random() * 5,
+          tmp_tgl_2_90th: temp - Math.random() * 9,
+          rh_tgl_2_5th: rh + Math.random() * 9,
           rh_tgl_2_median: rh + Math.random() * 2,
-          rh_tgl_2_90th: rh - Math.random() * 5
+          rh_tgl_2_90th: rh - Math.random() * 9
         })
       }
     }
