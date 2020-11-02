@@ -39,7 +39,7 @@ interface Props {
 const WxDataToggles = ({
   toggleValues,
   setToggleValues,
-  noObservations: noObservations,
+  noObservations,
   noModels,
   noForecasts,
   noBiasAdjustedModels,

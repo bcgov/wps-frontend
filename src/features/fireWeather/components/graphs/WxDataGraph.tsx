@@ -31,7 +31,7 @@ interface Props {
 }
 
 const WxDataGraph = ({
-  observedValues: observedValues = [],
+  observedValues = [],
   allModelValues = [],
   pastModelValues = [],
   modelValues = [],

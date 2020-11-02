@@ -528,7 +528,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .attr('class', 'xAxisLabel')
 
       // Y axis
-      svg.append('g').call(d3.axisLeft(yTempScale).tickValues([-10, 5, 20, 35, 45]))
+      svg.append('g').call(d3.axisLeft(yTempScale).tickValues([-10, 5, 20, 35, 40]))
       svg
         .append('g')
         .attr('transform', `translate(${width}, 0)`)
@@ -737,22 +737,22 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
               case 'forecastTemp':
                 return `Forecast Temp: ${weatherValue} (°C)`
               case 'modelTemp':
-                return `Model Temp: ${weatherValue} (°C)`
+                return `GDPS Temp: ${weatherValue} (°C)`
               case 'biasAdjustedModelTemp':
-                return `Bias adjusted Temp: ${weatherValue} (°C)`
+                return `Bias adjusted GDPS Temp: ${weatherValue} (°C)`
               case 'hrModelTemp':
-                return `High Res Model Temp ${weatherValue} (°C)`
+                return `HRDPS Temp ${weatherValue} (°C)`
 
               case 'rh':
                 return `Observed RH: ${weatherValue} (%)`
               case 'forecastRH':
                 return `Forecast RH: ${weatherValue} (%)`
               case 'modelRH':
-                return `Model RH: ${weatherValue} (%)`
+                return `GDPS RH: ${weatherValue} (%)`
               case 'biasAdjustedModelRH':
-                return `Bias adjusted Model RH: ${weatherValue} (%)`
+                return `Bias adjusted GDPS RH: ${weatherValue} (%)`
               case 'hrModelRH':
-                return `High Res Model RH ${weatherValue} (%)`
+                return `HRDPS RH ${weatherValue} (%)`
 
               default:
                 return ''
