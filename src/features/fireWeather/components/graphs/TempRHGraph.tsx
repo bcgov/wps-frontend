@@ -47,12 +47,15 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 }: Props) => {
   const classes = styles.useStyles()
   const svgRef = useRef(null)
-  // Mutable variable for keeping track of the sidebar size
+
+  // Keep track of the sidebar position & size so that the sidebar can stay
+  // exactly as it is when toggling weather sources
+  // Use mutable ref object that doesn't cause re-render
   const brushSelection = useRef<[number, number] | null>(null)
 
   useEffect(() => {
     if (svgRef.current) {
-      /* Clear previous svg before rendering a new one */
+      /* Clear previous graphics before rendering new ones */
       d3.select(svgRef.current)
         .selectAll('*')
         .remove()
@@ -128,7 +131,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           model.modelRH = Math.round(rh)
           modelRHValues.push(model)
         }
-        // combine with the existing observed value
+        // combine with the existing weather values
         weatherValueByDatetime[v.datetime] = {
           ...weatherValueByDatetime[v.datetime],
           ...model
