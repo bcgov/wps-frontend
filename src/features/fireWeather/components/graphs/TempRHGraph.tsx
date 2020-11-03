@@ -819,7 +819,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         bgdTestId: 'temp-rh-graph-background',
         getInnerText: ([k, value]) => {
           const key = k as keyof WeatherValue
-          if (key === 'date' && typeof value === 'object') {
+          if (key === 'date' && value instanceof Date) {
             return `${formatDateInPDT(value, 'h:mm a, ddd, MMM Do')} (PDT, UTC-7)`
           } else if (typeof value === 'number') {
             let weatherValue: number | string = value
