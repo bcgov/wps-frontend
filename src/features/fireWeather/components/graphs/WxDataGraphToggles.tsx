@@ -47,11 +47,16 @@ const WxDataToggles = ({
 }: Props) => {
   const classes = useStyles()
   const handleSwitch = (e: React.ChangeEvent<{ name: string }>, checked: boolean) => {
-    console.log('handle switch', e.target.name, checked)
     setToggleValues(e.target.name as keyof ToggleValues, checked)
+    // Create a matomo event.
     if (window._mtm) {
-      const targetName = `${e.target.name}`
-      window._mtm.push({ event: targetName, targetName: checked })
+      window._mtm.push({
+        event: 'tempRHGraphToggle',
+        toggle: {
+          name: e.target.name,
+          checked: checked ? 'show' : 'hide' // matomo doesn't play nice with booleans
+        }
+      })
     }
   }
   const handleSelect = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
