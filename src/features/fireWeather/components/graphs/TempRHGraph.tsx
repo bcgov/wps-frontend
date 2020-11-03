@@ -542,7 +542,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .tickValues(xTickValues)
       chart // Include only x axis to the chart group
         .append('g')
-        .attr('class', 'x-axis')
+        .attr('class', 'xAxis')
         .attr('transform', `translate(0, ${chartHeight})`)
         .call(xAxisFunc)
         .selectAll('text')
@@ -557,7 +557,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .call(d3.axisLeft(yTempScale).tickValues([-10, 0, 10, 20, 30, 40]))
       context
         .append('g')
-        .attr('class', 'y-axis')
         .attr('transform', `translate(${chartWidth}, 0)`)
         .call(d3.axisRight(yRHScale).tickValues([0, 25, 50, 75, 100]))
 
@@ -589,7 +588,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           xScale.domain(selection.map(xSidebarScale.invert, xSidebarScale))
 
           // Update chart's x axis with the new scale
-          chart.select<SVGGElement>('.x-axis').call(xAxisFunc)
+          chart.select<SVGGElement>('.xAxis').call(xAxisFunc)
 
           // Redraw all the displayed graphics
           updateObservedTempSymbols?.(d => xScale(d.date))
@@ -647,56 +646,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .append('g')
         .call(brush)
         .call(brush.move, brushSelection.current || xSidebarScale.range().map(x => x / 4))
-
-      /* Attach tooltip listener */
-      d3Utils.addTooltipListener({
-        svg: chart,
-        xScale,
-        width: chartWidth,
-        height: chartHeight,
-        data: weatherValues,
-        textTestId: 'temp-rh-tooltip-text',
-        bgdTestId: 'temp-rh-graph-background',
-        getInnerText: ([k, value]) => {
-          const key = k as keyof WeatherValue
-          if (key === 'date' && typeof value === 'object') {
-            return `${formatDateInPDT(value, 'h:mm a, ddd, MMM Do')} (PDT, UTC-7)`
-          } else if (typeof value === 'number') {
-            let weatherValue: number | string = value
-            if (isNaN(weatherValue)) {
-              weatherValue = '-'
-            }
-
-            switch (key) {
-              case 'temp':
-                return `Observed Temp: ${weatherValue} (°C)`
-              case 'forecastTemp':
-                return `Forecast Temp: ${weatherValue} (°C)`
-              case 'modelTemp':
-                return `Model Temp: ${weatherValue} (°C)`
-              case 'biasAdjModelTemp':
-                return `Bias adjusted Temp: ${weatherValue} (°C)`
-              case 'hrModelTemp':
-                return `High Res Model Temp ${weatherValue} (°C)`
-
-              case 'rh':
-                return `Observed RH: ${weatherValue} (%)`
-              case 'forecastRH':
-                return `Forecast RH: ${weatherValue} (%)`
-              case 'modelRH':
-                return `Model RH: ${weatherValue} (%)`
-              case 'biasAdjModelRH':
-                return `Bias adjusted Model RH: ${weatherValue} (%)`
-              case 'hrModelRH':
-                return `High Res Model RH ${weatherValue} (%)`
-
-              default:
-                return ''
-            }
-          }
-          return ''
-        }
-      })
 
       /* Render legends */
       // TODO: We're going to have to look at using layouts moving forward to achieve the placement of objects. https://www.d3indepth.com/layouts/

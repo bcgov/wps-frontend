@@ -85,5 +85,21 @@ describe('MoreCast Page', () => {
     cy.getByTestId('temp-rh-tooltip-text')
       .should('contain', 'Observed Temp: - (°C)')
       .and('contain', 'Observed RH: 61 (%)')
+
+    // Move sidebar to the right a bit
+    cy.window().then(win => {
+      cy.get('.sidebar')
+        .find('.selection')
+        .trigger('mousedown', { view: win })
+        .trigger('mousemove', {
+          clientX: 300,
+          clientY: 300,
+          force: true
+        })
+        .trigger('mouseup', {
+          force: true,
+          view: win
+        })
+    })
   })
 })
