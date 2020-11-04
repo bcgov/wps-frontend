@@ -17,7 +17,7 @@ const formatDate = (format: string) => (value: Date | { valueOf(): number }) => 
 }
 
 export const formatDateInDay = formatDate('Do')
-export const formatDateInMonthAndDay = formatDate('MMM DD')
+export const formatDateInMonthAndDay = formatDate('MMM D')
 
 export const storeDaysLookup = (
   lookup: { [k: string]: Date },

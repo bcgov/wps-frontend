@@ -62,7 +62,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
       /* Prepare for data */
       const daysLookup: { [k: string]: Date } = {} // will help to create the date label on x axis
-      const weatherValueByDatetime: { [k: string]: WeatherValue } = {}
+      const weatherValuesByDatetime: { [k: string]: WeatherValue } = {}
 
       const observedTempValues: { date: Date; temp: number }[] = []
       const observedRHValues: { date: Date; rh: number }[] = []
@@ -82,7 +82,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           observation.rh = Math.round(v.relative_humidity)
           observedRHValues.push(observation)
         }
-        weatherValueByDatetime[v.datetime] = observation
+        weatherValuesByDatetime[v.datetime] = observation
       })
 
       const forecastValues = _forecastValues.map(d => {
@@ -93,8 +93,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           forecastRH: Math.round(d.relative_humidity)
         }
         // combine with existing observed and models values
-        weatherValueByDatetime[d.datetime] = {
-          ...weatherValueByDatetime[d.datetime],
+        weatherValuesByDatetime[d.datetime] = {
+          ...weatherValuesByDatetime[d.datetime],
           ...forecast
         }
 
@@ -117,7 +117,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         }
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
-
         const model = {
           date,
           modelTemp: NaN,
@@ -132,8 +131,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           modelRHValues.push(model)
         }
         // combine with the existing weather values
-        weatherValueByDatetime[v.datetime] = {
-          ...weatherValueByDatetime[v.datetime],
+        weatherValuesByDatetime[v.datetime] = {
+          ...weatherValuesByDatetime[v.datetime],
           ...model
         }
       })
@@ -156,7 +155,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         }
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
-
         const biasAdjModel = {
           date,
           biasAdjModelTemp: NaN,
@@ -170,8 +168,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           biasAdjModel.biasAdjModelRH = Math.round(biasAdjRH)
           biasAdjModelRHValues.push(biasAdjModel)
         }
-        weatherValueByDatetime[v.datetime] = {
-          ...weatherValueByDatetime[v.datetime],
+        weatherValuesByDatetime[v.datetime] = {
+          ...weatherValuesByDatetime[v.datetime],
           ...biasAdjModel
         }
       })
@@ -184,7 +182,6 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         }
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
-
         const hrModel = { date, hrModelTemp: NaN, hrModelRH: NaN }
         if (v.temperature != null) {
           hrModel.hrModelTemp = Number(v.temperature.toFixed(2))
@@ -194,8 +191,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
           hrModel.hrModelRH = Math.round(v.relative_humidity)
           hrModelRHValues.push(hrModel)
         }
-        weatherValueByDatetime[v.datetime] = {
-          ...weatherValueByDatetime[v.datetime],
+        weatherValuesByDatetime[v.datetime] = {
+          ...weatherValuesByDatetime[v.datetime],
           ...hrModel
         }
       })
@@ -206,7 +203,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
 
       // weather values without percentile summaries
-      const weatherValues = Object.values(weatherValueByDatetime).sort(
+      const weatherValues = Object.values(weatherValuesByDatetime).sort(
         (a, b) => a.date.valueOf() - b.date.valueOf()
       )
       const xDomain = d3.extent(weatherValues, v => v.date) as [Date, Date]
@@ -538,7 +535,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       /* Render the X & Y axis and labels */
       const xAxisFunc = d3
         .axisBottom(xScale)
-        .tickFormat(d3Utils.formatDateInDay)
+        .tickFormat(d3Utils.formatDateInMonthAndDay)
         .tickValues(xTickValues)
       chart // Include only x axis to the chart group
         .append('g')
@@ -632,7 +629,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .call(
           d3
             .axisBottom(xSidebarScale)
-            .tickFormat(d3Utils.formatDateInDay)
+            .tickFormat(d3Utils.formatDateInMonthAndDay)
             .tickValues(xTickValues)
         )
         .selectAll('text')
