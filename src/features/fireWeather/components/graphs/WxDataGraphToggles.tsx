@@ -29,7 +29,7 @@ const useStyles = makeStyles({
 interface Props {
   toggleValues: ToggleValues
   setToggleValues: SetToggleValues
-  noReadings: boolean
+  noObservations: boolean
   noModels: boolean
   noForecasts: boolean
   noBiasAdjustedModels: boolean
@@ -39,7 +39,7 @@ interface Props {
 const WxDataToggles = ({
   toggleValues,
   setToggleValues,
-  noReadings,
+  noObservations,
   noModels,
   noForecasts,
   noBiasAdjustedModels,
@@ -48,6 +48,16 @@ const WxDataToggles = ({
   const classes = useStyles()
   const handleSwitch = (e: React.ChangeEvent<{ name: string }>, checked: boolean) => {
     setToggleValues(e.target.name as keyof ToggleValues, checked)
+    // Create a matomo event.
+    if (window._mtm) {
+      window._mtm.push({
+        event: 'tempRHGraphToggle',
+        toggle: {
+          name: e.target.name,
+          checked: checked ? 'show' : 'hide' // matomo doesn't play nice with booleans
+        }
+      })
+    }
   }
   const handleSelect = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
     const { name, value } = e.target
@@ -74,10 +84,10 @@ const WxDataToggles = ({
         className={classes.switchControl}
         control={
           <Switch
-            name="showReadings"
-            data-testid="wx-graph-reading-toggle"
-            checked={toggleValues.showReadings}
-            disabled={noReadings}
+            name="showObservations"
+            data-testid="wx-graph-observation-toggle"
+            checked={toggleValues.showObservations}
+            disabled={noObservations}
             size="small"
             onChange={handleSwitch}
           />
@@ -117,9 +127,7 @@ const WxDataToggles = ({
             checked={toggleValues.showHighResModels}
             disabled={noHighResModels}
             size="small"
-            onChange={(e, checked) => {
-              setToggleValues(e.target.name as 'showHighResModels', checked)
-            }}
+            onChange={handleSwitch}
           />
         }
         label={
