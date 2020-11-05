@@ -22,10 +22,10 @@ const getPastValues = () => {
       const sineWeight = 7
       const temp = 20 + Math.sin(length) * sineWeight
       const rh = 20 - Math.sin(length) * sineWeight
-      const dew_point = 20 + Math.sin(length) * sineWeight
       const wind_speed = 20 + Math.sin(length) * sineWeight
       const wind_direction = 20 + Math.sin(length) * sineWeight
-      const total_precipitation = 10 + Math.sin(length) * sineWeight
+      const barometric_pressure = 10 + Math.sin(length) * sineWeight
+      const precipitation = 10 + Math.sin(length) * sineWeight
       const datetime = moment(first)
         .add(length, 'hours')
         .utc()
@@ -38,8 +38,8 @@ const getPastValues = () => {
         relative_humidity: rh,
         wind_speed,
         wind_direction,
-        dew_point,
-        total_precipitation,
+        barometric_pressure,
+        precipitation,
         ffmc: null,
         isi: null,
         fwi: null
@@ -124,13 +124,13 @@ const getFutureValues = () => {
 
   while (last.diff(first, 'days') >= 0) {
     for (let length = 0; length < 24; length++) {
-      const signWeight = 7
-      const temp = 20 + Math.sin(length) * signWeight
-      const rh = 20 - Math.sin(length) * signWeight
-      const dew_point = 20 + Math.sin(length) * signWeight
-      const wind_speed = 20 + Math.sin(length) * signWeight
-      const wind_direction = 20 + Math.sin(length) * signWeight
-      const total_precipitation = 10 + Math.sin(length) * signWeight
+      const sineWeight = 7
+      const temp = 20 + Math.sin(length) * sineWeight
+      const rh = 20 - Math.sin(length) * sineWeight
+      const dew_point = 20 + Math.sin(length) * sineWeight
+      const wind_speed = 20 + Math.sin(length) * sineWeight
+      const wind_direction = 20 + Math.sin(length) * sineWeight
+      const total_precipitation = 10 + Math.sin(length) * sineWeight
       const datetime = moment(first)
         .add(length, 'hours')
         .utc()
@@ -183,7 +183,7 @@ const getFutureValues = () => {
 export const { forecastValues, modelValues, highResModelValues } = getFutureValues()
 
 export const {
-  observedValues: observedValues,
+  observedValues,
   pastForecastValues,
   forecastSummaries,
   pastModelValues,
