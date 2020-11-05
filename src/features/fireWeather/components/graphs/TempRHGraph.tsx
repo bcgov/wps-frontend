@@ -62,6 +62,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
       /* Prepare for data */
       const daysLookup: { [k: string]: Date } = {} // will help to create the date label on x axis
+      const datesFromAllSources: Date[] = [] // will be used to determine x axis range
       const weatherValuesByDatetime: { [k: string]: WeatherValue } = {}
 
       const observedTempValues: { date: Date; temp: number }[] = []
@@ -72,6 +73,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         }
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
+        datesFromAllSources.push(date)
 
         const observation = { date, temp: NaN, rh: NaN }
         if (v.temperature != null) {
@@ -87,6 +89,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
       const forecastValues = _forecastValues.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
+        datesFromAllSources.push(date)
+
         const forecast = {
           date,
           forecastTemp: Number(d.temperature.toFixed(2)),
@@ -103,6 +107,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
       const forecastSummaries: ForecastSummary[] = _forecastSummaries.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
+        datesFromAllSources.push(date)
 
         return { ...d, date }
       })
@@ -117,6 +122,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         }
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
+        datesFromAllSources.push(date)
+
         const model = {
           date,
           modelTemp: NaN,
@@ -139,6 +146,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
 
       const modelSummaries: ModelSummary[] = _modelSummaries.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
+        datesFromAllSources.push(date)
 
         return { ...d, date }
       })
@@ -155,6 +163,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         }
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
+        datesFromAllSources.push(date)
+
         const biasAdjModel = {
           date,
           biasAdjModelTemp: NaN,
@@ -182,6 +192,8 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         }
 
         const date = d3Utils.storeDaysLookup(daysLookup, v.datetime)
+        datesFromAllSources.push(date)
+
         const hrModel = { date, hrModelTemp: NaN, hrModelRH: NaN }
         if (v.temperature != null) {
           hrModel.hrModelTemp = Number(v.temperature.toFixed(2))
@@ -198,6 +210,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       })
       const highResModelSummaries: ModelSummary[] = _highResModelSummaries.map(d => {
         const date = d3Utils.storeDaysLookup(daysLookup, d.datetime)
+        datesFromAllSources.push(date)
 
         return { ...d, date }
       })
@@ -206,7 +219,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
       const weatherValues = Object.values(weatherValuesByDatetime).sort(
         (a, b) => a.date.valueOf() - b.date.valueOf()
       )
-      const xDomain = d3.extent(weatherValues, v => v.date) as [Date, Date]
+      const xDomain = d3.extent(datesFromAllSources) as [Date, Date]
       const xTickValues = Object.values(daysLookup)
         .sort((a, b) => a.valueOf() - b.valueOf()) // Sort in ascending order
         .map((day, idx) => {
@@ -215,7 +228,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
             return day
           }
           // Return the rest with 0h 0m 0s set
-          return new Date(day).setHours(0, 0, 0)
+          return new Date(day.setHours(0, 0, 0))
         })
 
       /* Set dimensions and svg groups */
@@ -235,7 +248,7 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .append('clipPath')
         .attr('id', 'clip')
         .append('rect')
-        .attr('x', -1) // -1 to give some tiny window to show stuff on the very left end
+        .attr('x', -1) // -1 to give some tiny window to show stuff that's hidden on the left
         .attr('y', -10) // - 10 to show the text(Now) from the reference line
         .attr('width', chartWidth + 2) // + 2 to show the last tick of the x axis
         .attr('height', svgHeight) // Use svgHeight to show the x axis and its labels
@@ -549,10 +562,10 @@ const TempRHGraph: React.FunctionComponent<Props> = ({
         .attr('dy', '-0.1em')
         .attr('dx', '0.8em')
         .attr('transform', 'rotate(45)')
-      context
+      context // Y temp axis
         .append('g')
         .call(d3.axisLeft(yTempScale).tickValues([-10, 0, 10, 20, 30, 40]))
-      context
+      context // Y rh axis
         .append('g')
         .attr('transform', `translate(${chartWidth}, 0)`)
         .call(d3.axisRight(yRHScale).tickValues([0, 25, 50, 75, 100]))
